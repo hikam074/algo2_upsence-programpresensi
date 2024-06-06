@@ -1673,7 +1673,7 @@ def akun_pertama():
         first_Account_pass   = str(input("Masukkan passkey anda      : "))
 
         # memasukkan admin pertama 
-        first_input = f"{first_account_ID.upper()},{first_account_nama.upper()},{first_account_posisi.upper()},TRUE,TRUE,TRUE,TRUE,TRUE,FALSE,FALSE{first_Account_pass}"
+        first_input = f"{first_account_ID.upper()},{first_account_nama.upper()},{first_account_posisi.upper()},TRUE,TRUE,TRUE,TRUE,TRUE,FALSE,FALSE,{first_Account_pass}"
 
         with open('admin_account_database.csv', 'w', newline='') as fileAdmincsv:
             admin_list = csv.DictWriter(fileAdmincsv, fieldnames=[first_input],  delimiter='/') 
@@ -1685,13 +1685,13 @@ def akun_pertama():
         presensi = open('histori_database.csv', 'w')
         presensi.close()
 
-# FITUR AKUN PERTAMA
+# FITUR AKUN PERTAMA SELESAI
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
-# BACKEND : OTOMATIS PRESENSI BILA TIDAK HADIR v ------------------------------------------------------------------------------------------------------------------
+# BACKEND : OTOMATIS PRESENSI BILA TIDAK HADIR------------------------------------------------------------------------------------------------------------------
 
 def backendAutoPresensi():
     # MEMBUAT PENGECEK DATA PRESENSI SUDAH ADA ATAU BELUM
@@ -1738,13 +1738,18 @@ def backendAutoPresensi():
     for tujuan in range (0, len(data_employee)):
 
         hari_seminggu = ["SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU", "MINGGU"]
+        hari_seminggu_inggris = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
         for nomor_hari in range(3,10):
-            if data_employee[tujuan][nomor_hari] == 'True':    
-                data_baru = [tanggal_presensi, data_employee[tujuan][0],data_employee[tujuan][1],hari_seminggu[nomor_hari],'TIDAK HADIR',datetime.datetime.now().strftime("%H:%M:%S")]
-                data_baru_cond = [f'{tanggal_presensi}', f'{data_employee[tujuan][0]}', f'{data_employee[tujuan][1]}', hari_seminggu[nomor_hari], '', '']
-                dataUpdateHistori = [f'{tanggal_presensi} {hari_seminggu[nomor_hari]} Karyawan {data_employee[tujuan][0]} {data_employee[tujuan][1]} tidak presensi']
+            if data_employee[tujuan][nomor_hari] == 'True' and (datetime.datetime.now().strftime("%A").upper() == hari_seminggu_inggris[nomor_hari-3]):   
+                print(nomor_hari) 
+                print(data_employee[tujuan][nomor_hari])
+                data_baru = [tanggal_presensi, data_employee[tujuan][0], data_employee[tujuan][1], hari_seminggu[nomor_hari-3],'TIDAK HADIR',datetime.datetime.now().strftime("%H:%M:%S")]
+                print(data_baru)
+                data_baru_cond = [f'{tanggal_presensi}', f'{data_employee[tujuan][0]}', f'{data_employee[tujuan][1]}', hari_seminggu[nomor_hari-3], '', '']
+                print(data_baru_cond)
+                dataUpdateHistori = [f'{backend_tanggal_presensi} Karyawan {data_employee[tujuan][0]} {data_employee[tujuan][1]} tidak presensi']
 
-                if (data_baru_cond not in data_presensi_cond) and ((datetime.datetime.now().strftime("%H:%M:%S") )not in (pre_presensi and time_range_kerja)) and (dataUpdateHistori not in dataHistory):
+                if (data_baru_cond not in data_presensi_cond) and ((datetime.datetime.now().strftime("%H:%M:%S") ) not in (pre_presensi and time_range_kerja)) and (dataUpdateHistori not in dataHistory):
                     data_presensi.append(data_baru)   # Menambahkan data baru ke dalam list data_presensi
                     with open('presensi_database.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
                         writer_presensi = csv.writer(csvfile_presensi)
@@ -1755,8 +1760,7 @@ def backendAutoPresensi():
                 else:
                     pass
 
-
-# BACKEND : OTOMATIS PRESENSI BILA TIDAK HADIR
+# BACKEND : OTOMATIS PRESENSI BILA TIDAK HADIR SELESAI
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -1891,6 +1895,7 @@ global_close_presensi = "23:59:59"
 
 # untuk absensi otomatis
 waktuRealBackend = now_time.strftime("%A %d %B %Y")
+backend_tanggal_presensi = datetime.datetime.now().strftime("%Y-%m-%d %A")
 
 # memperbolehkan operasi dengan 0
 def calculate_percentage(present_days, total_days):
