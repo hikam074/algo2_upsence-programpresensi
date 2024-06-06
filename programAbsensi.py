@@ -1770,14 +1770,14 @@ kolom_presensi = ["Tanggal", "ID", "Nama", "Hari Kerja", "Kehadiran", "Waktu"]
 delayWelcome = 3
 
 # menentukan berapa karyawan dalam toko
-qKasir = 3
-qStaf = 2*qKasir
-qKasirPagi = 1
-qKasirSiang = 1
-qKasirMalam = 1
-qStafPagi = 2*qKasirPagi
-qStafSiang = 2*qKasirSiang
-qStafMalam = 2*qKasirMalam
+# qKasir = 3
+# qStaf = 2*qKasir
+# qKasirPagi = 1
+# qKasirSiang = 1
+# qKasirMalam = 1
+# qStafPagi = 2*qKasirPagi
+# qStafSiang = 2*qKasirSiang
+# qStafMalam = 2*qKasirMalam
 
 #logo-logo
 logoPart1 = (r"  _    _       _____                      ")
