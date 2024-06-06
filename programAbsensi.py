@@ -64,7 +64,7 @@ def launchPage():
                 # MENGAUTENTIFIKASI ID DAN PASSCODE YANG DIMASUKKAN SESUAI ATAU TIDAK
                 if launch_ID in admin_column:   # ID DAN PASSCODE ADA DI DATABASE ADMIN
                     for x in range(0,len(data_admin)):                                          # mencocokkan ID hasil login dengan ID di database
-                        if launch_ID == data_admin[x][0] and launchPass == data_admin[x][4]:    # ID DAN PASSCODE SESUAI DENGAN DATABASE ADMIN
+                        if launch_ID == data_admin[x][0] and launchPass == data_admin[x][-1]:    # ID DAN PASSCODE SESUAI DENGAN DATABASE ADMIN
                             launch_page_condition = False
                             main_page_admin()                                                   # DIARAHKAN KE MENU ADMIN
 
@@ -86,7 +86,7 @@ def launchPage():
                 # MENGAUTENTIFIKASI ID DAN PASSCODE YANG DIMASUKKAN SESUAI ATAU TIDAK
                 if launch_ID in employee_column:    # ID DAN PASSCODE ADA DI DATABASE KARYAWAN
                     for x in range(0,len(data_employee)):
-                        if launch_ID == data_employee[x][0] and launchPass == data_employee[x][6]:      # ID DAN PASSCODE SESUAI DENGAN DATABASE KARYAWAN
+                        if launch_ID == data_employee[x][0] and launchPass == data_employee[x][-1]:      # ID DAN PASSCODE SESUAI DENGAN DATABASE KARYAWAN
                             launch_page_condition = False
                             main_page_employee()                                                        # DIARAHKAN KE MENU KARYAWAN
 
@@ -1207,13 +1207,14 @@ def main_page_employee():   # FITUR KARYAWAN
             data_presensi_cond[g][-1] = ""      # MENAMBAHKAN TIAP DATA PRESENSI KE VARIABEL KONDISI DENGAN MENGHAPUS DATA KOLOM "WAKTU"
             g+=1
 
-    # MENDETEKSI NAMA ADMIN MENGGUNAKAN ID
+    # MENDETEKSI NAMA MENGGUNAKAN ID
     if launch_ID in employee_column:    # ID DAN PASSCODE ADA DI DATABASE
         for x in range(0,len(data_employee)):       # mencocokkan ID hasil login dengan ID di database
             if launch_ID == data_employee[x][0]:    # ID DAN PASSCODE SESUAI DENGAN DATABASE ADMIN
                 global tujuan   # index orang yang dituju saat menggunakan semua menu karyawan
                 tujuan = x
                 print(f'Selamat Datang, karyawan "{data_employee[x][1]}"! Apa yang ingin anda lakukan saat ini?\n') # selamat datang karyawan
+
     print('\nMenu:\n[1] PRESENSI SEKARANG!\n[2] Lihat Jadwal Kerja Anda\n[3] Lihat Rekapitulasi Presensi\n[4] Lihat Data Presensi Anda\n[5] LEMBUR\n[6] Gaji Anda\n[7] Informasi Mengenai Program\n[8] Keluar') # pilihan menu karyawan
     menu_choice = input("Pilih menu : ")
     print()
