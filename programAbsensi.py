@@ -1137,155 +1137,67 @@ def main_page_employee():   # FITUR KARYAWAN
     print()
 
     if menu_choice == '1':    # FITUR 1 PRESENSI SEKARANG
+
+        # UI PRESENSI SEKARANG DAN PILIHAN SHIFT
         os.system('cls')
+        print(f'++{'='*86}++\n|| karyawan>menu utama>presensi sekarang!>{' '*46}||\n++{'-'*86}++\n||{' '*86}||\n||{' '*26}P R E S E N S I   S E K A R A N G !{' '*25}||\n||{' '*86}||\n++{'='*86}++\nwaktu : {datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n')  
+
         tanggal_presensi = datetime.datetime.now().strftime("%Y-%m-%d") # indikator tanggal riil
 
-        # LOOPING UNTUK FITUR PRESENSI
-        repeat_menu_choice_1 = True
-        while repeat_menu_choice_1 :
-            os.system('cls')
-            menu_choice_1 = input(f'++{'='*86}++\n|| karyawan>menu utama>presensi sekarang!>{' '*46}||\n++{'-'*86}++\n||{' '*86}||\n||{' '*26}P R E S E N S I   S E K A R A N G !{' '*25}||\n||{' '*86}||\n++{'='*86}++\nwaktu : {datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\nPilih Shift:\n[1] Pagi\n[2] Siang\n[3] Malam\n[4] Kembali Ke Menu\nPilih menu : ')  # UI PRESENSI SEKARANG DAN PILIHAN SHIFT
-
-            if menu_choice_1 == '1':            # FITUR 1.1 PRESENSI SEKARANG>SHIFT PAGI
-                if data_employee[tujuan][3] == 'True':  # KARYAWAN YANG HENDAK PRESENSI BENAR MERUPAKAN KARYAWAN SHIFT PAGI
-                    repeat_menu_choice_1 = False
-                    time_range = DateTimeRange(openPresensiPagi, closePresensiPagi)  # RANGE SHIFT PAGI
-                    x = datetime.datetime.now().strftime("%H:%M:%S")    # DEKLARASI WAKTU TERBARU
-                    
-                    # BILA DALAM WAKTU GLOBAL PRESENSI
-                    if x in DateTimeRange(openPresensiPagi,globalClosePresensi):   # ABSENSI GLOBAL DIBUKA
-                        if x in time_range :    # DALAM RENTANG PRESENSI
-                            status_kehadiran = "HADIR" 
-                        elif x in timeRangePagi:    # TIDAK DALAM RENTANG PRESENSI TAPI MASIH PADA SHIFT
-                            status_kehadiran = "TERLAMBAT"
-                        else :          # PRESENSI DILUAR JAM SHIFT
-                            input("\nPERHATIAN : Bukan jadwal presensi! Tekan [enter] untuk kembali ke menu utama")
-                            status_kehadiran = "TIDAK HADIR"
-                            main_page_employee()    # MENGEMBALIKAN KE MENU UTAMA
-                        
-                        # MEMBUAT DATA UNTUK DIMASUKKAN
-                        data_baru = [tanggal_presensi, data_employee[tujuan][0],data_employee[tujuan][1],'PAGI',status_kehadiran,now_time.strftime("%H:%M:%S")]
-                        # MEMBUAT DATA PENGKONDISIAN UNTUK MENGECEK DATA SUDAH ADA ATAU BELUM
-                        data_baru_cond = [f'{tanggal_presensi}', f'{data_employee[tujuan][0]}', f'{data_employee[tujuan][1]}', 'PAGI', f'{status_kehadiran}', '']
-                        
-                        # MENDETEKSI APAKAH KARYAWAN SUDAH MELAKUKAN PRESENSI DI SHIFT YANG SAMA HARI INI
-                        if data_baru_cond not in data_presensi_cond:    # KARYAWAN BELUM PRESENSI
-                            # Menambahkan data baru ke dalam list data_presensi
-                            data_presensi.append(data_baru)
-                            # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
-                            with open('presensi_database.csv', 'w', newline='') as csvfile_presensi:
-                                writer_presensi = csv.writer(csvfile_presensi)
-                                writer_presensi.writerows(data_presensi)
-                            input(f'\nPresensi : {tanggal_presensi},{now_time.strftime("%H:%M:%S")},{data_employee[tujuan][0]},{data_employee[tujuan][1]},PAGI,{status_kehadiran} \nPERHATIAN : Presensi berhasil direkam!\n\nTekan [enter] untuk kembali ke menu utama')   # IN-PROGRAM-NOTIFICATION DATA DICATAT
-                        else:   # KARYAWAN SUDAH PRESENSI SEBELUMNYA
-                            input(f'\nPERHATIAN : Data presensi "{tanggal_presensi},{data_employee[tujuan][0]},{data_employee[tujuan][1]},PAGI,{status_kehadiran}" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')    # IN-PROGRAM-NOTIFICATION DATA SUDAH ADA
-                    
-                    elif x in prePresensiPagi:     # ABSENSI GLOBAL BELUM DIBUKA
-                        input("\nPERHATIAN : Waktu belum menunjukkan jadwal presensi!\n\nTekan [enter] untuk kembali ke menu utama")     # MENGEMBALIKAN KE MENU UTAMA
-
-                else:   # KARYAWAN YANG HENDAK PRESENSI BUKAN MERUPAKAN KARYAWAN SHIFT PAGI
-                    input("\nPERHATIAN : Bukan jadwal presensi shift anda! Tekan [enter] untuk melanjutkan")   # KEMBALI PILIH SHIFT PRESENSI
-                    repeat_menu_choice_1 = True
-
-            # FITUR 1.1
-
-            elif menu_choice_1 == '2':          # FITUR 1.2 PRESENSI SEKARANG>SHIFT SIANG
-                if data_employee[tujuan][4] == 'True':  # KARYAWAN YANG HENDAK PRESENSI BENAR MERUPAKAN KARYAWAN SHIFT SIANG
-                    repeat_menu_choice_1 = False
-                    time_range = DateTimeRange(openPresensiSiang, closePresensiSiang)   # RANGE SHIFT SIANG
-                    x = datetime.datetime.now().strftime("%H:%M:%S")    # DEKLARASI WAKTU TERBARU
-
-                    # BILA DALAM WAKTU GLOBAL PRESENSI
-                    if x in DateTimeRange(openPresensiSiang, globalClosePresensi):  # ABSENSI GLOBAL DIBUKA
-                        if x in time_range :    # DALAM RENTANG PRESENSI
-                            status_kehadiran = "HADIR"
-                        elif x in timeRangeSiang:   # TIDAK DALAM RENTANG PRESENSI TAPI MASIH PADA SHIFT
-                            status_kehadiran = "TERLAMBAT"
-                        else :          # PRESENSI DILUAR JAM SHIFT
-                            input("\nPERHATIAN : Bukan jadwal presensi! Tekan [enter] untuk kembali ke menu utama")
-                            status_kehadiran = "TIDAK HADIR"
-                            main_page_employee()    # MENGEMBALIKAN KE MENU UTAMA
-                        
-                        # MEMBUAT DATA UNTUK DIMASUKKAN
-                        data_baru = [tanggal_presensi, data_employee[tujuan][0],data_employee[tujuan][1],'SIANG',status_kehadiran,now_time.strftime("%H:%M:%S")]
-                        # MEMBUAT DATA PENGKONDISIAN UNTUK MENGECEK DATA SUDAH ADA ATAU BELUM
-                        data_baru_cond = [f'{tanggal_presensi}', f'{data_employee[tujuan][0]}', f'{data_employee[tujuan][1]}', 'SIANG', f'{status_kehadiran}', '']
-                        
-                        # MENDETEKSI APAKAH KARYAWAN SUDAH MELAKUKAN PRESENSI DI SHIFT YANG SAMA HARI INI
-                        if data_baru_cond not in data_presensi_cond:    # KARYAWAN BELUM PRESENSI
-                            # Menambahkan data baru ke dalam list data_presensi
-                            data_presensi.append(data_baru)
-                            # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
-                            with open('presensi_database.csv', 'w', newline='') as csvfile_presensi:
-                                writer_presensi = csv.writer(csvfile_presensi)
-                                writer_presensi.writerows(data_presensi)
-                            input(f'\nPresensi : {tanggal_presensi},{now_time.strftime("%H:%M:%S")},{data_employee[tujuan][0]},{data_employee[tujuan][1]},SIANG,{status_kehadiran} \nPERHATIAN : Presensi berhasil direkam!\n\nTekan [enter] untuk kembali ke menu utama')  # IN-PROGRAM-NOTIFICATION DATA DICATAT
-                        else:   # KARYAWAN SUDAH PRESENSI SEBELUMNYA
-                            input(f'\nPERHATIAN : Data presensi "{tanggal_presensi},{data_employee[tujuan][0]},{data_employee[tujuan][1]},SIANG,{status_kehadiran}" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')   # IN-PROGRAM-NOTIFICATION DATA SUDAH ADA
-                    
-                    elif x in prePresensiSiang:  # ABSENSI GLOBAL BELUM DIBUKA
-                        input("\nPERHATIAN : Waktu belum menunjukkan jadwal presensi!\n\nTekan [enter] untuk kembali ke menu utama")     # MENGEMBALIKAN KE MENU UTAMA
+        hari_seminggu = ["SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU", "MINGGU"]
+        for nomor_hari in range(3,10):
+    
+            # KARYAWAN YANG HENDAK PRESENSI BENAR MERUPAKAN KARYAWAN SHIFT TERSEBUT
+            if data_employee[tujuan][nomor_hari] == 'True':  
+    
+                time_range = DateTimeRange(open_presensi,close_presensi)
+                x = datetime.datetime.now().strftime("%H:%M:%S")    # DEKLARASI WAKTU TERBARU
                 
-                else:   # KARYAWAN YANG HENDAK PRESENSI BUKAN MERUPAKAN KARYAWAN SHIFT SIANG
-                    input("\nPERHATIAN : Bukan jadwal presensi shift anda! Tekan [enter] untuk melanjutkan")   # KEMBALI PILIH SHIFT PRESENSI
-                    repeat_menu_choice_1 = True
-
-            # FITUR 1.2
-
-            elif menu_choice_1 == '3':          # FITUR 1.3 PRESENSI SEKARANG>SHIFT MALAM
-                if data_employee[tujuan][5] == 'True':  # KARYAWAN YANG HENDAK PRESENSI BENAR MERUPAKAN KARYAWAN SHIFT MALAM
-                    repeat_menu_choice_1 = False
-                    time_range = DateTimeRange(openPresensiMalam, closePresensiMalam)  # RANGE SHIFT MALAM
-                    x = datetime.datetime.now().strftime("%H:%M:%S")    # DEKLARASI WAKTU TERBARU
-
-                    # BILA DALAM WAKTU GLOBAL PRESENSI
-                    if x in DateTimeRange(openPresensiMalam,globalClosePresensi):   # ABSENSI GLOBAL DIBUKA
-                        if x in time_range :    # DALAM RENTANG PRESENSI
-                            status_kehadiran = "HADIR"
-                        elif x in timeRangeMalam:   # TIDAK DALAM RENTANG PRESENSI TAPI MASIH PADA SHIFT
-                            status_kehadiran = "TERLAMBAT"
-                        else :          # PRESENSI DILUAR JAM SHIFT
-                            input("\nPERHATIAN : Bukan jadwal presensi! Tekan [enter] untuk kembali ke menu utama")
-                            status_kehadiran = "TIDAK HADIR"
-                            main_page_employee()    # MENGEMBALIKAN KE MENU UTAMA
-                        
-                        # MEMBUAT DATA UNTUK DIMASUKKAN
-                        data_baru = [tanggal_presensi, data_employee[tujuan][0],data_employee[tujuan][1],'MALAM',status_kehadiran,now_time.strftime("%H:%M:%S")]
-                        # MEMBUAT DATA PENGKONDISIAN UNTUK MENGECEK DATA SUDAH ADA ATAU BELUM
-                        data_baru_cond = [f'{tanggal_presensi}', f'{data_employee[tujuan][0]}', f'{data_employee[tujuan][1]}', 'MALAM', f'{status_kehadiran}', '']
-                        
-                        # MENDETEKSI APAKAH KARYAWAN SUDAH MELAKUKAN PRESENSI DI SHIFT YANG SAMA HARI INI
-                        if data_baru_cond not in data_presensi_cond:    # KARYAWAN BELUM PRESENSI
-                            # Menambahkan data baru ke dalam list data_presensi
-                            data_presensi.append(data_baru)
-                            # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
-                            with open('presensi_database.csv', 'w', newline='') as csvfile_presensi:
-                                writer_presensi = csv.writer(csvfile_presensi)
-                                writer_presensi.writerows(data_presensi)
-                            input(f'\nPresensi : {tanggal_presensi},{now_time.strftime("%H:%M:%S")},{data_employee[tujuan][0]},{data_employee[tujuan][1]},MALAM,{status_kehadiran} \nPERHATIAN : Presensi berhasil direkam!\n\nTekan [enter] untuk kembali ke menu utama')  # IN-PROGRAM-NOTIFICATION DATA DICATAT
-                        else:  # KARYAWAN SUDAH PRESENSI SEBELUMNYA
-                            input(f'\nPERHATIAN : Data presensi "{tanggal_presensi},{data_employee[tujuan][0]},{data_employee[tujuan][1]},MALAM,{status_kehadiran}" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')   # IN-PROGRAM-NOTIFICATION DATA SUDAH ADA
+                # BILA DALAM WAKTU GLOBAL PRESENSI
+                if x in DateTimeRange(open_presensi,global_close_presensi):   # ABSENSI GLOBAL DIBUKA
+                    # DALAM RENTANG PRESENSI
+                    if x in time_range :    
+                        status_kehadiran = "HADIR" 
+                    # TIDAK DALAM RENTANG PRESENSI TAPI MASIH PADA SHIFT
+                    elif x in time_range_kerja:    
+                        status_kehadiran = "TERLAMBAT"
+                    # PRESENSI DILUAR JAM SHIFT
+                    else :          
+                        input("\nPERHATIAN : Bukan jadwal presensi! Tekan [enter] untuk kembali ke menu utama")
+                        status_kehadiran = "TIDAK HADIR"
+                        main_page_employee()    # MENGEMBALIKAN KE MENU UTAMA
                     
-                    elif x in prePresensiMalam:  # ABSENSI GLOBAL BELUM DIBUKA
-                        input("\nPERHATIAN : Waku belum menunjukkan jadwal presensi!\n\nTekan [enter] untuk kembali ke menu utama")
+                    # MEMBUAT DATA UNTUK DIMASUKKAN
+                    data_baru = [tanggal_presensi, data_employee[tujuan][0],data_employee[tujuan][1],hari_seminggu[nomor_hari],status_kehadiran,now_time.strftime("%H:%M:%S")]
+                    # MEMBUAT DATA PENGKONDISIAN UNTUK MENGECEK DATA SUDAH ADA ATAU BELUM
+                    data_baru_cond = [f'{tanggal_presensi}', f'{data_employee[tujuan][0]}', f'{data_employee[tujuan][1]}', f'{hari_seminggu[nomor_hari]}', f'{status_kehadiran}', '']
+                    
+                    # MENDETEKSI APAKAH KARYAWAN SUDAH MELAKUKAN PRESENSI DI SHIFT YANG SAMA HARI INI
+                    # KARYAWAN BELUM PRESENSI
+                    if data_baru_cond not in data_presensi_cond:    
+                        data_presensi.append(data_baru) # Menambahkan data baru ke dalam list data_presensi
+                        with open('presensi_database.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
+                            writer_presensi = csv.writer(csvfile_presensi)
+                            writer_presensi.writerows(data_presensi)
+                        # IN-PROGRAM-NOTIFICATION DATA DICATAT
+                        input(f'\nPresensi : {tanggal_presensi},{now_time.strftime("%H:%M:%S")},{data_employee[tujuan][0]},{data_employee[tujuan][1]},{hari_seminggu[nomor_hari]},{status_kehadiran} \nPERHATIAN : Presensi berhasil direkam!\n\nTekan [enter] untuk kembali ke menu utama')   
+                    # KARYAWAN SUDAH PRESENSI SEBELUMNYA
+                    # IN-PROGRAM-NOTIFICATION DATA SUDAH ADA
+                    else:
+                        input(f'\nPERHATIAN : Data presensi "{tanggal_presensi},{data_employee[tujuan][0]},{data_employee[tujuan][1]},{hari_seminggu[nomor_hari]},{status_kehadiran}" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')    
                 
-                else:   # KARYAWAN YANG HENDAK PRESENSI BUKAN MERUPAKAN KARYAWAN SHIFT MALAM
-                    input("\nPERHATIAN : Bukan jadwal presensi anda! Tekan [enter] untuk melanjutkan")   # KEMBALI PILIH SHIFT PRESENSI
-                    repeat_menu_choice_1 = True
+                # ABSENSI GLOBAL BELUM DIBUKA
+                elif x in pre_presensi:     
+                    # MENGEMBALIKAN KE MENU UTAMA
+                    input("\nPERHATIAN : Waktu belum menunjukkan jadwal presensi!\n\nTekan [enter] untuk kembali ke menu utama")
             
-            # FITUR 1.3 
-
-            elif menu_choice_1 == '4':          # FITUR 1.4 PRESENSI SEKARANG>KEMBALI KE MENU UTAMA
-                repeat_menu_choice_1 = False
-            
-            # FITUR 1.4
-
-            else:                               # SALAH INPUT, COBA LAGI
-                repeat_menu_choice_1 = True
-
+            # KARYAWAN YANG HENDAK PRESENSI BUKAN MERUPAKAN KARYAWAN SHIFT TERSEBUT
+            else:   
+                input("\nPERHATIAN : Bukan jadwal presensi anda! Tekan [enter] untuk melanjutkan")
+                
         main_page_employee()
 
-    # FITUR 1
+    # FITUR 1 SELESAI
 
     elif menu_choice == '2':  # FITUR 2 LIHAT JADWAL SHIFT ANDA
         os.system('cls')  # Membersihkan layar konsol
@@ -1621,6 +1533,8 @@ def main_page_employee():   # FITUR KARYAWAN
                     print("Pilihan tidak valid, silakan coba lagi.")
         menu()
 
+    # FITUR 5
+
     elif menu_choice == '6':  # FITUR 6 EULA
         os.system('cls')
         print(eula_text)
@@ -1736,7 +1650,7 @@ def backendAutoPresensi():
     for tujuan in range (0, len(data_employee)):
 
         hari_seminggu = ["SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU", "MINGGU"]
-        for nomor_hari in range(3,9):
+        for nomor_hari in range(3,10):
             if data_employee[tujuan][nomor_hari] == 'True':    
                 data_baru = [tanggal_presensi, data_employee[tujuan][0],data_employee[tujuan][1],hari_seminggu[nomor_hari],'TIDAK HADIR',datetime.datetime.now().strftime("%H:%M:%S")]
                 data_baru_cond = [f'{tanggal_presensi}', f'{data_employee[tujuan][0]}', f'{data_employee[tujuan][1]}', hari_seminggu[nomor_hari], '', '']
@@ -1871,7 +1785,7 @@ tanggal_presensi = datetime.datetime.now().strftime("%Y-%m-%d")
 time_range_kerja = DateTimeRange("08:00:00", "16:59:59")
 pre_presensi = DateTimeRange("00:00:00", "07:59:59")
 open_presensi = "08:00:00"
-close_presensi = "17:00:00"
+close_presensi = "08:59:59"
 global_close_presensi = "23:59:59"
 
 # # range presensi shift
