@@ -1643,7 +1643,7 @@ def main_page_employee():   # FITUR KARYAWAN
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-# MEMBUKA FILE UNTUK PERTAMA KALINYA--------------------------------------------------------------------------------------------------------------------------
+# FITUR AKUN PERTAMA v --------------------------------------------------------------------------------------------------------------------------
 
 def akun_pertama():
     os.system('cls')
@@ -1671,7 +1671,7 @@ def akun_pertama():
         first_Account_pass   = str(input("Masukkan passkey anda      : "))
 
         # memasukkan admin pertama 
-        first_input = f"{first_account_ID.upper()},{first_account_nama.upper()},{first_account_posisi.upper()},True,True,True,True,True,False,False,{first_Account_pass}"
+        first_input = f"{first_account_ID.upper()},{first_account_nama.upper()},{first_account_posisi.upper()},TRUE,TRUE,TRUE,TRUE,TRUE,FALSE,FALSE{first_Account_pass}"
 
         with open('admin_account_database.csv', 'w', newline='') as fileAdmincsv:
             admin_list = csv.DictWriter(fileAdmincsv, fieldnames=[first_input],  delimiter='/') 
@@ -1683,13 +1683,13 @@ def akun_pertama():
         presensi = open('histori_database.csv', 'w')
         presensi.close()
 
-# FITUR AKUN PERTAMA SELESAI - UI : COMMENT : DESAIN
+# FITUR AKUN PERTAMA
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
-# BACKEND : OTOMATIS PRESENSI BILA TIDAK HADIR------------------------------------------------------------------------------------------------------------------
+# BACKEND : OTOMATIS PRESENSI BILA TIDAK HADIR v ------------------------------------------------------------------------------------------------------------------
 
 def backendAutoPresensi():
     # MEMBUAT PENGECEK DATA PRESENSI SUDAH ADA ATAU BELUM
@@ -1735,58 +1735,26 @@ def backendAutoPresensi():
 
     for tujuan in range (0, len(data_employee)):
 
-        # BILA SHIFT PAGI
-        if data_employee[tujuan][3] == 'True':    
-            data_baru = [tanggal_presensi, data_employee[tujuan][0],data_employee[tujuan][1],'PAGI','TIDAK HADIR',datetime.datetime.now().strftime("%H:%M:%S")]
-            data_baru_cond = [f'{tanggal_presensi}', f'{data_employee[tujuan][0]}', f'{data_employee[tujuan][1]}', 'PAGI', '', '']
-            dataUpdateHistori = [f'{tanggal_presensi} shift kerja PAGI Karyawan {data_employee[tujuan][0]} {data_employee[tujuan][1]} tidak presensi']
-            if (data_baru_cond not in data_presensi_cond) and ((datetime.datetime.now().strftime("%H:%M:%S") )not in (timeRangePagi and prePresensiPagi)) and (dataUpdateHistori not in dataHistory):
-                data_presensi.append(data_baru)   # Menambahkan data baru ke dalam list data_presensi
-                with open('presensi_database.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
-                    writer_presensi = csv.writer(csvfile_presensi)
-                    writer_presensi.writerows(data_presensi)
-                with open('histori_database.csv', 'a', newline='') as csvfile_histori:    # notifikasi ke admin
-                    writer_histori = csv.writer(csvfile_histori,quoting=csv.QUOTE_NONE, escapechar='_')
-                    writer_histori.writerows([dataUpdateHistori])
-            else:
-                pass
+        hari_seminggu = ["SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU", "MINGGU"]
+        for nomor_hari in range(3,9):
+            if data_employee[tujuan][nomor_hari] == 'True':    
+                data_baru = [tanggal_presensi, data_employee[tujuan][0],data_employee[tujuan][1],hari_seminggu[nomor_hari],'TIDAK HADIR',datetime.datetime.now().strftime("%H:%M:%S")]
+                data_baru_cond = [f'{tanggal_presensi}', f'{data_employee[tujuan][0]}', f'{data_employee[tujuan][1]}', hari_seminggu[nomor_hari], '', '']
+                dataUpdateHistori = [f'{tanggal_presensi} {hari_seminggu[nomor_hari]} Karyawan {data_employee[tujuan][0]} {data_employee[tujuan][1]} tidak presensi']
 
-        # BILA SHIFT SIANG
-        elif data_employee[tujuan][4] == 'True':
-            data_baru = [tanggal_presensi, data_employee[tujuan][0],data_employee[tujuan][1],'SIANG','TIDAK HADIR',datetime.datetime.now().strftime("%H:%M:%S")]
-            data_baru_cond = [f'{tanggal_presensi}', f'{data_employee[tujuan][0]}', f'{data_employee[tujuan][1]}', 'SIANG', '', '']
-            dataUpdateHistori = [f'{tanggal_presensi} shift kerja SIANG Karyawan {data_employee[tujuan][0]} {data_employee[tujuan][1]} tidak presensi']
-            if (data_baru_cond not in data_presensi_cond) and ((datetime.datetime.now().strftime("%H:%M:%S")) not in (timeRangeSiang and prePresensiSiang)) and (dataUpdateHistori not in dataHistory):
-                data_presensi.append(data_baru)   # Menambahkan data baru ke dalam list data_presensi
-                with open('presensi_database.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
-                    writer_presensi = csv.writer(csvfile_presensi)
-                    writer_presensi.writerows(data_presensi)
-                with open('histori_database.csv', 'a', newline='') as csvfile_histori:    # notifikasi ke admin
-                    writer_histori = csv.writer(csvfile_histori,quoting=csv.QUOTE_NONE, escapechar='_')
-                    writer_histori.writerows([dataUpdateHistori])
-            else:
-                pass
+                if (data_baru_cond not in data_presensi_cond) and ((datetime.datetime.now().strftime("%H:%M:%S") )not in (pre_presensi and time_range_kerja)) and (dataUpdateHistori not in dataHistory):
+                    data_presensi.append(data_baru)   # Menambahkan data baru ke dalam list data_presensi
+                    with open('presensi_database.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
+                        writer_presensi = csv.writer(csvfile_presensi)
+                        writer_presensi.writerows(data_presensi)
+                    with open('histori_database.csv', 'a', newline='') as csvfile_histori:    # notifikasi ke admin
+                        writer_histori = csv.writer(csvfile_histori,quoting=csv.QUOTE_NONE, escapechar='_')
+                        writer_histori.writerows([dataUpdateHistori])
+                else:
+                    pass
 
-        # BILA SHIFT MALAM
-        elif data_employee[tujuan][5] == 'True':
-            data_baru = [tanggal_presensi, data_employee[tujuan][0],data_employee[tujuan][1],'MALAM','TIDAK HADIR',datetime.datetime.now().strftime("%H:%M:%S")]
-            data_baru_cond = [f'{tanggal_presensi}', f'{data_employee[tujuan][0]}', f'{data_employee[tujuan][1]}', 'MALAM', '', '']
-            dataUpdateHistori = [f'{tanggal_presensi} shift kerja MALAM Karyawan {data_employee[tujuan][0]} {data_employee[tujuan][1]} tidak presensi']
-            if (data_baru_cond not in data_presensi_cond) and ((datetime.datetime.now().strftime("%H:%M:%S")) not in (timeRangeMalam and prePresensiMalam)) and (dataUpdateHistori not in dataHistory):
-                data_presensi.append(data_baru)   # Menambahkan data baru ke dalam list data_presensi
-                with open('presensi_database.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
-                      writer_presensi = csv.writer(csvfile_presensi)
-                      writer_presensi.writerows(data_presensi)
-                with open('histori_database.csv', 'a', newline='') as csvfile_histori:    # notifikasi ke admin
-                    writer_histori = csv.writer(csvfile_histori,quoting=csv.QUOTE_NONE, escapechar='_')
-                    writer_histori.writerows([dataUpdateHistori])
-            else:
-                pass
 
-        else:
-            pass
-
-# BACKEND : OTOMATIS PRESENSI BILA TIDAK HADIR SELESAI
+# BACKEND : OTOMATIS PRESENSI BILA TIDAK HADIR
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -1794,9 +1762,9 @@ def backendAutoPresensi():
 # PERKOLOMAN DAN DESAIN---------------------------------------------------------------------------------------------------------------------------------------
 
 # kolom esensial
-kolom_admin = ['ID','Nama','Posisi','Bidang','Password']
-kolom_employee = ['ID','Nama','Posisi','Shift 1','Shift 2','Shift 3','Password']
-kolom_presensi = ["Tanggal", "ID", "Nama", "Shift", "Kehadiran", "Waktu"]
+kolom_admin    = ['ID','Nama','Posisi','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Password']
+kolom_employee = ['ID','Nama','Posisi','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Password']
+kolom_presensi = ["Tanggal", "ID", "Nama", "Hari Kerja", "Kehadiran", "Waktu"]
 
 # lama freeze welcome page
 delayWelcome = 3
@@ -1894,23 +1862,30 @@ waktuRealTanggal = now_time.strftime("%Y-%m-%d")
 waktuRealJam = now_time.strftime("%H:%M:%S")
 tanggal_presensi = datetime.datetime.now().strftime("%Y-%m-%d")
 
-# range jam shift
-timeRangePagi = DateTimeRange("04:00:00", "09:59:59")
-timeRangeSiang = DateTimeRange("10:00:00", "15:59:59")
-timeRangeMalam = DateTimeRange("16:00:00", "21:59:59")
+# # range jam shift
+# timeRangePagi = DateTimeRange("04:00:00", "09:59:59")
+# timeRangeSiang = DateTimeRange("10:00:00", "15:59:59")
+# timeRangeMalam = DateTimeRange("16:00:00", "21:59:59")
 
-# range presensi shift
-prePresensiPagi = DateTimeRange("00:00:00", "03:59:59")
-openPresensiPagi = "04:00:00"
-closePresensiPagi = "05:00:00"
-prePresensiSiang = DateTimeRange("00:00:00", "09:59:59")
-openPresensiSiang = "10:00:00"
-closePresensiSiang = "11:00:00"
-prePresensiMalam = DateTimeRange("00:00:00", "15:59:59")
-openPresensiMalam = "16:00:00"
-closePresensiMalam = "17:00:00"
+# range jam kerja
+time_range_kerja = DateTimeRange("08:00:00", "16:59:59")
+pre_presensi = DateTimeRange("00:00:00", "07:59:59")
+open_presensi = "08:00:00"
+close_presensi = "17:00:00"
+global_close_presensi = "23:59:59"
 
-globalClosePresensi = "23:59:59"
+# # range presensi shift
+# prePresensiPagi = DateTimeRange("00:00:00", "03:59:59")
+# openPresensiPagi = "04:00:00"
+# closePresensiPagi = "05:00:00"
+# prePresensiSiang = DateTimeRange("00:00:00", "09:59:59")
+# openPresensiSiang = "10:00:00"
+# closePresensiSiang = "11:00:00"
+# prePresensiMalam = DateTimeRange("00:00:00", "15:59:59")
+# openPresensiMalam = "16:00:00"
+# closePresensiMalam = "17:00:00"
+
+# globalClosePresensi = "23:59:59"
 
 # untuk absensi otomatis
 waktuRealBackend = now_time.strftime("%A %d %B %Y")
