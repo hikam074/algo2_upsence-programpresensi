@@ -167,7 +167,7 @@ def main_page_admin():
             if launch_ID == data_admin[x][0]:   # ID DAN PASSCODE SESUAI DENGAN DATABASE ADMIN
                 print(f'Selamat Datang, admin "{data_admin[x][1]}"!')   # selamat datang admin
 
-    print('Apa yang ingin anda lakukan saat ini?\n\nMenu:\n[1] Tambahkan Orang\n[2] Edit Data\n[3] Edit Presensi Karyawan\n[4] Lihat Data\n[5] Hapus Data\n[6] Keluar\n\n[N] Notifkasi')    # pilihan menu admin
+    print('Apa yang ingin anda lakukan saat ini?\n\nMenu:\n[1] Tambahkan Orang\n[2] Edit Data\n[3] Edit Presensi Karyawan\n[4] Lihat Data\n[5] Hapus Data\n[6] KARYAWAN TERBAIK atau TERBURUK\n[7] Keluar\n\n[N] Notifkasi')    # pilihan menu admin
     menu_choice = input("\nPilih menu : ")
     print()
 
@@ -200,7 +200,7 @@ def main_page_admin():
 
             main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
 
-        # FITUR 1.1 SELESAI - UI : COMMENT : DESAIN
+        # FITUR 1.1
 
         elif menu_choice_1 == '2':  # FITUR 1.2 TAMBAHKAN ORANG>TAMBAHKAN KARYAWAN
             os.system('cls')
@@ -351,13 +351,13 @@ def main_page_admin():
 
             main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
 
-        # FITUR 1.2 SELESAI - UI : COMMENT : DESAIN
+        # FITUR 1.2 
 
         else:                       # FITUR 1.3 BILA SALAH KEMBALI KE MENU UTAMA KARYAWAN
             main_page_admin()
         # FITUR 1.3 SELESAI - UI : COMMENT : DESAIN
 
-    # FITUR 1 SELESAI - UI : COMMENT : DESAIN
+    # FITUR 1 
 
     elif menu_choice == '2':        # FITUR 2 EDIT DATA 
         menu_choice_2 = input("[1] Edit Data Admin\n[2] Edit Data Karyawan\nPilih menu : ")     # pilihan mengedit data
@@ -418,7 +418,7 @@ def main_page_admin():
             input("Tekan [enter] untuk kembali ke menu utama")
             main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
 
-        # FITUR 2.1 SELESAI : UI : COMMENT : DESAIN
+        # FITUR 2.1 
 
         elif menu_choice_2 == '2':  # FITUR 2.2 EDIT DATA>EDIT DATA KARYAWAN
             os.system('cls')
@@ -467,7 +467,7 @@ def main_page_admin():
                     print(f'\nData baru untuk "{df.iloc[baris_employee.index, 0:3].to_string(header=False,index=False)}" telah diubah!\n\nData saat ini :\n{tabulate.tabulate(df, headers="keys", tablefmt="github", showindex=False)}\n')  # IN-PROGRAM-NOTIFICATION DATA BERHASIL DIUBAH
                     input()
 
-                # FITUR 2.2.1 SELESAI - UI : COMMENT
+                # FITUR 2.2.1 
 
                 elif edit_employee_profil == '2':   # FITUR 2.2.2 EDIT DATA>EDIT DATA KARYAWAN>EDIT DATA SHIFT
                     
@@ -503,12 +503,12 @@ def main_page_admin():
                     print(f'\nData baru untuk "{df.iloc[baris_employee.index, 0:3].to_string(header=False,index=False)}" telah diubah!\n\nData saat ini :\n{tabulate.tabulate(df, headers="keys", tablefmt="github", showindex=False)}\n')  # IN-PROGRAM-NOTIFICATION DATA BERHASIL DIUBAH
                     input()
 
-                # FITUR 2.2.2 SELESAI - UI : COMMENT
+                # FITUR 2.2.2 
 
                 else:
                     input("kesalahan input, silahkan coba lagi")
 
-        # FITUR 2.2 SELESAI - UI :COMMENT : DESAIN
+    # FITUR 2.2
 
             else:    # DATA YANG HENDAK DIUBAH TIDAK ADA
                 input("PERHATIAN : Kesalahan input atau data tidak ada...\nTekan [enter] untuk kembali ke menu utama")    
@@ -519,7 +519,7 @@ def main_page_admin():
             input("Tekan [enter] untuk kembali ke menu utama")
             main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
 
-    # FITUR 2 SELESAI - UI : COMMENT : DESAIN
+    # FITUR 2
 
     elif menu_choice == '3':        # FITUR 3 EDIT DATA PRESENSI
         os.system('cls')
@@ -602,7 +602,7 @@ def main_page_admin():
         input("Tekan [enter] untuk kembali ke menu utama")  # back to main menu
         main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
 
-    # FITUR 3 SELESAI - UI : COMMENT : DESAIN
+    # FITUR 3
 
     elif menu_choice == '4':        # FITUR 4 LIHAT DATA
         menu_choice_4 = input("[1] Lihat Data Admin\n[2] Lihat Data Karyawan\n[3] Lihat Presensi Karyawan\n[enter] Kembali ke menu utama\n\nPilih menu : ")
@@ -633,7 +633,7 @@ def main_page_admin():
             input("\nTekan [enter] untuk kembali ke menu utama") 
             main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
 
-        # FITUR 4.1 SELESAI - UI : COMMENT: DESAIN
+        # FITUR 4.1
 
         elif menu_choice_4 == '2':    # FITUR 4.2 LIHAT DATA>LIHAT DATA KARYAWAN
             os.system('cls')
@@ -668,44 +668,103 @@ def main_page_admin():
             input("\nTekan [enter] untuk kembali ke menu utama")  # back to main menu
             main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
 
-        # FITUR 4.2 SELESAI - UI : COMMENT : DESAIN
+        elif menu_choice_4 == '2':    # FITUR 4.2 LIHAT DATA>LIHAT DATA KARYAWAN
+            os.system('cls')
+            print(f"++{'='*86}++\n|| {f'admin>menu utama>lihat data>lihat data karyawan>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*24}L I H A T   D A T A   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}\n\n\n\njadwal minggu ini\n")
+                
+            # MENAMPILKAN DATA
+            # DISPLAY TABEL
+            df = pd.DataFrame(data_employee, columns=kolom_employee)    # MEMASUKKAN LIST DATA BESAR KE PANDAS                df = df.sort_values(by="ID")  # Mengurutkan DataFrame berdasarkan ID
+
+            # Menampilkan DataFrame dengan format tabel
+            df['Shift 1'] = df["Shift 1"].str.replace('True', 'PAGI').replace('False', '-')
+            df['Shift 2'] = df["Shift 2"].str.replace('True', 'SIANG').replace('False', '-')
+            df['Shift 3'] = df["Shift 3"].str.replace('True', 'MALAM').replace('False', '-')
+            print(tabulate.tabulate(df, headers="keys", tablefmt="grid", showindex=False))  # Menampilkan tabel
+                
+            # FITUR SEARCH BERDASARKAN ID
+            search_ID = input("\nMasukkan ID yang hendak dicari: ")
+                
+            # Convert search_ID to the same data type as in the DataFrame
+            search_ID = str(search_ID)
+                
+            # Inisialisasi variabel untuk binary search
+            left, right = 0, len(df) - 1
+            hasil_pencarian = None
+                
+            # Algoritma Binary Search
+            while left <= right:
+                mid = (left + right) // 2
+                mid_id = df.iloc[mid]["ID"]
+                if mid_id == search_ID:
+                    hasil_pencarian = df.iloc[mid]
+                    break
+                elif mid_id < search_ID:
+                    left = mid + 1
+                else:
+                    right = mid - 1               
+                
+                # Output hasil pencarian
+            if hasil_pencarian is not None:
+                print("Data Karyawan Ditemukan:")
+                print(f"ID: {hasil_pencarian['ID']}")
+                print(f"Nama: {hasil_pencarian['Nama']}")
+                print(f"Posisi: {hasil_pencarian['Posisi']}")
+            else:
+                print("Karyawan dengan ID tersebut tidak ditemukan.")
+                
+            input("\nTekan [enter] untuk kembali ke menu utama")  # Kembali ke menu utama
+            main_page_admin()  # MENGEMBALIKAN KE MENU UTAMA ADMIN    
+
+        # FITUR 4.2 
 
         elif menu_choice_4 == '3':    # FITUR 4.3 LIHAT DATA>LIHAT PRESENSI KARYAWAN
             os.system('cls')
-            print(f"++{'='*86}++\n|| {f"admin>menu utama>lihat data>lihat presensi karyawan>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}L I H A T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n")  # UI LIHAT PRESENSI KARYAWAN
+            print(f"++{'='*86}++\n|| {f'admin>menu utama>lihat data>lihat presensi karyawan>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}L I H A T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}\n")
+
             # MENAMPILKAN DATA
-            df = pd.DataFrame(data_presensi, columns=kolom_presensi)    # memasukkan data list ke pandas
-            df = df.sort_values(by='Tanggal',ascending=True)            # SORTIR BERDASARKAN TANGGAL
-        
+            df = pd.DataFrame(data_presensi, columns=kolom_presensi)  # memasukkan data list ke pandas
+            df = df.sort_values(by='ID', ascending=True)  # Sortir berdasarkan ID
+
             # FITUR SEARCH BERDASARKAN ID
             search_ID = input("\nMasukkan ID yang hendak dicari : ")
-            # MEMBUKA KEMBALI DATABASE UNTUK SEARCHING
-            with open('presensi_database.csv', 'r') as presensi_file:
-                data_presensi = presensi_file.readlines()
-            df = pd.DataFrame([entry.strip().split(',') for entry in data_presensi],columns=kolom_presensi)
-            # HASIL SEARCH
-            if search_ID in df['ID'].values:    # SEARCHING ADA DI DATABASE
 
+            # Implementasi Pencarian Biner
+            left, right = 0, len(df) - 1
+            index = -1
+            while left <= right:
+                mid = (left + right) // 2
+                mid_id = df.iloc[mid]['ID']
+                if mid_id == search_ID:
+                    index = mid
+                    break
+                elif mid_id < search_ID:
+                    left = mid + 1
+                else:
+                    right = mid - 1
+
+            if index != -1:  # SEARCHING ADA DI DATABASE
                 menu_presensi_karyawan = input("\n[1] Lihat Data Presensi\n[2] Lihat Rekapitulasi Presensi\nMasukan opsi : ")
-
-                # FITUR 4.3.1 LIHAT DATA>LIHAT PRESENSI KARYAWAN
+                
                 if menu_presensi_karyawan == '1':
-                    print(f"|| {f"admin>menu utama>lihat data>lihat presensi karyawan>cari ID>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}L I H A T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n") # UI LIHAT PRESENSI KARYAWAN DENGAN ID YANG DIINGINKAN
-                    filtered_df = df.loc[df['ID'].str.contains(search_ID)]  # deklarasi data hasil filter
-                    print(f'\nHasil Pencarian untuk ID "{search_ID}"\n')    # memunculkan data di terminal
+                    os.system('cls')
+                    print(f"++{'='*86}++\n|| {f'admin>menu utama>lihat data>lihat presensi karyawan>cari ID>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}L I H A T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}\n\n")
+
+                    filtered_df = df.iloc[[index]]  # deklarasi data hasil filter
+                    print(f'\nHasil Pencarian untuk ID "{search_ID}"\n')
                     print(tabulate.tabulate(filtered_df, headers='keys', tablefmt='github', showindex=False))
 
-                    #SEARCHING LAGI DENGAN TANGGAL
+                    # SEARCHING LAGI DENGAN TANGGAL
                     search_date = input("\nMasukkan Tanggal yang hendak dicari [yyyy-mm-dd] : ")
 
-                    if search_date in df['Tanggal'].values:     # SEARCHING ADA DI DATABASE
+                    if search_date in filtered_df['Tanggal'].values:  # SEARCHING ADA DI DATABASE
                         os.system('cls')
-                        print(f"++{'='*86}++\n|| {f"admin>menu utama>lihat data>lihat presensi karyawan>cari ID>cari tanggal>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}L I H A T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n")    # UI LIHAT PRESENSI KARYAWAN DENGAN ID DAN TANGGAL YANG DIINGINKAN
-                        filtered_df = df.loc[df['ID'].str.contains(search_ID)]                  # deklarasi data hasil filter
-                        filtered_df = filtered_df.loc[df['Tanggal'].str.contains(search_date)]  # data hasil filtrasi ID dan tanggal
-                        print(f'\nHasil Pencarian untuk tanggal "{search_date}"\n')             # IN-PROGRAM-NOTIFICATION DATA YANG DICARI ADA DI DATABASE
-                        print(tabulate.tabulate(filtered_df, headers='keys', tablefmt='github', showindex=False))   # memunculkan data di terminal
-                    else:   # HASIL SEARCHING DENGAN TANGGAL TIDAK DITEMUKAN
+                        print(f"++{'='*86}++\n|| {f'admin>menu utama>lihat data>lihat presensi karyawan>cari ID>cari tanggal>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}L I H A T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}\n\n")
+
+                        filtered_df = filtered_df.loc[filtered_df['Tanggal'].str.contains(search_date)]
+                        print(f'\nHasil Pencarian untuk tanggal "{search_date}"\n')
+                        print(tabulate.tabulate(filtered_df, headers='keys', tablefmt='github', showindex=False))
+                    else:  # HASIL SEARCHING DENGAN TANGGAL TIDAK DITEMUKAN
                         print("\nData yang anda cari tidak ada...")
 
                 # FITUR 4.3.2 LIHAT DATA>LIHAT REKAPITULASI PRESENSI KARYAWAN
@@ -798,7 +857,7 @@ def main_page_admin():
             input("\nTekan [enter] untuk kembali ke menu utama")
             main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
 
-        # FITUR 4.3 SELESAI - UI : COMMENT : DESAIN
+        # FITUR 4.3
 
         else:   # BILA INPUTAN PILIHAN SALAH
             main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
@@ -844,7 +903,7 @@ def main_page_admin():
                 input("\nData tidak ada ... Tekan [enter] untuk kembali ke menu utama")
                 main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
 
-        # FITUR 5.1 SELESAI - UI : COMMENT : DESAIN
+        # FITUR 5.1
 
         elif menu_choice_5 == '2':    # FITUR 5.2 HAPUS DATA>HAPUS DATA KARYAWAN
 
@@ -883,7 +942,7 @@ def main_page_admin():
                 input("\nData tidak ada ... Tekan [enter] untuk kembali ke menu utama")
                 main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
 
-        # FITUR 5.2 SELESAI - UI : COMMENT : DESAIN
+        # FITUR 5.2 
 
         elif menu_choice_5 == '3':    # FITUR 5.3 HAPUS PRESENSI KARYAWAN
             os.system('cls')
@@ -921,14 +980,97 @@ def main_page_admin():
             input("\nTekan [enter] untuk kembali ke Main Menu")
             main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
         
-        # FITUR 5.3 SELESAI - UI : COMMENT : DESAIN
+        # FITUR 5.3
 
         else:
             main_page_admin()
 
-    # FITUR 5 SELESAI - UI : COMMENT : DESAIN
+    # FITUR 5
 
-    elif menu_choice == '6':    # kembali ke launch page
+    elif menu_choice == '6':        # FITUR 6 KARYAWAN TERBAIK ATAU TERBURUK
+        os.system('cls')
+        print(f"++{'='*86}++\n|| {f'admin>menu utama>lihat data>lihat presensi karyawan>urutkan karyawan>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}L I H A T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}\n")
+
+        # opsi pemilihan waktu
+        ulangAdmin4 = True
+        while ulangAdmin4:
+            rekap_choice = input("\nPilih jenis rekapitulasi\n[1] Minggu Ini\n[2] Bulan Ini\n[3] Tahun Ini\n[4] Minggu Lalu\n[5] Bulan Lalu\n[6] Kembali ke menu utama\n\nMasukkan pilihan : ")
+
+            now = datetime.datetime.now()
+
+            if rekap_choice in ['1', '2', '3']:  # minggu ini, bulan ini, tahun ini
+                if rekap_choice == '1':  # minggu ini
+                    rekap_choice_word = "minggu ini"
+                    start_date = (now - datetime.timedelta(days=now.weekday())).strftime('%Y-%m-%d')
+                    end_date = (now + datetime.timedelta(days=(6 - now.weekday()))).strftime('%Y-%m-%d')
+                elif rekap_choice == '2':  # bulan ini
+                    rekap_choice_word = "bulan ini"
+                    start_date = f'{now.year}-{now.month:02d}-01'
+                    last_day = calendar.monthrange(now.year, now.month)[1]
+                    end_date = f'{now.year}-{now.month:02d}-{last_day}'
+                else:  # tahun ini
+                    rekap_choice_word = "tahun ini"
+                    start_date = f'{now.year}-01-01'
+                    end_date = f'{now.year}-12-31'
+                ulangAdmin4 = False
+            elif rekap_choice == '4':  # minggu lalu
+                rekap_choice_word = "minggu lalu"
+                start_date = (now - datetime.timedelta(days=now.weekday() + 7)).strftime('%Y-%m-%d')
+                end_date = (now - datetime.timedelta(days=now.weekday() + 1)).strftime('%Y-%m-%d')
+                ulangAdmin4 = False
+            elif rekap_choice == '5':  # bulan lalu
+                rekap_choice_word = "bulan lalu"
+                last_month = now.month - 1 if now.month > 1 else 12
+                last_month_year = now.year if now.month > 1 else now.year - 1
+                last_month_last_day = calendar.monthrange(last_month_year, last_month)[1]
+                start_date = f'{last_month_year}-{last_month:02d}-01'
+                end_date = f'{last_month_year}-{last_month:02d}-{last_month_last_day}'
+                ulangAdmin4 = False
+            elif rekap_choice == '6':  # Back to main menu
+                input("\nTekan [enter] untuk kembali ke menu utama")
+                main_page_admin()
+            else:
+                input('Pilihan yang anda berikan tidak ada!\nCoba lagi')  # Invalid input, try again
+                ulangAdmin4 = True
+
+        # Convert data_presensi to DataFrame
+        df = pd.DataFrame(data_presensi, columns=kolom_presensi)
+
+        # Filter DataFrame based on selected date range
+        filtered_df = df.loc[(df['Tanggal'] >= start_date) & (df['Tanggal'] <= end_date)]
+
+        # Calculate attendance statistics for each employee
+        def hitung_kehadiran(kehadiran_series):
+            kehadiran_upper = kehadiran_series.str.upper()
+            jumlah_hadir = (kehadiran_upper == 'HADIR').sum()
+            jumlah_terlambat = (kehadiran_upper == 'TERLAMBAT').sum()
+            return jumlah_hadir + jumlah_terlambat
+        attendance_summary = filtered_df.groupby(['ID', 'Nama'])['Kehadiran'].apply(hitung_kehadiran).reset_index()
+        attendance_summary.columns = ['ID', 'Nama', 'Total Kehadiran']
+
+        # Ask for sorting order
+        sort_order = input("\nPilih urutan\n[1] Dari terbaik ke terburuk\n[2] Dari terburuk ke terbaik\nMasukkan pilihan : ")
+
+        # divide an conquer
+        if sort_order == '1':
+            sorted_df = attendance_summary.sort_values(by='Total Kehadiran', ascending=False)
+        elif sort_order == '2':
+            sorted_df = attendance_summary.sort_values(by='Total Kehadiran', ascending=True)
+        else:
+            print("\nPilihan yang anda berikan tidak ada!")
+            input("\nTekan [enter] untuk kembali ke menu utama")
+            main_page_admin()
+
+        # Display sorted employees
+        os.system('cls')
+        print(f"++{'='*86}++\n|| {f'admin>menu utama>lihat data>lihat presensi karyawan>urutkan karyawan>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}L I H A T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}\n\n")
+        print(f'\nKaryawan dengan total kehadiran dari {"terbaik ke terburuk" if sort_order == "1" else "terburuk ke terbaik"} untuk periode "{rekap_choice_word}"\n')
+        print(tabulate.tabulate(sorted_df, headers='keys', tablefmt='github', showindex=False))
+
+        input("\nTekan [enter] untuk kembali ke menu utama")
+        main_page_admin()
+
+    elif menu_choice == '7':    # kembali ke launch page
         launchPage()
 
     # FITUR 6 SELESAI - UI : COMMENT : DESAIN
@@ -946,7 +1088,7 @@ def main_page_admin():
         main_page_admin()    # salah input, kembali ke menu utama admin
     os.system('cls')
 
-# FITUR ADMIN SELESAI - UI : COMMENT : DESAIN
+# FITUR ADMIN
       
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -990,7 +1132,7 @@ def main_page_employee():   # FITUR KARYAWAN
                 global tujuan   # index orang yang dituju saat menggunakan semua menu karyawan
                 tujuan = x
                 print(f'Selamat Datang, karyawan "{data_employee[x][1]}"! Apa yang ingin anda lakukan saat ini?\n') # selamat datang karyawan
-    print('\nMenu:\n[1] PRESENSI SEKARANG!\n[2] Lihat Jadwal Shift\n[3] Lihat Rekapitulasi Presensi\n[4] Lihat Data Presensi Anda\n[5] Informasi Mengenai Program\n[6] Keluar') # pilihan menu karyawan
+    print('\nMenu:\n[1] PRESENSI SEKARANG!\n[2] Lihat Jadwal Shift\n[3] Lihat Rekapitulasi Presensi\n[4] Lihat Data Presensi Anda\n[5] Ajukan Lembur\n[6] Informasi Mengenai Program\n[7] Keluar') # pilihan menu karyawan
     menu_choice = input("Pilih menu : ")
     print()
 
@@ -1045,7 +1187,7 @@ def main_page_employee():   # FITUR KARYAWAN
                     input("\nPERHATIAN : Bukan jadwal presensi shift anda! Tekan [enter] untuk melanjutkan")   # KEMBALI PILIH SHIFT PRESENSI
                     repeat_menu_choice_1 = True
 
-            # FITUR 1.1 SELESAI - UI : COMMENT : DESAIN
+            # FITUR 1.1
 
             elif menu_choice_1 == '2':          # FITUR 1.2 PRESENSI SEKARANG>SHIFT SIANG
                 if data_employee[tujuan][4] == 'True':  # KARYAWAN YANG HENDAK PRESENSI BENAR MERUPAKAN KARYAWAN SHIFT SIANG
@@ -1088,7 +1230,7 @@ def main_page_employee():   # FITUR KARYAWAN
                     input("\nPERHATIAN : Bukan jadwal presensi shift anda! Tekan [enter] untuk melanjutkan")   # KEMBALI PILIH SHIFT PRESENSI
                     repeat_menu_choice_1 = True
 
-            # FITUR 1.2 SELESAI - UI : COMMENT : DESAIN
+            # FITUR 1.2
 
             elif menu_choice_1 == '3':          # FITUR 1.3 PRESENSI SEKARANG>SHIFT MALAM
                 if data_employee[tujuan][5] == 'True':  # KARYAWAN YANG HENDAK PRESENSI BENAR MERUPAKAN KARYAWAN SHIFT MALAM
@@ -1131,50 +1273,57 @@ def main_page_employee():   # FITUR KARYAWAN
                     input("\nPERHATIAN : Bukan jadwal presensi anda! Tekan [enter] untuk melanjutkan")   # KEMBALI PILIH SHIFT PRESENSI
                     repeat_menu_choice_1 = True
             
-            # FITUR 1.3 SELESAI - UI : COMMENT : DESAIN
+            # FITUR 1.3 
 
             elif menu_choice_1 == '4':          # FITUR 1.4 PRESENSI SEKARANG>KEMBALI KE MENU UTAMA
                 repeat_menu_choice_1 = False
             
-            # FITUR 1.4 SELESAI - UI : COMMENT : DESAIN
+            # FITUR 1.4
 
             else:                               # SALAH INPUT, COBA LAGI
                 repeat_menu_choice_1 = True
 
         main_page_employee()
-    # FITUR 1 SELESAI - UI : COMMENT : DESAIN
+
+    # FITUR 1
 
     elif menu_choice == '2':  # FITUR 2 LIHAT JADWAL SHIFT ANDA
         os.system('cls')  # Membersihkan layar konsol
-        print(f"++{'='*86}++\n|| karyawan>menu utama>lihat jadwal shift>{' '*46}||\n++{'-'*86}++\n||{' '*86}||\n||{' '*21}L I H A T   J A D W A L   S H I F T   A N D A{' '*20}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n")    # UI LIHAT JADWAL SHIFT
+        print(f"++{'='*86}++\n|| karyawan>menu utama>lihat jadwal shift>{' '*46}||\n++{'-'*86}++\n||{' '*86}||\n||{' '*21}L I H A T   J A D W A L   S H I F T   A N D A{' '*20}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('%A, %d %B %Y | %H:%M:%S')}\n")    # UI LIHAT JADWAL SHIFT
         print("Shift anda minggu ini:\n")
 
         # MEMASUKKAN DATA KE PANDAS
-        df = pd.DataFrame(data_employee,columns=kolom_employee)
+        df = pd.DataFrame(data_employee, columns=kolom_employee)
         # Filter DataFrame berdasarkan ID yang sudah login
         filtered_df = df.loc[df['ID'] == launch_ID]
-        if filtered_df.loc[tujuan, 'Shift 1'] == 'True': # SHIFT PAGI
-            print('"PAGI"\n04:00:00 - 10:00:00')
-            if filtered_df.loc[tujuan, 'Shift 2'] == 'True': # SHIFT SIANG
-                print('"SIANG"\n10:00:00 - 16:00:00')
-                if filtered_df.loc[tujuan, 'Shift 3'] == 'True': # SHIFT SIANG
-                    print('"MALAM"\n16:00:00 - 22:00:00')
-            statShift = False   # BUKAN TIDAK SHIFT PAGI
-        elif filtered_df.loc[tujuan, 'Shift 2'] == 'True':   # SHIFT SIANG
-            print('"SIANG"\n10:00:00 - 16:00:00')
-            if filtered_df.loc[tujuan, 'Shift 3'] == 'True': # SHIFT MALAM
-                print('"MALAM"16:00:00 - 22:00:00')
-            statShift = False   # BUKAN TIDAK SHIFT SIANG
-        elif filtered_df.loc[tujuan, 'Shift 3'] == 'True':   # SHIFT MALAM
-            print('"MALAM"\n16:00:00 - 22:00:00')
-            statShift = False   # BUKAN TIDAK SHIFT MALAM
 
-        if statShift == True:   # BUKAN SHIFT PAGI/SIANG/MALAM
+        # Daftar shift
+        shifts = [
+            ("Shift 1", '"PAGI"\n04:00:00 - 10:00:00'),
+            ("Shift 2", '"SIANG"\n10:00:00 - 16:00:00'),
+            ("Shift 3", '"MALAM"\n16:00:00 - 22:00:00')
+        ]
+
+        left, right = 0, len(shifts) - 1
+        statShift = True  # Asumsi awal tidak ada shift
+
+        while left <= right:
+            mid = (left + right) // 2
+            shift_key, shift_text = shifts[mid]
+            if filtered_df.loc[tujuan, shift_key] == 'True':
+                print(shift_text)
+                statShift = False
+                left = mid + 1  # Lanjutkan pencarian untuk shift berikutnya
+            else:
+                right = mid - 1  # Shift tidak ditemukan, kurangi jangkauan pencarian
+
+        if statShift:
             print('"TIDAK ADA"')
-        input("\n\nTekan [enter] untuk kembali ke Main Menu")
-        main_page_employee()    # MENGEMBALIKAN KE MENU UTAMA
 
-    # FITUR 2 SELESAI- UI : COMMENT : DESAIN
+        input("\n\nTekan [enter] untuk kembali ke Main Menu")
+        main_page_employee()  # MENGEMBALIKAN KE MENU UTAMA
+    
+    # FITUR 2
 
     elif menu_choice == '3':  # FITUR 3 REKAPITULASI PRESENSI
         ulangEmployee3 = True   # LOOPING UNTUK MENU REKAPITULASI PRESENSI
@@ -1266,7 +1415,7 @@ def main_page_employee():   # FITUR KARYAWAN
         input("\n\n\nTekan [enter] untuk kembali ke Main Menu")
         main_page_employee()    # MENGEMBALIKAN KE MENU UTAMA
 
-    # FITUR 3 SELESAI - UI : COMMENT : DESAIN
+    # FITUR 3
 
     elif menu_choice == '4':  # FITUR 4 LIHAT DATA PRESENSI ANDA
 
@@ -1329,27 +1478,167 @@ def main_page_employee():   # FITUR KARYAWAN
         input("\nTekan [enter] untuk kembali ke Main Menu")
         main_page_employee()    # MENGEMBALIKAN KE MENU UTAMA
     
-    # FITUR 4 SELESAI - UI : COMMENT : DESAIN
+    # FITUR 4
 
-    elif menu_choice == '5':  # FITUR 5 EULA
+    elif menu_choice == '5':  # FITUR 5 Pangajuan Lembur
+        os.system('cls')
+        def baca_data_karyawan():
+            data_karyawan = []
+            try:
+                with open("employee_account_database.csv", "r", newline="") as csvfile:
+                    reader = csv.DictReader(csvfile, fieldnames=["ID", "Nama", "Posisi", "ShiftPagi", "ShiftSiang", "ShiftMalam", "Password"])
+                    for row in reader:
+                        data_karyawan.append({
+                            "ID": row["ID"],
+                            "Nama": row["Nama"],
+                            "Posisi": row["Posisi"],
+                            "Shift": {
+                                "Pagi": row["ShiftPagi"] == "True",
+                                "Siang": row["ShiftSiang"] == "True",
+                                "Malam": row["ShiftMalam"] == "True"
+                            },
+                            "Password": row["Password"]
+                        })
+            except KeyError as e:
+                print(f"Error: Kolom {e} tidak ditemukan di file CSV.")
+            return data_karyawan
+
+        def hitung_jam_lembur(jam_pulang_lembur, jam_pulang):
+            jam_pulang_lembur_h, jam_pulang_lembur_m = map(int, jam_pulang_lembur.split(':'))
+            jam_pulang_h, jam_pulang_m = map(int, jam_pulang.split(':'))
+
+            total_menit_pulang_lembur = jam_pulang_lembur_h * 60 + jam_pulang_lembur_m
+            total_menit_pulang = jam_pulang_h * 60 + jam_pulang_m
+
+            if total_menit_pulang_lembur > total_menit_pulang:
+                total_menit_lembur = total_menit_pulang_lembur - total_menit_pulang
+                return total_menit_lembur // 60
+            else:
+                return 0
+
+        def baca_data_lembur():
+            data_lembur = []
+            try:
+                with open("data_lembur.csv", "r", newline="") as csvfile:
+                    reader = csv.DictReader(csvfile, fieldnames=["ID", "Jam Lembur"])
+                    next(reader) 
+                    for row in reader:
+                        data_lembur.append({
+                            "ID": row["ID"],
+                            "Jam Lembur": int(row["Jam Lembur"]) 
+                        })
+            except FileNotFoundError:
+                print("File data_lembur.csv tidak ditemukan, memulai dengan data lembur kosong.")
+            return data_lembur
+
+        def catat_lembur(jam_pulang_lembur):
+            global data_lembur
+            data_karyawan = baca_data_karyawan()
+            for data in data_karyawan:
+                if data["ID"] == launch_ID:
+                    if data["Shift"]["Pagi"]:
+                        jam_selesai_shift = "09:59"
+                    elif data["Shift"]["Siang"]:
+                        jam_selesai_shift = "15:59"
+                    elif data["Shift"]["Malam"]:
+                        jam_selesai_shift = "21:59"
+                    else:
+                        print("Error: Tidak ada shift yang dipilih.")
+                        return
+
+                    jam_lembur = 0
+                    if jam_pulang_lembur > jam_selesai_shift:
+                        jam_lembur = hitung_jam_lembur(jam_pulang_lembur, jam_selesai_shift)
+
+                    data_lembur.append({"ID": launch_ID, "Jam Lembur": jam_lembur})
+                    print(f"Lembur untuk ID '{launch_ID}' berhasil dicatat.")
+                    return
+            print(f"Error: Employee dengan ID '{launch_ID}' tidak ditemukan.")
+
+        def buat_csv_lembur():
+            with open("data_lembur.csv", "w", newline="") as csvfile:
+                fieldnames = ["ID", "Jam Lembur"]
+                writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+                writer.writeheader()
+                for data in data_lembur:
+                    writer.writerow(data)
+            print("Data lembur telah disimpan ke file data_lembur.csv")
+
+        def lihat_data_lembur():
+            global data_lembur
+            ditemukan = False
+            for data in data_lembur:
+                if data["ID"] == launch_ID:
+                    print(f"ID: {data['ID']}, Jam Lembur: {data['Jam Lembur']} jam")
+                    ditemukan = True
+            if not ditemukan:
+                print(f"Data lembur untuk ID '{launch_ID}' tidak ditemukan.")
+
+        def hapus_lembur():
+            global data_lembur
+            if not data_lembur:
+                print("Tidak ada data lembur untuk dihapus.")
+                return
+
+            print("Data Lembur:")
+            for idx, data in enumerate(data_lembur):
+                print(f"{idx + 1}. ID: {data['ID']}, Jam Lembur: {data['Jam Lembur']} jam")
+
+            pilihan_hapus = int(input("Pilih nomor lembur yang ingin dihapus: ")) - 1
+            if 0 <= pilihan_hapus < len(data_lembur):
+                data_lembur.pop(pilihan_hapus)
+                print("Data lembur berhasil dihapus.")
+            else:
+                print("Pilihan tidak valid.")
+
+        def menu():
+            global data_lembur
+            data_lembur = baca_data_lembur()
+            while True:
+                print("\nMenu:")
+                print("1. Ajukan Lembur")
+                print("2. Lihat Data Lembur Diri Sendiri")
+                print("3. Hapus Lembur")
+                print("4. Keluar")
+                
+                pilihan = input("Pilih opsi: ")
+                
+                if pilihan == "1":
+                    jam_pulang_lembur = input("Masukkan jam pulang lembur (HH:MM): ")
+                    catat_lembur(jam_pulang_lembur)
+                    
+                elif pilihan == "2":
+                    lihat_data_lembur()
+            
+                elif pilihan == "3":
+                    hapus_lembur()
+                
+                elif pilihan == "4":
+                    buat_csv_lembur()
+                    main_page_employee()
+                
+                else:
+                    print("Pilihan tidak valid, silakan coba lagi.")
+        menu()
+
+    elif menu_choice == '6':  # FITUR 6 EULA
         os.system('cls')
         print(eula_text)
         input("\nTekan [enter] untuk kembali ke menu utama")
         main_page_employee()    # MENGEMBALIKAN KE MENU UTAMA
 
-    # FITUR 5 SELESAI - UI : COMMENT : DESAIN
+    # FITUR 6 SELESAI - UI : COMMENT : DESAIN
 
-    elif menu_choice == '6':  # FITUR 6 KELUAR
+    elif menu_choice == '7':  # FITUR 7 KELUAR
         launch_page_condition = True
         launchPage()    # KEMBALI KE LAUNCH PAGE
 
-    # FITUR 6 SELESAI - UI : COMMENT : DESAIN
+    # FITUR 7 SELESAI - UI : COMMENT : DESAIN
 
     else:       # BILA SALAH INPUT
         main_page_employee()
-    os.system('cls')
 
-# FITUR KARYAWAN SELESAI - UI : COMMENT : DESAIN
+# FITUR KARYAWAN 
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -1376,11 +1665,10 @@ def akun_pertama():
         #buat file dahulu sebelum mengakses fungsi tambah supaya bisa menambahkan header dulu
 
         # data admin pertama
-        first_account_ID     = str(input("Anda adalah admin pertama. Masukkan ID anda : "))
-        first_account_nama   = str(input("Masukkan Nama anda : "))
-        first_account_posisi = str(input("Masukkan Posisi anda : "))
-        first_account_bidang = str(input("Masukkan bidang divisi anda : "))
-        first_Account_pass   = str(input("Masukkan passkey anda : "))
+        first_account_ID     = str(input("Anda adalah admin pertama! \nMasukkan ID anda           : "))
+        first_account_nama   = str(input("Masukkan Nama Lengkap anda : "))
+        first_account_posisi = str(input("Masukkan Jabatan anda      : "))
+        first_Account_pass   = str(input("Masukkan passkey anda      : "))
 
         # memasukkan admin pertama 
         first_input = f"{first_account_ID.upper()},{first_account_nama.upper()},{first_account_posisi.upper()},{first_account_bidang.upper()},{first_Account_pass}"
@@ -1534,7 +1822,7 @@ logoPart7 = (r"        | |                               ")
 logoPart8 = (r"        |_|                               ")
 
 logo = f'{logoPart1}\n{logoPart2}\n{logoPart3}\n{logoPart4}\n{logoPart5}\n{logoPart6}\n{logoPart7}\n{logoPart8}'
-logoLaunch = f'++{'='*50}++\n||{' '*50}||\n||{' '*4}{logoPart1}{' '*4}||\n||{' '*4}{logoPart2}{' '*4}||\n||{' '*4}{logoPart3}{' '*4}||\n||{' '*4}{logoPart4}{' '*4}||\n||{' '*4}{logoPart5}{' '*4}||\n||{' '*4}{logoPart6}{' '*4}||\n||{' '*4}{logoPart7}{' '*4}||\n||{' '*4}{logoPart8}{' '*4}||\n||{' '*50}||\n||{' '*4}UpSence : Aplikasi Presensi Berbasis Python{' '*3}||\n||{' '*50}||\n||{' '*13}by ©Kelompok 2 TA Algo1{' '*14}||\n++{'='*50}++'
+logoLaunch = f'++{'='*50}++\n||{' '*50}||\n||{' '*4}{logoPart1}{' '*4}||\n||{' '*4}{logoPart2}{' '*4}||\n||{' '*4}{logoPart3}{' '*4}||\n||{' '*4}{logoPart4}{' '*4}||\n||{' '*4}{logoPart5}{' '*4}||\n||{' '*4}{logoPart6}{' '*4}||\n||{' '*4}{logoPart7}{' '*4}||\n||{' '*4}{logoPart8}{' '*4}||\n||{' '*50}||\n||{' '*4}UpSence : Aplikasi Presensi Berbasis Python{' '*3}||\n||{' '*50}||\n||{' '*13}by ©Kelompok 2 TA Algo2{' '*14}||\n++{'='*50}++'
 logoBorder = f'++{'='*86}++\n||{' '*22}{logoPart1}{' '*22}||\n||{' '*22}{logoPart2}{' '*22}||\n||{' '*22}{logoPart3}{' '*22}||\n||{' '*22}{logoPart4}{' '*22}||\n||{' '*22}{logoPart5}{' '*22}||\n||{' '*22}{logoPart6}{' '*22}||\n||{' '*22}{logoPart7}{' '*22}||\n||{' '*22}{logoPart8}{' '*22}||\n||{' '*86}||\n||{' '*27}Aplikasi Presensi Berbasis Python{' '*26}||\n++{'='*86}++'
 
 launchInterface = f"+{'='*88}+\n|{' '*88}|\n|{' '*20}SELAMAT DATANG DI LAUNCH PAGE APLIKASI PRESENSI{' '*21}|\n|{' '*88}|\n+{'='*88}+\n"
