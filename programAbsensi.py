@@ -1671,7 +1671,7 @@ def akun_pertama():
         first_Account_pass   = str(input("Masukkan passkey anda      : "))
 
         # memasukkan admin pertama 
-        first_input = f"{first_account_ID.upper()},{first_account_nama.upper()},{first_account_posisi.upper()},TRUE,TRUE,TRUE,TRUE,TRUE,FALSE,FALSE{first_Account_pass}"
+        first_input = f"{first_account_ID.upper()},{first_account_nama.upper()},{first_account_posisi.upper()},True,True,True,True,True,False,False,{first_Account_pass}"
 
         with open('admin_account_database.csv', 'w', newline='') as fileAdmincsv:
             admin_list = csv.DictWriter(fileAdmincsv, fieldnames=[first_input],  delimiter='/') 
