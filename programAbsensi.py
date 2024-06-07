@@ -9,6 +9,7 @@ import datetime                         # import time and date
 from datetimerange import DateTimeRange # import range waktu
 from datetime import timedelta          # melakukan operasi matematika pada objek datetime
 import calendar                         # import kalender untuk melakukan operasi kalender
+import matplotlib.pyplot as plt         # import matlib agar bisa menampilkan diagram
 
 # HALAMAN LOGIN DAN LAUNCH PAGE ------------------------------------------------------------------------------------------------------------------------------
 def launchPage():
@@ -938,10 +939,9 @@ def main_page_admin():
             main_page_admin()
 
     # FITUR 6 SELESAI
-
     elif menu_choice == '7':        # FITUR 7 KARYAWAN TERBAIK ATAU TERBURUK
         os.system('cls')
-        print(f"++{'='*86}++\n|| {f'admin>menu utama>lihat data>lihat presensi karyawan>urutkan karyawan>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}L I H A T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}\n")
+        print(f"++{'='*86}++\n|| {f'admin>menu utama>lihat data>lihat presensi karyawan>urutkan karyawan>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}L I H A T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('%A, %d %B %Y | %H:%M:%S')}\n")
 
         # opsi pemilihan waktu
         ulangAdmin4 = True
@@ -1000,29 +1000,60 @@ def main_page_admin():
         attendance_summary = filtered_df.groupby(['ID', 'Nama'])['Kehadiran'].apply(hitung_kehadiran).reset_index()
         attendance_summary.columns = ['ID', 'Nama', 'Total Kehadiran']
 
+        # Convert DataFrame to list of dictionaries for sorting
+        attendance_list = attendance_summary.to_dict('records')
+
         # Ask for sorting order
         sort_order = input("\nPilih urutan\n[1] Dari terbaik ke terburuk\n[2] Dari terburuk ke terbaik\nMasukkan pilihan : ")
 
+        def merge_sort(arr, key):
+            if len(arr) <= 1:
+                return arr
+            mid = len(arr) // 2
+            left_half = merge_sort(arr[:mid], key)
+            right_half = merge_sort(arr[mid:], key)
+            return merge(left_half, right_half, key)
+
+        def merge(left, right, key):
+            sorted_arr = []
+            while left and right:
+                if left[0][key] < right[0][key]:
+                    sorted_arr.append(left.pop(0))
+                else:
+                    sorted_arr.append(right.pop(0))
+            sorted_arr.extend(left if left else right)
+            return sorted_arr
+        
         # divide an conquer
         if sort_order == '1':
-            sorted_df = attendance_summary.sort_values(by='Total Kehadiran', ascending=False)
+            sorted_list = merge_sort(attendance_list, 'Total Kehadiran')[::-1]  # best to worst
         elif sort_order == '2':
-            sorted_df = attendance_summary.sort_values(by='Total Kehadiran', ascending=True)
+            sorted_list = merge_sort(attendance_list, 'Total Kehadiran')  # worst to best
         else:
             print("\nPilihan yang anda berikan tidak ada!")
             input("\nTekan [enter] untuk kembali ke menu utama")
             main_page_admin()
 
-        # Display sorted employees
-        os.system('cls')
-        print(f"++{'='*86}++\n|| {f'admin>menu utama>lihat data>lihat presensi karyawan>urutkan karyawan>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}L I H A T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}\n\n")
-        print(f'\nKaryawan dengan total kehadiran dari {"terbaik ke terburuk" if sort_order == "1" else "terburuk ke terbaik"} untuk periode "{rekap_choice_word}"\n')
-        print(tabulate.tabulate(sorted_df, headers='keys', tablefmt='github', showindex=False))
+        # Convert back to DataFrame
+        sorted_df = pd.DataFrame(sorted_list)
+
+        # Plot the data
+        plt.figure(figsize=(10, 6))
+        plt.bar(sorted_df['Nama'], sorted_df['Total Kehadiran'], color='blue')
+        plt.xlabel('Nama Karyawan')
+        plt.ylabel('Total Kehadiran')
+        plt.title(f'Total Kehadiran Karyawan dari {"terbaik ke terburuk" if sort_order == "1" else "terburuk ke terbaik"} untuk periode "{rekap_choice_word}"')
+        plt.xticks(rotation=45, ha='right')
+        plt.tight_layout()
+
+        # Save the plot as an image
+        plt.savefig('attendance_summary_chart.png')
+
+        # Display the plot
+        plt.show()
 
         input("\nTekan [enter] untuk kembali ke menu utama")
-        main_page_admin()
-
-    # FITUR 7
+        main_page_admin()    # FITUR 7
 
     elif menu_choice == '8':        # FTUR 8 LEMBUR
         def baca_data_karyawan():
@@ -1236,88 +1267,136 @@ def main_page_admin():
     # FITUR 8 SELESAI
 
     elif menu_choice == '9':        # FITUR 9 PENGGAJIAN
-        os.system('cls')
-        print(f"++{'='*86}++\n|| {f'admin>menu utama>penggajian':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}P E N G G A J I A N  K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}\n")
-        #Membaca file csv dari ketiga csv
-        employee_df = pd.read_csv('employee_account_database.csv')
-        lembur_df = pd.read_csv('perintah_lembur.csv')
-        presensi_df = pd.read_csv('presensi_database.csv')
+        def penggajian():
+            os.system('cls')
+            print(f"++{'='*86}++\n|| {f'admin>menu utama>penggajian':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}P E N G G A J I A N  K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('%A, %d %B %Y | %H:%M:%S')}\n")
 
-        # Set ongkos lembur per jam dan potongan per jam keterlambatan dan per hari ketidakhadiran
-        ongkos_lembur_per_jam = 50000
-        potongan_per_jam_telat = 10000
-        potongan_per_hari_absen = 100000
 
-        # Daftar posisi karyawan
-        posisi_karyawan = [
-            'Sekretaris', 'Akuntan', 'Sales Representative', 'Tax', 'CS', 'Admin',
-            'HR', 'Digital Marketing', 'Designer', 'PM', 'Developer', 'Data Analyst'
-        ]
+            # Membaca file csv dari ketiga csv
+            try:
+                employee_df = pd.read_csv('employee_account_database.csv', names=kolom_employee)
+                lembur_df = pd.read_csv('perintah_lembur.csv')
+                presensi_df = pd.read_csv('presensi_database.csv')
+            except FileNotFoundError as e:
+                print(f"Error: {e}")
+                return
+           
+            # Set ongkos lembur per jam dan potongan per jam keterlambatan dan per hari ketidakhadiran
+            ongkos_lembur_per_jam = 50000
+            potongan_per_jam_telat = 10000
+            potongan_per_hari_absen = 100000
 
-        # Menampilkan menu pilihan posisi
-        print("Pilih posisi karyawan:")
-        for i, posisi in enumerate(posisi_karyawan, 1):
-            print(f"{i}. {posisi}")
 
-        # Meminta input dari pengguna
-        pilihan = int(input("Masukkan nomor posisi yang dipilih: "))
-        posisi_terpilih = posisi_karyawan[pilihan - 1]
-        print(f"Posisi yang dipilih: {posisi_terpilih}")
+            # Daftar posisi karyawan
+            posisi_karyawan = [
+                'Sekretaris', 'Akuntan', 'Sales Representative', 'Tax', 'CS', 'Admin',
+                'HR', 'Digital Marketing', 'Designer', 'PM', 'Developer', 'Data Analyst'
+            ]
 
-        # Filter karyawan berdasarkan posisi yang dipilih
-        karyawan_terpilih = employee_df[employee_df['Posisi'] == posisi_terpilih]
 
-        # Tentukan gaji pokok berdasarkan posisi karyawan
-        gaji_pokok_map = {
-            'Sekretaris': 4000000,
-            'Akuntan': 6000000,
-            'Sales Representative': 5000000,
-            'Tax': 6000000,
-            'CS': 3500000,
-            'Admin': 4000000,
-            'HR': 4500000,
-            'Digital Marketing': 5500000,
-            'Designer': 5000000,
-            'PM': 7000000,
-            'Developer': 8000000,
-            'Data Analyst': 6000000
-        }
+            # Menampilkan menu pilihan posisi
+            print("Pilih posisi karyawan:")
+            print("0. Semua posisi")
+            for i, posisi in enumerate(posisi_karyawan, 1):
+                print(f"{i}. {posisi}")
 
-        # Hitung total lembur dan ongkos lembur
-        lembur_df['durasi_jam'] = lembur_df['durasi_jam'].astype(float)
-        total_lembur = lembur_df.groupby('Id')['durasi_jam'].sum().reset_index()
-        total_lembur['Ongkos_Lembur'] = total_lembur['durasi_jam'] * ongkos_lembur_per_jam
 
-        # Hitung total keterlambatan
-        presensi_df['waktu'] = pd.to_datetime(presensi_df['waktu']).dt.time
-        presensi_df['Telat'] = presensi_df.apply(lambda row: max((datetime.combine(datetime.today(), row['waktu']) - datetime.combine(datetime.today(), close_presensi)).seconds // 3600, 0) if row['kehadiran'] == 'Hadir' and row['waktu'] > close_presensi else 0, axis=1)
-        total_telat = presensi_df.groupby('ID')['Telat'].sum().reset_index()
-        total_telat['Potongan_Telat'] = total_telat['Telat'] * potongan_per_jam_telat
+            # Meminta input dari pengguna dengan error handling
+            print(employee_df)
+            while True:
+                try:
+                    pilihan = int(input("Masukkan nomor posisi yang dipilih (atau masukkan 0 untuk semua posisi): "))
+                    if 0 <= pilihan <= len(posisi_karyawan):
+                        if pilihan == 0:
+                            posisi_terpilih = "Semua"
+                            karyawan_terpilih = employee_df
+                            print("Semua posisi dipilih")
+                        else:
+                            posisi_terpilih = posisi_karyawan[pilihan - 1]
+                            karyawan_terpilih = []
+                            for i in range(0,len(employee_df)):
+                                if employee_df.iloc[2, i] == posisi_terpilih:
+                                    print(employee_df[i])
+                                    karyawan_terpilih.append(employee_df[i,])
+                            input(f"Posisi yang dipilih: {posisi_terpilih}")
+                       
+                        if karyawan_terpilih == []:
+                            input(f"Tidak ada karyawan untuk posisi: {posisi_terpilih}")
+                            return
+                            
+                    else:
+                        input("Nomor posisi tidak valid. Silakan coba lagi.")
+                except ValueError as e:
+                    input(f"{e}Input tidak valid. Silakan masukkan nomor posisi.")
 
-        # Hitung total ketidakhadiran
-        absensi_df = presensi_df[(presensi_df['kehadiran'] == 'Tidak Hadir') & (presensi_df['hari_kerja'] == 'Ya')]
-        total_absen = absensi_df.groupby('ID').size().reset_index(name='Total_Tidak_Hadir')
-        total_absen['Potongan_Absensi'] = total_absen['Total_Tidak_Hadir'] * potongan_per_hari_absen
 
-        # Merge data untuk penggajian
-        penggajian_df = pd.merge(karyawan_terpilih, total_lembur, left_on='ID', right_on='Id', how='left').fillna(0)
-        penggajian_df = pd.merge(penggajian_df, total_telat[['ID', 'Potongan_Telat']], on='ID', how='left').fillna(0)
-        penggajian_df = pd.merge(penggajian_df, total_absen[['ID', 'Potongan_Absensi']], on='ID', how='left').fillna(0)
+            # Tentukan gaji pokok berdasarkan posisi karyawan
+            gaji_pokok_map = {
+                'Sekretaris': 4000000,
+                'Akuntan': 6000000,
+                'Sales Representative': 5000000,
+                'Tax': 6000000,
+                'CS': 3500000,
+                'Admin': 4000000,
+                'HR': 4500000,
+                'Digital Marketing': 5500000,
+                'Designer': 5000000,
+                'PM': 7000000,
+                'Developer': 8000000,
+                'Data Analyst': 6000000
+            }
 
-        # Tentukan gaji pokok berdasarkan posisi karyawan
-        penggajian_df['Gaji_Pokok'] = penggajian_df['Posisi'].map(gaji_pokok_map)
 
-        # Hitung Gaji Bersih
-        penggajian_df['Gaji_Bersih'] = penggajian_df['Gaji_Pokok'] + penggajian_df['Ongkos_Lembur'] - penggajian_df['Potongan_Telat'] - penggajian_df['Potongan_Absensi']
+            # Hitung total lembur dan ongkos lembur
+            lembur_df['durasi_jam'] = lembur_df['durasi_jam'].astype(float)
+            total_lembur = lembur_df.groupby('Id')['durasi_jam'].sum().reset_index()
+            total_lembur['Ongkos_Lembur'] = total_lembur['durasi_jam'] * ongkos_lembur_per_jam
 
-        # Pilih hanya kolom yang diinginkan untuk disimpan dalam CSV
-        penggajian_df = penggajian_df[kolom_penggajian]
 
-        penggajian_df.to_csv('employee_penggajian.csv', index=False)
-        print(penggajian_df)
+            # Hitung total keterlambatan
+            presensi_df['waktu'] = pd.to_datetime(presensi_df['waktu']).dt.time
+            presensi_df['Telat'] = presensi_df.apply(lambda row: max((datetime.datetime.combine(datetime.date.today(), row['waktu']) - datetime.datetime.combine(datetime.date.today(), datetime.time(9, 0))).seconds // 3600, 0) if row['kehadiran'] == 'Hadir' and row['waktu'] > datetime.time(9, 0) else 0, axis=1)
+            total_telat = presensi_df.groupby('ID')['Telat'].sum().reset_index()
+            total_telat['Potongan_Telat'] = total_telat['Telat'] * potongan_per_jam_telat
 
-        input("\nTekan [enter] untuk kembali ke menu utama")
-        main_page_admin()
+
+            # Hitung total ketidakhadiran
+            absensi_df = presensi_df[(presensi_df['kehadiran'] == 'Tidak Hadir') & (presensi_df['hari_kerja'] == 'Ya')]
+            total_absen = absensi_df.groupby('ID').size().reset_index(name='Total_Tidak_Hadir')
+            total_absen['Potongan_Absensi'] = total_absen['Total_Tidak_Hadir'] * potongan_per_hari_absen
+
+
+            # Merge data untuk penggajian
+            penggajian_df = pd.merge(karyawan_terpilih, total_lembur, left_on='ID', right_on='Id', how='left').fillna(0)
+            penggajian_df = pd.merge(penggajian_df, total_telat[['ID', 'Potongan_Telat']], on='ID', how='left').fillna(0)
+            penggajian_df = pd.merge(penggajian_df, total_absen[['ID', 'Potongan_Absensi']], on='ID', how='left').fillna(0)
+
+
+            # Tentukan gaji pokok berdasarkan posisi karyawan
+            penggajian_df['Gaji_Pokok'] = penggajian_df['Posisi'].map(gaji_pokok_map)
+
+
+            # Hitung Gaji Bersih
+            penggajian_df['Gaji_Bersih'] = penggajian_df['Gaji_Pokok'] + penggajian_df['Ongkos_Lembur'] - penggajian_df['Potongan_Telat'] - penggajian_df['Potongan_Absensi']
+
+
+            # Kolom yang ingin disimpan
+            kolom_penggajian = ['ID', 'Nama', 'Posisi', 'Gaji_Pokok', 'Ongkos_Lembur', 'Potongan_Telat', 'Potongan_Absensi', 'Gaji_Bersih']
+
+
+            # Save the DataFrame to CSV
+            penggajian_df[kolom_penggajian].to_csv('employee_penggajian.csv', index=False)
+
+
+            # Print the DataFrame using tabulate
+            print(tabulate(penggajian_df[kolom_penggajian], headers='keys', tablefmt='grid'))
+
+
+            input("\nTekan [enter] untuk kembali ke menu utama")
+            main_page_admin()
+
+
+        penggajian()
 
     # FITUR 9 
 
@@ -1817,9 +1896,9 @@ def akun_pertama():
         employee.close()
 
     # apabila database gaji belum ada
-    if not(Path('employee_presensi_lembur.csv').is_file()):
+    if not(Path('penggajian_database.csv').is_file()):
         #buat file dahulu sebelum mengakses fungsi tambah supaya bisa menambahkan header dulu
-        employee = open('employee_presensi_lembur.csv', 'w')
+        employee = open('penggajian_database.csv', 'w')
         employee.close()
 
     # apabila database admin belum ada
@@ -1844,6 +1923,7 @@ def akun_pertama():
         #buat file dahulu sebelum mengakses fungsi tambah supaya bisa menambahkan header dulu
         presensi = open('histori_database.csv', 'w')
         presensi.close()
+
 
 # FITUR AKUN PERTAMA SELESAI
 
@@ -1982,6 +2062,7 @@ kolom_admin    = ['ID','Nama','Posisi','Password']
 kolom_employee = ['ID','Nama','Posisi','Password']
 kolom_presensi = ["Tanggal", "ID", "Nama", "Hari Kerja", "Kehadiran", "Waktu"]
 kolom_penggajian = ["ID", "Nama", "Posisi", "Gaji Pokok", "Ongkos Lembur", "Potongan Absensi", "Gaji Bersih" ]
+kolom_lembur   = ["Tanggal","Hari","ID","Nama","Jam Mulai","Jam Selesai","durasi_jam"]
 
 # lama freeze welcome page
 delayWelcome = 3
