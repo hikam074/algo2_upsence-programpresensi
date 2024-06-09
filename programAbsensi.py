@@ -10,6 +10,7 @@ from datetimerange import DateTimeRange # import range waktu
 from datetime import timedelta          # melakukan operasi matematika pada objek datetime
 import calendar                         # import kalender untuk melakukan operasi kalender
 import matplotlib.pyplot as plt         # import matlib agar bisa menampilkan diagram
+import tkinter as tk                    # import tkinter agar bisa engatur letak diagram agar tertata
 
 # HALAMAN LOGIN DAN LAUNCH PAGE ------------------------------------------------------------------------------------------------------------------------------
 def launchPage():
@@ -750,7 +751,7 @@ def main_page_admin():
     # FITUR 4 SELESAI : UI : COMMENT : DESAIN
 
     elif menu_choice == '5':        # FITUR 5 LIHAT DATA
-        menu_choice_5 = input("[1] Lihat Data Admin\n[2] Lihat Data Karyawan\n[3] Lihat Presensi Karyawan\n[enter] Kembali ke menu utama\n\nPilih menu : ")
+        menu_choice_5 = input("[1] Lihat Data Admin\n[2] Lihat Data Karyawan\n[3] Lihat Presensi Admin\n[4] Lihat Presensi Karyawan\n[enter] Kembali ke menu utama\n\nPilih menu : ")
 
         if menu_choice_5 == '1':    # FITUR 5.1 LIHAT DATA>LIHAT DATA ADMIN
             os.system('cls')
@@ -758,6 +759,39 @@ def main_page_admin():
 
             # MENAMPILKAN DATA
             df = pd.DataFrame(data_admin, columns=kolom_admin)    # MEMASUKKAN LIST DATA BESAR KE PANDAS
+
+            # ALGORITMA MERGE SORT
+            def merge_sort(df, column):
+                if len(df) > 1:
+                    mid = len(df) // 2
+                    left_half = df.iloc[:mid].copy()
+                    right_half = df.iloc[mid:].copy()
+
+                    merge_sort(left_half, column)
+                    merge_sort(right_half, column)
+
+                    i = j = k = 0
+
+                    while i < len(left_half) and j < len(right_half):
+                        if left_half.iloc[i][column] < right_half.iloc[j][column]:
+                            df.iloc[k] = left_half.iloc[i]
+                            i += 1
+                        else:
+                            df.iloc[k] = right_half.iloc[j]
+                            j += 1
+                        k += 1
+
+                    while i < len(left_half):
+                        df.iloc[k] = left_half.iloc[i]
+                        i += 1
+                        k += 1
+
+                    while j < len(right_half):
+                        df.iloc[k] = right_half.iloc[j]
+                        j += 1
+                        k += 1
+            # MELAKUKAN SORTING MENGGUNAKAN ALGORITMA MERGE SORT
+            merge_sort(df, 'ID')
 
             # DISPLAY TABEL
             print(tabulate.tabulate(df.iloc[:, :2], headers="keys", tablefmt=kolom_fmt, showindex=False))
@@ -803,6 +837,39 @@ def main_page_admin():
             # MENAMPILKAN DATA
             df = pd.DataFrame(data_employee, columns=kolom_employee)    # MEMASUKKAN LIST DATA BESAR KE PANDAS
 
+            # ALGORITMA MERGE SORT
+            def merge_sort(df, column):
+                if len(df) > 1:
+                    mid = len(df) // 2
+                    left_half = df.iloc[:mid].copy()
+                    right_half = df.iloc[mid:].copy()
+
+                    merge_sort(left_half, column)
+                    merge_sort(right_half, column)
+
+                    i = j = k = 0
+
+                    while i < len(left_half) and j < len(right_half):
+                        if left_half.iloc[i][column] < right_half.iloc[j][column]:
+                            df.iloc[k] = left_half.iloc[i]
+                            i += 1
+                        else:
+                            df.iloc[k] = right_half.iloc[j]
+                            j += 1
+                        k += 1
+
+                    while i < len(left_half):
+                        df.iloc[k] = left_half.iloc[i]
+                        i += 1
+                        k += 1
+
+                    while j < len(right_half):
+                        df.iloc[k] = right_half.iloc[j]
+                        j += 1
+                        k += 1
+            # MELAKUKAN SORTING MENGGUNAKAN ALGORITMA MERGE SORT
+            merge_sort(df, 'ID')
+
             # DISPLAY TABEL
             print(tabulate.tabulate(df.iloc[:, :2], headers="keys", tablefmt=kolom_fmt, showindex=False))
                 
@@ -834,25 +901,60 @@ def main_page_admin():
                 print(tabulate.tabulate(table, headers=kolom_employee, tablefmt=kolom_fmt))
             # BILA DATA TIDAK DITEMUKAN
             else:
-                print("Karyawan dengan ID tersebut tidak ditemukan.")
+                print("PERHATIAN : Karyawan dengan ID tersebut tidak ditemukan.")
                 
             input("\nTekan [enter] untuk kembali ke menu utama") 
 
-        # FITUR 5.2 
+        # FITUR 5.2 SELESAI : UI : COMMENT : DESAIN
 
-        elif menu_choice_5 == '3':    # FITUR 5.3 LIHAT DATA>LIHAT PRESENSI KARYAWAN
+        elif menu_choice_5 == '3':    # FITUR 5.3 LIHAT DATA>LIHAT PRESENSI ADMIN
             os.system('cls')
-            print(f"++{'='*86}++\n|| {f'admin>menu utama>lihat data>lihat presensi karyawan>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}L I H A T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}\n")
+            print(f"++{'='*86}++\n|| {f'admin>menu utama>lihat data>lihat presensi admin>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*24}L I H A T   P R E S E N S I   A D M I N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}\n")
 
             # MENAMPILKAN DATA
+            df = pd.DataFrame(data_admin, columns=kolom_admin)    # MEMASUKKAN LIST DATA BESAR KE PANDAS
 
-            print(tabulate.tabulate(data_employee, headers="keys", tablefmt="grid", showindex=False)) 
-            df = pd.DataFrame(data_presensi, columns=kolom_presensi)  # memasukkan data list ke pandas
+            # ALGORITMA MERGE SORT
+            def merge_sort(df, column):
+                if len(df) > 1:
+                    mid = len(df) // 2
+                    left_half = df.iloc[:mid].copy()
+                    right_half = df.iloc[mid:].copy()
+
+                    merge_sort(left_half, column)
+                    merge_sort(right_half, column)
+
+                    i = j = k = 0
+
+                    while i < len(left_half) and j < len(right_half):
+                        if left_half.iloc[i][column] < right_half.iloc[j][column]:
+                            df.iloc[k] = left_half.iloc[i]
+                            i += 1
+                        else:
+                            df.iloc[k] = right_half.iloc[j]
+                            j += 1
+                        k += 1
+
+                    while i < len(left_half):
+                        df.iloc[k] = left_half.iloc[i]
+                        i += 1
+                        k += 1
+
+                    while j < len(right_half):
+                        df.iloc[k] = right_half.iloc[j]
+                        j += 1
+                        k += 1
+            # MELAKUKAN SORTING MENGGUNAKAN ALGORITMA MERGE SORT
+            merge_sort(df, 'ID')
+            # DISPLAY TABEL
+            print(tabulate.tabulate(df.iloc[:, :2], headers="keys", tablefmt=kolom_fmt, showindex=False))
+
+            df = pd.DataFrame(data_presensi_admin, columns=kolom_presensi) 
             df = df.sort_values(by='ID', ascending=True)  # Sortir berdasarkan ID
             # FITUR SEARCH BERDASARKAN ID
             search_ID = input("\nMasukkan ID yang hendak dilihat : ")
 
-            # Implementasi Pencarian Biner
+            # BINARY SEARCH
             left, right = 0, len(df) - 1
             index = -1
             while left <= right:
@@ -867,65 +969,72 @@ def main_page_admin():
                     right = mid - 1
 
             if index != -1:  # SEARCHING ADA DI DATABASE
-                menu_presensi_karyawan = input("\n[1] Lihat Data Presensi\n[2] Lihat Rekapitulasi Presensi\nMasukan opsi : ")
-                
-                if menu_presensi_karyawan == '1':
+                menu_presensi_admin = input("Menu :\n[1] Lihat Data Presensi\n[2] Lihat Rekapitulasi Presensi\nMasukan opsi : ")
+
+                if menu_presensi_admin == '1':       # FITUR 5.3.1 LIHAT DATA>LIHAT PRESENSI ADMIN>LIHAT DATA PRESENSI
                     os.system('cls')
-                    print(f"++{'='*86}++\n|| {f'admin>menu utama>lihat data>lihat presensi karyawan>cari ID>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}L I H A T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}\n\n")
+                    print(f"++{'='*86}++\n|| {f'admin>menu utama>lihat data>lihat presensi admin>cari ID>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*24}L I H A T   P R E S E N S I   A D M I N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}")
 
                     filtered_df = df.iloc[[index]]  # deklarasi data hasil filter
                     print(f'\nHasil Pencarian untuk ID "{search_ID}"\n')
-                    print(tabulate.tabulate(filtered_df, headers='keys', tablefmt='github', showindex=False))
+                    print(tabulate.tabulate(filtered_df, headers='keys', tablefmt=kolom_fmt, showindex=False))
 
                     # SEARCHING LAGI DENGAN TANGGAL
                     search_date = input("\nMasukkan Tanggal yang hendak dicari [yyyy-mm-dd] : ")
 
                     if search_date in filtered_df['Tanggal'].values:  # SEARCHING ADA DI DATABASE
                         os.system('cls')
-                        print(f"++{'='*86}++\n|| {f'admin>menu utama>lihat data>lihat presensi karyawan>cari ID>cari tanggal>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}L I H A T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}\n\n")
+                        print(f"++{'='*86}++\n|| {f'admin>menu utama>lihat data>lihat presensi admin>cari ID>cari tanggal>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*24}L I H A T   P R E S E N S I   A D M I N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}\n")
 
                         filtered_df = filtered_df.loc[filtered_df['Tanggal'].str.contains(search_date)]
                         print(f'\nHasil Pencarian untuk tanggal "{search_date}"\n')
-                        print(tabulate.tabulate(filtered_df, headers='keys', tablefmt='github', showindex=False))
+                        print(tabulate.tabulate(filtered_df, headers='keys', tablefmt=kolom_fmt, showindex=False))
                     else:  # HASIL SEARCHING DENGAN TANGGAL TIDAK DITEMUKAN
                         print("\nData yang anda cari tidak ada...")
-
-                # FITUR 4.3.2 LIHAT DATA>LIHAT REKAPITULASI PRESENSI KARYAWAN
-                elif menu_presensi_karyawan == '2':
                     
-                    # Filter DataFrame berdasarkan ID yang sudah login
+                    input("\nTekan [enter] untuk kembali ke menu utama")
+                
+                elif menu_presensi_admin == '2':     # FITUR 5.3.2 LIHAT DATA>LIHAT PRESENSI ADMIN>LIHAT REKAPITULASI PRESENSI ADMIN
+                    
+                    # FILTER DF BERDASARKAN ID YANG DICARI
                     filtered_df = df.loc[df['ID'] == search_ID]
 
-                    # Pilihan untuk rekap mingguan atau bulanan
+                    # PILIHAN REKAP
                     ulangAdmin4 = True
                     while ulangAdmin4:
-                        rekap_choice = input("\nPilih jenis rekapitulasi\n[1] Minggu Ini\n[2] Minggu Lalu\n[3] Bulan Ini\n[4] Bulan Lalu\n[5] Kembali ke menu utama\n\nMasukkan pilihan : ")
+                        os.system('cls')
+                        print(f"++{'='*86}++\n|| {f'admin>menu utama>lihat data>lihat presensi admin>cari ID>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*24}L I H A T   P R E S E N S I   A D M I N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}")
+                        print(f'\nHasil Pencarian untuk ID "{search_ID}"\n')
+                        print(tabulate.tabulate(filtered_df, headers='keys', tablefmt=kolom_fmt, showindex=False))
 
+                        # PILIH JENIS REKAP
+                        rekap_choice = input("\nPilih jenis rekapitulasi\n[1] Minggu Ini\n[2] Minggu Lalu\n[3] Bulan Ini\n[4] Bulan Lalu\n[5] Kembali ke menu utama\n\nMasukkan pilihan : ")
                         now = datetime.datetime.now()
 
-                        if rekap_choice == '1':  # Minggu Ini
+                        # MINGGU INI
+                        if rekap_choice == '1':
                             rekap_choice_word = "minggu ini"
                             ulangAdmin4 = False
                             start_date = (now - timedelta(days=now.weekday())).strftime('%Y-%m-%d')
                             end_date = (now + timedelta(days=(6 - now.weekday()))).strftime('%Y-%m-%d')
                             total_days = 7
-
-                        elif rekap_choice == '2':  # Minggu Lalu
+                        # MINGGU LALU
+                        elif rekap_choice == '2':
                             rekap_choice_word = "minggu lalu"
                             ulangAdmin4 = False
                             start_date = (now - timedelta(days=(now.weekday() + 7))).strftime('%Y-%m-%d')
                             end_date = (now - timedelta(days=now.weekday() + 1)).strftime('%Y-%m-%d')
                             total_days = 7
-
-                        elif rekap_choice == '3':  # Bulan Ini
+                        # BULAN INI
+                        elif rekap_choice == '3':
                             rekap_choice_word = "bulan ini"
                             ulangAdmin4 = False
                             start_date = f'{now.year}-{now.month:02d}-01'
                             last_day = calendar.monthrange(now.year, now.month)[1]
                             end_date = f'{now.year}-{now.month:02d}-{last_day}'
                             total_days = last_day
-
-                        elif rekap_choice == '4':  # Bulan Lalu
+                        # BULAN LALU
+                        elif rekap_choice == '4':
                             rekap_choice_word = "bulan lalu"
                             ulangAdmin4 = False
                             last_month = (now.replace(day=1) - timedelta(days=1)).replace(day=1)
@@ -933,19 +1042,18 @@ def main_page_admin():
                             last_day = calendar.monthrange(last_month.year, last_month.month)[1]
                             end_date = f'{last_month.year}-{last_month.month:02d}-{last_day}'
                             total_days = last_day
-
+                        # MENGEMBALIKAN KE MENU UTAMA
                         elif rekap_choice == '5':
                             input("\nTekan [enter] untuk kembali ke menu utama")
-                            main_page_admin()    # MENGEMBALIKAN KE MENU UTAMA
+                            main_page_admin()    
 
                         else:
-                            input('Pilihan yang anda berikan tidak ada!\nCoba lagi')    # KESALAHAN INPUT, KEMBALI KE NEMU REKAP
                             ulangAdmin4 = True
                     
-                    # Filter DataFrame berdasarkan tanggal
+                    # FILTER DF BERDASARKAN TANGGAL
                     filtered_df = filtered_df.loc[(filtered_df['Tanggal'] >= start_date) & (filtered_df['Tanggal'] <= end_date)]
 
-                    # Menghitung statistik kehadiran
+                    # MENGHITUNG STATISTIK KEHADIRAN
                     total_kehadiran_tepat_waktu = len(filtered_df[filtered_df['Kehadiran'].str.upper() == 'HADIR'])
                     total_terlambat = len(filtered_df[filtered_df['Kehadiran'].str.upper() == 'TERLAMBAT'])
                     total_kehadiran = total_kehadiran_tepat_waktu + total_terlambat
@@ -953,45 +1061,301 @@ def main_page_admin():
 
                     total_hari_kerja = total_kehadiran + total_tidak_hadir  # Total hari kerja dihitung berdasarkan jumlah data presensi
 
-                    # Menampilkan statistik kehadiran
+                    # MENAMPILKAN STATISTIK KEHADIRAN
                     os.system('cls')
-                    print(f'++{'='*86}++\n|| {'admin>menu utama>lihat data>lihat rekapitulasi presensi karyawan>'f"{rekap_choice_word}"'>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{' '*23}R E K A P I T U L A S I   P R E S E N S I{' '*22}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\nMenampilkan rekapitulasi "{rekap_choice_word.upper()}"\n{start_date} | {end_date}\n\n\nTOTAL HADIR : {total_kehadiran}')  # UI HASIL REKAPAN
-
-                    # Rincian Total Kehadiran
-                    print("    Rincian:")
-                    print(f"      -Total Hadir Tepat Waktu: {total_kehadiran_tepat_waktu}")
-                    print(f"      -Total Terlambat: {total_terlambat}")
-
-                    print(f"\nTOTAL TIDAK HADIR : {total_tidak_hadir}")
+                    print(f'++{'='*86}++\n|| {'admin>menu utama>lihat data>lihat rekapitulasi presensi admin>'f"{rekap_choice_word}"'>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{' '*23}R E K A P I T U L A S I   P R E S E N S I{' '*22}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\nMenampilkan rekapitulasi "{rekap_choice_word.upper()}"\n{start_date} | {end_date}\n\nTOTAL HADIR : {total_kehadiran}')  # UI HASIL REKAPAN
+                    print("dengan rincian :")
+                    print(f" > Total Hadir Tepat Waktu: {total_kehadiran_tepat_waktu}")
+                    print(f" > Total Terlambat: {total_terlambat}")
+                    print(f"TOTAL TIDAK HADIR : {total_tidak_hadir}")
 
                     # Persentase Kehadiran
                     if total_hari_kerja > 0:
                         attendance_percentage = round((total_kehadiran / total_hari_kerja * 100))
-                        print(f"\nPERSENTASE KEHADIRAN ({start_date} sampai {end_date}): {attendance_percentage}% ({total_kehadiran} dari {total_hari_kerja} hari kerja)")
+                        print(f"\nPERSENTASE KEHADIRAN ({start_date} sampai {end_date}): \n{attendance_percentage}% ({total_kehadiran} dari {total_hari_kerja} hari kerja)")
+                        print("\n[Tutup jendela grafik untuk kembali ke menu]")
+                        # MENYIAPKAN GRAFIK DENGAN MATHPLOPLIB
+                        plt.figure(figsize=(5, 5)) # UKURAN WINDOW
+                        labels = ['Hadir Tepat Waktu', 'Terlambat', 'Tidak Hadir']
+                        values = [total_kehadiran_tepat_waktu, total_terlambat, total_tidak_hadir]
+                        nama_display = filtered_df.iloc[0,2]
+
+                        plt.bar(labels, values, color=['green', 'orange', 'red'])
+                        plt.xlabel('Kategori Kehadiran')
+                        plt.ylabel('Jumlah')
+                        plt.title(f'Grafik Kehadiran {nama_display}')
+                        
+                        # ROOT TKINTER
+                        root = tk.Tk()
+                        root.withdraw()  # SEMBUNYIKAN TK
+
+                        # MEMBUAT WINDOW TK UNTUK PATOKAN POSISI WINDOW PLT
+                        top = tk.Toplevel(root)
+
+                        # MENGATUR UKURAN DAN POSISI MEMUNCULKAN KANVAS
+                        screen_width = root.winfo_screenwidth()
+                        screen_height = root.winfo_screenheight()
+                        window_width = 450
+                        window_height = 400
+                        pos_x = screen_width - window_width - 50  # 50 pixel dari kanan
+                        pos_y = screen_height - window_height - 100  # 100 pixel dari bawah
+
+                        top.geometry(f'{window_width}x{window_height}+{pos_x}+{pos_y}')
+                        top.update_idletasks()
+
+                        # MEMINDAHKAN WINDOW PLT KE POSISI YANG DIINGINKAN
+                        fig_manager = plt.get_current_fig_manager()
+                        fig_manager.window.wm_geometry(f"{window_width}x{window_height}+{pos_x}+{pos_y}")
+
+                        # EKSEKUSI
+                        root.destroy()  # MENUTUP WINDOW TK KARENA HANYA UNTUK POSITIONING
+                        plt.show()      # MEMUNCULKAN GRAFIK
+
+                        # KEMBALI KE MENU
+                        main_page_admin()
+                        
                     else:
                         print("\nTidak ada data kehadiran pada periode yang dipilih.")
+                        input("\nTekan [enter] untuk kembali ke Main Menu")
 
-                    input("\n\n\nTekan [enter] untuk kembali ke Main Menu")
                     main_page_admin()    # MENGEMBALIKAN KE MENU UTAMA
 
             else:   # HASIL SEARCHING TIDAK DITEMUKAN
                 print("\nData yang anda cari tidak ada...")
+                input("\nTekan [enter] untuk kembali ke menu utama")
 
-            input("\nTekan [enter] untuk kembali ke menu utama")
+        # FITUR 5.3 SELESAI : UI : COMMENT : DESAIN
 
-        # FITUR 5.3
+        elif menu_choice_5 == '4':    # FITUR 5.4 LIHAT DATA>LIHAT PRESENSI KARYAWAN
+            os.system('cls')
+            print(f"++{'='*86}++\n|| {f'admin>menu utama>lihat data>lihat presensi karyawan>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}L I H A T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}\n")
+
+            # MENAMPILKAN DATA
+            df = pd.DataFrame(data_employee, columns=kolom_employee)    # MEMASUKKAN LIST DATA BESAR KE PANDAS
+
+            # ALGORITMA MERGE SORT
+            def merge_sort(df, column):
+                if len(df) > 1:
+                    mid = len(df) // 2
+                    left_half = df.iloc[:mid].copy()
+                    right_half = df.iloc[mid:].copy()
+
+                    merge_sort(left_half, column)
+                    merge_sort(right_half, column)
+
+                    i = j = k = 0
+
+                    while i < len(left_half) and j < len(right_half):
+                        if left_half.iloc[i][column] < right_half.iloc[j][column]:
+                            df.iloc[k] = left_half.iloc[i]
+                            i += 1
+                        else:
+                            df.iloc[k] = right_half.iloc[j]
+                            j += 1
+                        k += 1
+
+                    while i < len(left_half):
+                        df.iloc[k] = left_half.iloc[i]
+                        i += 1
+                        k += 1
+
+                    while j < len(right_half):
+                        df.iloc[k] = right_half.iloc[j]
+                        j += 1
+                        k += 1
+            # MELAKUKAN SORTING MENGGUNAKAN ALGORITMA MERGE SORT
+            merge_sort(df, 'ID')
+            # DISPLAY TABEL
+            print(tabulate.tabulate(df.iloc[:, :2], headers="keys", tablefmt=kolom_fmt, showindex=False))
+
+            df = pd.DataFrame(data_presensi, columns=kolom_presensi)  # memasukkan data list ke pandas
+            df = df.sort_values(by='ID', ascending=True)  # Sortir berdasarkan ID
+            # FITUR SEARCH BERDASARKAN ID
+            search_ID = input("\nMasukkan ID yang hendak dilihat : ")
+
+            # BINARY SEARCH
+            left, right = 0, len(df) - 1
+            index = -1
+            while left <= right:
+                mid = (left + right) // 2
+                mid_id = df.iloc[mid]['ID']
+                if mid_id == search_ID:
+                    index = mid
+                    break
+                elif mid_id < search_ID:
+                    left = mid + 1
+                else:
+                    right = mid - 1
+
+            if index != -1:  # SEARCHING ADA DI DATABASE
+                menu_presensi_karyawan = input("Menu :\n[1] Lihat Data Presensi\n[2] Lihat Rekapitulasi Presensi\nMasukan opsi : ")
+
+                if menu_presensi_karyawan == '1':       # FITUR 5.4.1 LIHAT DATA>LIHAT PRESENSI KARYAWAN>LIHAT DATA PRESENSI
+                    os.system('cls')
+                    print(f"++{'='*86}++\n|| {f'admin>menu utama>lihat data>lihat presensi karyawan>cari ID>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}L I H A T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}")
+
+                    filtered_df = df.iloc[[index]]  # deklarasi data hasil filter
+                    print(f'\nHasil Pencarian untuk ID "{search_ID}"\n')
+                    print(tabulate.tabulate(filtered_df, headers='keys', tablefmt=kolom_fmt, showindex=False))
+
+                    # SEARCHING LAGI DENGAN TANGGAL
+                    search_date = input("\nMasukkan Tanggal yang hendak dicari [yyyy-mm-dd] : ")
+
+                    if search_date in filtered_df['Tanggal'].values:  # SEARCHING ADA DI DATABASE
+                        os.system('cls')
+                        print(f"++{'='*86}++\n|| {f'admin>menu utama>lihat data>lihat presensi karyawan>cari ID>cari tanggal>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}L I H A T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}\n")
+
+                        filtered_df = filtered_df.loc[filtered_df['Tanggal'].str.contains(search_date)]
+                        print(f'\nHasil Pencarian untuk tanggal "{search_date}"\n')
+                        print(tabulate.tabulate(filtered_df, headers='keys', tablefmt=kolom_fmt, showindex=False))
+                    else:  # HASIL SEARCHING DENGAN TANGGAL TIDAK DITEMUKAN
+                        print("\nData yang anda cari tidak ada...")
+                    
+                    input("\nTekan [enter] untuk kembali ke menu utama")
+                
+                elif menu_presensi_karyawan == '2':     # FITUR 5.4.2 LIHAT DATA>LIHAT PRESENSI KARYAWAN>LIHAT REKAPITULASI PRESENSI KARYAWAN
+                    
+                    # FILTER DF BERDASARKAN ID YANG DICARI
+                    filtered_df = df.loc[df['ID'] == search_ID]
+
+                    # PILIHAN REKAP
+                    ulangAdmin4 = True
+                    while ulangAdmin4:
+                        os.system('cls')
+                        print(f"++{'='*86}++\n|| {f'admin>menu utama>lihat data>lihat presensi karyawan>cari ID>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}L I H A T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}")
+                        print(f'\nHasil Pencarian untuk ID "{search_ID}"\n')
+                        print(tabulate.tabulate(filtered_df, headers='keys', tablefmt=kolom_fmt, showindex=False))
+
+                        # PILIH JENIS REKAP
+                        rekap_choice = input("\nPilih jenis rekapitulasi\n[1] Minggu Ini\n[2] Minggu Lalu\n[3] Bulan Ini\n[4] Bulan Lalu\n[5] Kembali ke menu utama\n\nMasukkan pilihan : ")
+                        now = datetime.datetime.now()
+
+                        # MINGGU INI
+                        if rekap_choice == '1':
+                            rekap_choice_word = "minggu ini"
+                            ulangAdmin4 = False
+                            start_date = (now - timedelta(days=now.weekday())).strftime('%Y-%m-%d')
+                            end_date = (now + timedelta(days=(6 - now.weekday()))).strftime('%Y-%m-%d')
+                            total_days = 7
+                        # MINGGU LALU
+                        elif rekap_choice == '2':
+                            rekap_choice_word = "minggu lalu"
+                            ulangAdmin4 = False
+                            start_date = (now - timedelta(days=(now.weekday() + 7))).strftime('%Y-%m-%d')
+                            end_date = (now - timedelta(days=now.weekday() + 1)).strftime('%Y-%m-%d')
+                            total_days = 7
+                        # BULAN INI
+                        elif rekap_choice == '3':
+                            rekap_choice_word = "bulan ini"
+                            ulangAdmin4 = False
+                            start_date = f'{now.year}-{now.month:02d}-01'
+                            last_day = calendar.monthrange(now.year, now.month)[1]
+                            end_date = f'{now.year}-{now.month:02d}-{last_day}'
+                            total_days = last_day
+                        # BULAN LALU
+                        elif rekap_choice == '4':
+                            rekap_choice_word = "bulan lalu"
+                            ulangAdmin4 = False
+                            last_month = (now.replace(day=1) - timedelta(days=1)).replace(day=1)
+                            start_date = f'{last_month.year}-{last_month.month:02d}-01'
+                            last_day = calendar.monthrange(last_month.year, last_month.month)[1]
+                            end_date = f'{last_month.year}-{last_month.month:02d}-{last_day}'
+                            total_days = last_day
+                        # MENGEMBALIKAN KE MENU UTAMA
+                        elif rekap_choice == '5':
+                            input("\nTekan [enter] untuk kembali ke menu utama")
+                            main_page_admin()    
+
+                        else:
+                            ulangAdmin4 = True
+                    
+                    # FILTER DF BERDASARKAN TANGGAL
+                    filtered_df = filtered_df.loc[(filtered_df['Tanggal'] >= start_date) & (filtered_df['Tanggal'] <= end_date)]
+
+                    # MENGHITUNG STATISTIK KEHADIRAN
+                    total_kehadiran_tepat_waktu = len(filtered_df[filtered_df['Kehadiran'].str.upper() == 'HADIR'])
+                    total_terlambat = len(filtered_df[filtered_df['Kehadiran'].str.upper() == 'TERLAMBAT'])
+                    total_kehadiran = total_kehadiran_tepat_waktu + total_terlambat
+                    total_tidak_hadir = len(filtered_df[filtered_df['Kehadiran'].str.upper() == 'TIDAK HADIR'])
+
+                    total_hari_kerja = total_kehadiran + total_tidak_hadir  # Total hari kerja dihitung berdasarkan jumlah data presensi
+
+                    # MENAMPILKAN STATISTIK KEHADIRAN
+                    os.system('cls')
+                    print(f'++{'='*86}++\n|| {'admin>menu utama>lihat data>lihat rekapitulasi presensi karyawan>'f"{rekap_choice_word}"'>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{' '*23}R E K A P I T U L A S I   P R E S E N S I{' '*22}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\nMenampilkan rekapitulasi "{rekap_choice_word.upper()}"\n{start_date} | {end_date}\n\nTOTAL HADIR : {total_kehadiran}')  # UI HASIL REKAPAN
+                    print("dengan rincian :")
+                    print(f" > Total Hadir Tepat Waktu: {total_kehadiran_tepat_waktu}")
+                    print(f" > Total Terlambat: {total_terlambat}")
+                    print(f"TOTAL TIDAK HADIR : {total_tidak_hadir}")
+
+                    # Persentase Kehadiran
+                    if total_hari_kerja > 0:
+                        attendance_percentage = round((total_kehadiran / total_hari_kerja * 100))
+                        print(f"\nPERSENTASE KEHADIRAN ({start_date} sampai {end_date}): \n{attendance_percentage}% ({total_kehadiran} dari {total_hari_kerja} hari kerja)")
+                        print("\n[Tutup jendela grafik untuk kembali ke menu]")
+                        # MENYIAPKAN GRAFIK DENGAN MATHPLOPLIB
+                        plt.figure(figsize=(5, 5)) # UKURAN WINDOW
+                        labels = ['Hadir Tepat Waktu', 'Terlambat', 'Tidak Hadir']
+                        values = [total_kehadiran_tepat_waktu, total_terlambat, total_tidak_hadir]
+                        nama_display = filtered_df.iloc[0,2]
+                        plt.bar(labels, values, color=['green', 'orange', 'red'])
+                        plt.xlabel('Kategori Kehadiran')
+                        plt.ylabel('Jumlah')
+                        plt.title(f'Grafik Kehadiran {nama_display}')
+
+                        # ROOT TKINTER
+                        root = tk.Tk()
+                        root.withdraw()  # SEMBUNYIKAN TK
+
+                        # MEMBUAT WINDOW TK UNTUK PATOKAN POSISI WINDOW PLT
+                        top = tk.Toplevel(root)
+
+                        # MENGATUR UKURAN DAN POSISI MEMUNCULKAN KANVAS
+                        screen_width = root.winfo_screenwidth()
+                        screen_height = root.winfo_screenheight()
+                        window_width = 450
+                        window_height = 400
+                        pos_x = screen_width - window_width - 50  # 50 pixel dari kanan
+                        pos_y = screen_height - window_height - 100  # 100 pixel dari bawah
+
+                        top.geometry(f'{window_width}x{window_height}+{pos_x}+{pos_y}')
+                        top.update_idletasks()
+
+                        # MEMINDAHKAN WINDOW PLT KE POSISI YANG DIINGINKAN
+                        fig_manager = plt.get_current_fig_manager()
+                        fig_manager.window.wm_geometry(f"{window_width}x{window_height}+{pos_x}+{pos_y}")
+
+                        # EKSEKUSI
+                        root.destroy()  # MENUTUP WINDOW TK KARENA HANYA UNTUK POSITIONING
+                        plt.show()      # MEMUNCULKAN GRAFIK
+
+                        # KEMBALI KE MENU
+                        main_page_admin()
+                        
+                    else:
+                        print("\nTidak ada data kehadiran pada periode yang dipilih.")
+                        input("\nTekan [enter] untuk kembali ke Main Menu")
+
+                    main_page_admin()    # MENGEMBALIKAN KE MENU UTAMA
+
+            else:   # HASIL SEARCHING TIDAK DITEMUKAN
+                print("\nData yang anda cari tidak ada...")
+                input("\nTekan [enter] untuk kembali ke menu utama")
+
+        # FITUR 5.4 SELESAI : UI : COMMENT : DESAIN
 
         main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
     
-    # FITUR 5 SELESAI
+    # FITUR 5 SELESAI : UI : COMMENT : DESAIN
 
     elif menu_choice == '6':        # FITUR 6 HAPUS DATA
-        menu_choice_5 = input("[1] Hapus Data Admin\n[2] Hapus Data Karyawan\n[3] Hapus Presensi Karyawan\nPilih menu : ")  # PILIHAN DATA MANA YANG HENDAK DIHAPUS
-        if menu_choice_5 == '1':    # FITUR 6.1 HAPUS DATA>HAPUS DATA ADMIN
+        menu_choice_6 = input("[1] Hapus Data Admin\n[2] Hapus Data Karyawan\n[3] Hapus Presensi Admin\n[4] Hapus Presensi Karyawan\nPilih menu : ")  # PILIHAN DATA MANA YANG HENDAK DIHAPUS
+
+        if menu_choice_6 == '1':    # FITUR 6.1 HAPUS DATA>HAPUS DATA ADMIN
             os.system('cls')
-            print(f"++{'='*86}++\n|| {f"admin>menu utama>hapus data>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*27}H A P U S   D A T A   A D M I N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n\nmenampilkan keseluruhan data...\n") # UI HAPUS DATA
+            print(f"++{'='*86}++\n|| {f"admin>menu utama>hapus data>hapus data admin":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*27}H A P U S   D A T A   A D M I N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n\nmenampilkan keseluruhan data...\n") # UI HAPUS DATA
             df = pd.DataFrame(data_admin, columns=kolom_admin)  # MENGUBAH LIST MENJADI TABEL DENGAN PANDAS
-            print(tabulate.tabulate(df, headers=kolom_admin, tablefmt="github", showindex=False))    # MENAMPILKAN TABEL KE TERMINAL
+            print(tabulate.tabulate(df, headers=kolom_admin, tablefmt=kolom_fmt, showindex=False))    # MENAMPILKAN TABEL KE TERMINAL
 
             # MENDETEKSI DATA YANG HENDAK DIHAPUS ITU ADA
             menghapus_file = input("\nMasukkan ID admin yang mau dihapus : ")      # user memasukkan data yang ingin dihapus
@@ -1001,15 +1365,20 @@ def main_page_admin():
                 for x in range(0,len(data_admin)):  # mencari di seluruh database admin
                     # BILA DATA YANG DICOCOKKAN SAMA DENGAN YANG DICARI
                     if menghapus_file == data_admin[x][0]:  # DATA COCOK
-                        print(f'Data admin yang akan dihapus : "{data_admin[x]}"!\n')   # KONFIRMASI DATA YANG HENDAK DIHAPUS
+                        os.system('cls')
+                        print(f"++{'='*86}++\n|| {f"admin>menu utama>hapus data>hapus data admin>ID:{data_admin[x][0]}":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*27}H A P U S   D A T A   A D M I N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n") # UI HAPUS DATA
+                        print(f'Data admin yang akan dihapus :')
+                        print(tabulate.tabulate([data_admin[x]], headers=kolom_admin, tablefmt=kolom_fmt, showindex=False))   # KONFIRMASI DATA YANG HENDAK DIHAPUS
                         pilihan_admin_hapus = input("Anda yakin?\nTekan [1] untuk menghapus\nTekan [2] atau [tombol lain] untuk membatalkan : ")    # KONFIRMASI HENDAK MENGHAPUS ATAU TIDAK
                         # DATA JADI DIHAPUS
                         if pilihan_admin_hapus == '1':
                             df = pd.DataFrame(data_admin, columns=kolom_admin)                  # deklarasi tabel pandas
                             df = df.drop(x)                                                     # menghapus data yang diinginkan
                             np.savetxt('admin_account_database.csv',df,delimiter=',',fmt='% s') # meyimpan kembali data yang tidak dihapus
-                            input(f"\nID terhapus : {menghapus_file}")  # IN-PROGRAM-NOTIFICATION DATA YANG TELAH DIHAPUS
-                            print(f"Hasil data : \n{tabulate.tabulate(df, headers="keys", tablefmt="github", showindex=False)}")    # DATA TERSISA
+                            os.system('cls')
+                            print(f"++{'='*86}++\n|| {f"admin>menu utama>hapus data>hapus data admin>ID:{data_admin[x][0]}":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*27}H A P U S   D A T A   A D M I N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n") # UI HAPUS DATA
+                            print(f"ID terhapus : {menghapus_file}")  # IN-PROGRAM-NOTIFICATION DATA YANG TELAH DIHAPUS
+                            print(f"Hasil data : \n{tabulate.tabulate(df, headers="keys", tablefmt=kolom_fmt, showindex=False)}")    # DATA TERSISA
                             input("\nTekan [enter] untuk kembali ke menu utama")
                             main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
                         # DATA TIDAK JADI DIHAPUS
@@ -1023,14 +1392,13 @@ def main_page_admin():
                 input("\nData tidak ada ... Tekan [enter] untuk kembali ke menu utama")
                 main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
         
-        # FITUR 5.1
+        # FITUR 6.1 SELESAI : UI : COMMENT : DESAIN
 
-        elif menu_choice_5 == '2':    # FITUR 6.2 HAPUS DATA>HAPUS DATA KARYAWAN
-
+        elif menu_choice_6 == '2':    # FITUR 6.2 HAPUS DATA>HAPUS DATA KARYAWAN
             os.system('cls')
-            print(f"++{'='*86}++\n|| {f"admin>menu utama>hapus data>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*24}H A P U S   D A T A   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n\nmenampilkan keseluruhan data...\n")  # UI HAPUS DATA
+            print(f"++{'='*86}++\n|| {f"admin>menu utama>hapus data>hapus data karyawan>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*24}H A P U S   D A T A   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\nmenampilkan keseluruhan data...\n")  # UI HAPUS DATA
             df = pd.DataFrame(data_employee, columns=kolom_employee)    # MENGUBAH LIST MENJADI TABEL DENGAN PANDAS
-            print(tabulate.tabulate(df, headers=kolom_employee, tablefmt="github", showindex=False))    # MENAMPILKAN TABEL KE TERMINAL
+            print(tabulate.tabulate(df, headers=kolom_employee, tablefmt=kolom_fmt, showindex=False))    # MENAMPILKAN TABEL KE TERMINAL
 
             # MENDETEKSI DATA YANG HENDAK DIHAPUS ITU ADA
             menghapus_file = input("\nMasukkan ID karyawan yang mau dihapus : ")      # user memasukkan data yang ingin dihapus
@@ -1040,15 +1408,20 @@ def main_page_admin():
                 for x in range(0,len(data_employee)):   # mencari di seluruh database admin
                     # BILA DATA YANG DICOCOKKAN SAMA DENGAN YANG DICARI
                     if menghapus_file == data_employee[x][0]:   # DATA COCOK
-                        print(f'Data karyawan yang akan dihapus : "{data_employee[x]}"!\n')# KONFIRMASI DATA YANG HENDAK DIHAPUS
+                        os.system('cls')
+                        print(f"++{'='*86}++\n|| {f"admin>menu utama>hapus data>hapus data karyawan>ID:{data_employee[x][0]}":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*24}H A P U S   D A T A   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n")
+                        print(f'Data karyawan yang akan dihapus :')# KONFIRMASI DATA YANG HENDAK DIHAPUS
+                        print(tabulate.tabulate([data_employee[x]], headers=kolom_employee, tablefmt=kolom_fmt, showindex=False))   # KONFIRMASI DATA 
                         pilihan_employee_hapus = input("Anda yakin?\nTekan [1] untuk menghapus\nTekan [2] atau [tombol lain] untuk membatalkan : ") # KONFIRMASI HENDAK MENGHAPUS ATAU TIDAK
                         # DATA JADI DIHAPUS
                         if pilihan_employee_hapus == '1':
                             df = pd.DataFrame(data_employee, columns=kolom_employee)                # deklarasi tabel pandas
                             df = df.drop(x)                                                         # menghapus data yang diinginkan
                             np.savetxt('employee_account_database.csv',df,delimiter=',',fmt='% s')  # meyimpan kembali data yang tidak dihapus
-                            input(f"\nID dihapus : {menghapus_file}\n") # IN-PROGRAM-NOTIFICATION DATA YANG TELAH DIHAPUS
-                            print(f"Hasil data : \n{tabulate.tabulate(df, headers="keys", tablefmt="github", showindex=False)}")    # DATA TERSISA
+                            os.system('cls')
+                            print(f"++{'='*86}++\n|| {f"admin>menu utama>hapus data>hapus data karyawan>ID:{data_employee[x][0]}":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*24}H A P U S   D A T A   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n")
+                            print(f"ID dihapus : {menghapus_file}\n") # IN-PROGRAM-NOTIFICATION DATA YANG TELAH DIHAPUS
+                            print(f"Hasil data : \n{tabulate.tabulate(df, headers="keys", tablefmt=kolom_fmt, showindex=False)}")    # DATA TERSISA
                             input("\nTekan [enter] untuk kembali ke menu utama")
                             main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
                         # DATA TIDAK JADI DIHAPUS
@@ -1056,25 +1429,70 @@ def main_page_admin():
                             input("\nMembatalkan ... Tekan [enter] untuk kembali ke menu utama")
                             main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
                     else:   # DATA TIDAK COCOK
-                        pass
+                        input("\nData tidak ada ... Tekan [enter] untuk kembali ke menu utama")
+                        main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
 
             else:   # BILA DATA YANG HENDAK DIHAPUS TIDAK ADA
                 input("\nData tidak ada ... Tekan [enter] untuk kembali ke menu utama")
                 main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
         
-        # FITUR 5.2
+        # FITUR 6.2 SELESAI : UI : COMMENT : DESAIN
          
-        elif menu_choice_5 == '3':    # FITUR 6.3 HAPUS PRESENSI KARYAWAN
+        elif menu_choice_6 == '3':    # FITUR 6.3 HAPUS PRESENSI ADMIN
             os.system('cls')
-            print(f"++{'='*86}++\n|| {f"admin>menu utama>hapus presensi karyawan>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}H A P U S   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n=\n\n") # UI HAPUS DATA
+            print(f"++{'='*86}++\n|| {f"admin>menu utama>hapus presensi admin>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*24}H A P U S   P R E S E N S I   A D M I N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n") # UI HAPUS DATA
+            df = pd.DataFrame(data_presensi_admin, columns=kolom_presensi)    # MENGUBAH LIST MENJADI TABEL DENGAN PANDAS
+            
+            # MENCARI TANGGAL YANG HENDAK DIHAPUS ITU ADA
+            masukkan_tanggal_presensi = str(input("Masukkan tanggal yang dicari : "))  # user memasukkan data yang ingin dihapus
+            
+            os.system('cls')
+            print(f"++{'='*86}++\n|| {f"admin>menu utama>hapus presensi admin>tanggal:{masukkan_tanggal_presensi}":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*24}H A P U S   P R E S E N S I   A D M I N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n") # UI HAPUS DATA
+
+            # FILTRASI TANGGAL YANG SESUAI DENGAN YANG DICARI
+            filtered_df = df.loc[df['Tanggal'].str.contains(masukkan_tanggal_presensi)]        
+            print(tabulate.tabulate(filtered_df, headers="keys", tablefmt=kolom_fmt))    # MENAMPILKAN TABEL TANGGAL YANG SESUAI
+            # MEMILIH INDEX YANG HENDAK DIHAPUS
+            masukkan_hapus_presensi = input("\nMasukkan index yang hendak dihapus : ")
+            print()
+
+            if int(masukkan_hapus_presensi) in filtered_df.index.values.tolist():  # BILA INDEX YANG DIMASUKKAN ADA DI DALAH INDEKS SORTIRAN
+                pilihan_absensi_hapus = input("Anda yakin?\nTekan [1] untuk menghapus\nTekan [2] atau [tombol lain] untuk membatalkan : ") # KONFIRMASI HENDAK MENGHAPUS ATAU TIDAK
+                # DATA JADI DIHAPUS
+                if pilihan_absensi_hapus == '1':
+                    df = df.drop(int(masukkan_hapus_presensi))  # MENGHAPUS DATA
+                    df = df.astype(str) # Konversi semua kolom ke dalam string sebelum menyimpan
+                    # Simpan DataFrame yang telah diubah ke dalam file CSV
+                    np.savetxt("presensi_database_admin.csv",df,delimiter=',',fmt='% s')  
+                    os.system('cls')
+                    print(f"++{'='*86}++\n|| {f"admin>menu utama>hapus presensi admin>tanggal:{masukkan_tanggal_presensi}":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*24}H A P U S   P R E S E N S I   A D M I N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n") # UI HAPUS DATA
+                    print(f"Data {masukkan_hapus_presensi} berhasil dihapus!")  # IN-PROGRAM-NOTIFICATION DATA YANG TELAH DIHAPUS
+                    print(f"Data saat ini :\n\n{tabulate.tabulate(df, headers="keys", tablefmt=kolom_fmt, showindex=False)}")    # DATA TERSISA
+                    input("\nTekan [enter] untuk kembali ke Main Menu")
+                # DATA TIDAK JADI DIHAPUS
+                else:
+                    input("\nMembatalkan ... Tekan [enter] untuk kembali ke menu utama")
+
+            else:   # INDEX YANG DIPILIH BUKAN YANG DISORTIR
+                print("Kesalahan input, index yang dimasukkan tidak dalam jangkauan sortir, atau data tidak ada")
+                input("Tekan [Enter] untuk kembali ke Main Menu")
+            
+        # FITUR 6.3 SELESAI : UI : COMMENT : DESAIN
+
+        elif menu_choice_6 == '4':    # FITUR 6.4 HAPUS PRESENSI KARYAWAN
+            os.system('cls')
+            print(f"++{'='*86}++\n|| {f"admin>menu utama>hapus presensi karyawan>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}H A P U S   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n") # UI HAPUS DATA
             df = pd.DataFrame(data_presensi, columns=kolom_presensi)    # MENGUBAH LIST MENJADI TABEL DENGAN PANDAS
             
             # MENCARI TANGGAL YANG HENDAK DIHAPUS ITU ADA
-            masukkan_tanggal_presensi = str(input("\nMasukkan tanggal yang dicari : "))  # user memasukkan data yang ingin dihapus
-            print()
+            masukkan_tanggal_presensi = str(input("Masukkan tanggal yang dicari : "))  # user memasukkan data yang ingin dihapus
+            
+            os.system('cls')
+            print(f"++{'='*86}++\n|| {f"admin>menu utama>hapus presensi karyawan>tanggal:{masukkan_tanggal_presensi}":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}H A P U S   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n") # UI HAPUS DATA
+
             # FILTRASI TANGGAL YANG SESUAI DENGAN YANG DICARI
             filtered_df = df.loc[df['Tanggal'].str.contains(masukkan_tanggal_presensi)]        
-            print(tabulate.tabulate(filtered_df, headers="keys", tablefmt="github"))    # MENAMPILKAN TABEL TANGGAL YANG SESUAI
+            print(tabulate.tabulate(filtered_df, headers="keys", tablefmt=kolom_fmt))    # MENAMPILKAN TABEL TANGGAL YANG SESUAI
             # MEMILIH INDEX YANG HENDAK DIHAPUS
             masukkan_hapus_presensi = input("\nMasukkan index yang hendak dihapus : ")
             print()
@@ -1087,25 +1505,25 @@ def main_page_admin():
                     df = df.astype(str) # Konversi semua kolom ke dalam string sebelum menyimpan
                     # Simpan DataFrame yang telah diubah ke dalam file CSV
                     np.savetxt("presensi_database.csv",df,delimiter=',',fmt='% s')  
-                    input(f"\nData {masukkan_hapus_presensi} berhasil dihapus!\n")  # IN-PROGRAM-NOTIFICATION DATA YANG TELAH DIHAPUS
-                    print(f"Data saat ini :\n\n{tabulate.tabulate(df, headers="keys", tablefmt="github", showindex=False)}")    # DATA TERSISA
+                    os.system('cls')
+                    print(f"++{'='*86}++\n|| {f"admin>menu utama>hapus presensi karyawan>tanggal:{masukkan_tanggal_presensi}":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}H A P U S   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n") # UI HAPUS DATA
+                    print(f"Data {masukkan_hapus_presensi} berhasil dihapus!")  # IN-PROGRAM-NOTIFICATION DATA YANG TELAH DIHAPUS
+                    print(f"Data saat ini :\n\n{tabulate.tabulate(df, headers="keys", tablefmt=kolom_fmt, showindex=False)}")    # DATA TERSISA
+                    input("\nTekan [enter] untuk kembali ke Main Menu")
                 # DATA TIDAK JADI DIHAPUS
                 else:
                     input("\nMembatalkan ... Tekan [enter] untuk kembali ke menu utama")
-                    main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
 
             else:   # INDEX YANG DIPILIH BUKAN YANG DISORTIR
                 print("Kesalahan input, index yang dimasukkan tidak dalam jangkauan sortir, atau data tidak ada")
-
-            input("\nTekan [enter] untuk kembali ke Main Menu")
-            main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
+                input("Tekan [Enter] untuk kembali ke Main Menu")
+            
+        # FITUR 6.4 SELESAI : UI : COMMENT : DESAIN
         
-        # FITUR 6.3
+        main_page_admin()
 
-        else:
-            main_page_admin()
+    # FITUR 6 SELESAI : UI : COMMENT : DESAIN
 
-    # FITUR 6 SELESAI
     elif menu_choice == '7':        # FITUR 7 KARYAWAN TERBAIK ATAU TERBURUK
         os.system('cls')
         print(f"++{'='*86}++\n|| {f'admin>menu utama>lihat data>lihat presensi karyawan>urutkan karyawan>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}L I H A T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('%A, %d %B %Y | %H:%M:%S')}\n")
@@ -1205,24 +1623,41 @@ def main_page_admin():
         sorted_df = pd.DataFrame(sorted_list)
 
         # Plot the data
-        plt.figure(figsize=(10, 6))
+        plt.figure(figsize=(6, 5))
         plt.bar(sorted_df['Nama'], sorted_df['Total Kehadiran'], color='blue')
         plt.xlabel('Nama Karyawan')
         plt.ylabel('Total Kehadiran')
-        plt.title(f'Total Kehadiran Karyawan dari {"terbaik ke terburuk" if sort_order == "1" else "terburuk ke terbaik"} untuk periode "{rekap_choice_word}"')
+        plt.title(f'Total Kehadiran Karyawan dari {"terbaik ke terburuk" if sort_order == "1" else "terburuk ke terbaik"} \nuntuk periode "{rekap_choice_word}"')
         plt.xticks(rotation=45, ha='right')
         plt.tight_layout()
 
-        # Save the plot as an image
-        plt.savefig('attendance_summary_chart.png')
+        # ROOT TKINTER
+        root = tk.Tk()
+        root.withdraw()  # SEMBUNYIKAN TK
+        # MEMBUAT WINDOW TK UNTUK PATOKAN POSISI WINDOW PLT
+        top = tk.Toplevel(root)
+        # MENGATUR UKURAN DAN POSISI MEMUNCULKAN KANVAS
+        screen_width = root.winfo_screenwidth()
+        screen_height = root.winfo_screenheight()
+        window_width = 550
+        window_height = 400
+        pos_x = screen_width - window_width - 50  # 50 pixel dari kanan
+        pos_y = screen_height - window_height - 100  # 100 pixel dari bawah
+        top.geometry(f'{window_width}x{window_height}+{pos_x}+{pos_y}')
+        top.update_idletasks()
+        # MEMINDAHKAN WINDOW PLT KE POSISI YANG DIINGINKAN
+        fig_manager = plt.get_current_fig_manager()
+        fig_manager.window.wm_geometry(f"{window_width}x{window_height}+{pos_x}+{pos_y}")
+        # EKSEKUSI
+        root.destroy()  # MENUTUP WINDOW TK KARENA HANYA 
 
         # Display the plot
+        print("\n[Tutup jendela grafik untuk kembali ke Main Menu]")
         plt.show()
 
-        input("\nTekan [enter] untuk kembali ke menu utama")
         main_page_admin()    # FITUR 7
 
-    # FITUR 7 SELESAI
+    # FITUR 7 SELESAI 
 
     elif menu_choice == '8':        # FTUR 8 LEMBUR
         def baca_data_karyawan():
@@ -1438,23 +1873,25 @@ def main_page_admin():
     elif menu_choice == '9':        # FITUR 9 PENGGAJIAN
         def penggajian():
             os.system('cls')
-            print(f"++{'='*86}++\n|| {f'admin>menu utama>penggajian':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}P E N G G A J I A N  K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('%A, %d %B %Y | %H:%M:%S')}\n")
-
+            print(f"++{'='*86}++\n|| {f'admin>menu utama>penggajian>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}P E N G G A J I A N  K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('%A, %d %B %Y | %H:%M:%S')}\n")
 
             # Membaca file csv dari ketiga csv
             try:
-                employee_df = pd.read_csv('employee_account_database.csv', names=kolom_employee)
-                lembur_df = pd.read_csv('perintah_lembur.csv')
-                presensi_df = pd.read_csv('presensi_database.csv')
+                kolom_employee = ['ID', 'Nama', 'Posisi', 'Password']
+                kolom_lembur = ["Tanggal", "Hari", "ID", "Nama", "Jam Mulai", "Jam Selesai", "durasi_jam"]
+                kolom_presensi = ["Tanggal", "ID", "Nama", "Hari Kerja", "Kehadiran", "Waktu"]
+                employee_df = pd.read_csv('employee_account_database.csv', names=kolom_employee, header=None)
+                lembur_df = pd.read_csv('perintah_lembur.csv', names=kolom_lembur, header=None)
+                presensi_df = pd.read_csv('presensi_database.csv', names=kolom_presensi, header=None)
             except FileNotFoundError as e:
                 print(f"Error: {e}")
+                input("Tekan [enter] untuk kembali ke menu utama")
                 return
-           
+
             # Set ongkos lembur per jam dan potongan per jam keterlambatan dan per hari ketidakhadiran
             ongkos_lembur_per_jam = 50000
             potongan_per_jam_telat = 10000
             potongan_per_hari_absen = 100000
-
 
             # Daftar posisi karyawan
             posisi_karyawan = [
@@ -1462,108 +1899,97 @@ def main_page_admin():
                 'HR', 'Digital Marketing', 'Designer', 'PM', 'Developer', 'Data Analyst'
             ]
 
-
             # Menampilkan menu pilihan posisi
             print("Pilih posisi karyawan:")
-            print("0. Semua posisi")
             for i, posisi in enumerate(posisi_karyawan, 1):
                 print(f"{i}. {posisi}")
 
-
-            # Meminta input dari pengguna dengan error handling
-            print(employee_df)
+            # Input pilihan posisi
             while True:
                 try:
-                    pilihan = int(input("Masukkan nomor posisi yang dipilih (atau masukkan 0 untuk semua posisi): "))
-                    if 0 <= pilihan <= len(posisi_karyawan):
-                        if pilihan == 0:
-                            posisi_terpilih = "Semua"
-                            karyawan_terpilih = employee_df
-                            print("Semua posisi dipilih")
-                        else:
-                            posisi_terpilih = posisi_karyawan[pilihan - 1]
-                            karyawan_terpilih = []
-                            for i in range(0,len(employee_df)):
-                                if employee_df.iloc[2, i] == posisi_terpilih:
-                                    print(employee_df[i])
-                                    karyawan_terpilih.append(employee_df[i,])
-                            input(f"Posisi yang dipilih: {posisi_terpilih}")
-                       
-                        if karyawan_terpilih == []:
-                            input(f"Tidak ada karyawan untuk posisi: {posisi_terpilih}")
-                            return
-                            
-                    else:
-                        input("Nomor posisi tidak valid. Silakan coba lagi.")
-                except ValueError as e:
-                    input(f"{e}Input tidak valid. Silakan masukkan nomor posisi.")
+                    pilihan = int(input("Masukkan nomor posisi yang dipilih: "))
+                    if 1 <= pilihan <= len(posisi_karyawan):
+                        posisi_terpilih = posisi_karyawan[pilihan - 1].upper()  # Konversi ke huruf besar
+                        karyawan_terpilih = employee_df[employee_df['Posisi'].str.upper() == posisi_terpilih]  # Bandingkan dalam huruf besar
+                        print(f"\nPosisi yang dipilih: {posisi_terpilih.title()}\n")
 
+                        if karyawan_terpilih.empty:
+                            input(f"Tidak ada karyawan untuk posisi: {posisi_terpilih.title()}. Tekan [enter] untuk keluar.")
+                            return
+                        else:
+                            break
+                    else:
+                        input("Nomor posisi tidak valid. Silakan coba lagi. Tekan [enter] untuk melanjutkan.")
+                except ValueError as e:
+                    input(f"{e}. Input tidak valid. Silakan masukkan nomor posisi. Tekan [enter] untuk melanjutkan.")
 
             # Tentukan gaji pokok berdasarkan posisi karyawan
             gaji_pokok_map = {
-                'Sekretaris': 4000000,
-                'Akuntan': 6000000,
-                'Sales Representative': 5000000,
-                'Tax': 6000000,
+                'SEKRETARIS': 4000000,
+                'AKUNTAN': 6000000,
+                'SALES REPRESENTATIVE': 5000000,
+                'TAX': 6000000,
                 'CS': 3500000,
-                'Admin': 4000000,
+                'ADMIN': 4000000,
                 'HR': 4500000,
-                'Digital Marketing': 5500000,
-                'Designer': 5000000,
+                'DIGITAL MARKETING': 5500000,
+                'DESIGNER': 5000000,
                 'PM': 7000000,
-                'Developer': 8000000,
-                'Data Analyst': 6000000
+                'DEVELOPER': 8000000,
+                'DATA ANALYST': 6000000
             }
 
-
-            # Hitung total lembur dan ongkos lembur
-            lembur_df['durasi_jam'] = lembur_df['durasi_jam'].astype(float)
-            total_lembur = lembur_df.groupby('Id')['durasi_jam'].sum().reset_index()
-            total_lembur['Ongkos_Lembur'] = total_lembur['durasi_jam'] * ongkos_lembur_per_jam
-
+            # Pastikan kolom 'durasi_jam' ada dan berisi nilai float
+            if 'durasi_jam' in lembur_df.columns:
+                lembur_df['durasi_jam'] = pd.to_numeric(lembur_df['durasi_jam'], errors='coerce').fillna(0).astype(float)
+                total_lembur = lembur_df.groupby('ID')['durasi_jam'].sum().reset_index()
+                total_lembur['Ongkos_Lembur'] = total_lembur['durasi_jam'] * ongkos_lembur_per_jam
+            else:
+                print("Kolom 'durasi_jam' tidak ditemukan dalam DataFrame lembur. Pastikan kolom tersebut ada di file CSV.")
+                input("Tekan [enter] untuk kembali ke menu utama")
+                return
 
             # Hitung total keterlambatan
-            presensi_df['waktu'] = pd.to_datetime(presensi_df['waktu']).dt.time
-            presensi_df['Telat'] = presensi_df.apply(lambda row: max((datetime.datetime.combine(datetime.date.today(), row['waktu']) - datetime.datetime.combine(datetime.date.today(), datetime.time(9, 0))).seconds // 3600, 0) if row['kehadiran'] == 'Hadir' and row['waktu'] > datetime.time(9, 0) else 0, axis=1)
-            total_telat = presensi_df.groupby('ID')['Telat'].sum().reset_index()
-            total_telat['Potongan_Telat'] = total_telat['Telat'] * potongan_per_jam_telat
+            presensi_df['Waktu'] = pd.to_datetime(presensi_df['Waktu'], errors='coerce').dt.time
 
+            presensi_df['TERLAMBAT'] = presensi_df.apply(
+                lambda row: max(
+                    (datetime.datetime.combine(datetime.date.today(), row['Waktu']) - datetime.datetime.combine(datetime.date.today(), datetime.time(9, 0))).seconds // 3600, 0
+                ) if row['Kehadiran'] == 'HADIR' and row['Waktu'] > datetime.time(9, 0) else 0, axis=1
+            )
+            total_telat = presensi_df.groupby('ID')['TERLAMBAT'].sum().reset_index()
+            total_telat['Potongan_Telat'] = total_telat['TERLAMBAT'] * potongan_per_jam_telat
 
             # Hitung total ketidakhadiran
-            absensi_df = presensi_df[(presensi_df['kehadiran'] == 'Tidak Hadir') & (presensi_df['hari_kerja'] == 'Ya')]
+            absensi_df = presensi_df[(presensi_df['Kehadiran'] == 'TIDAK HADIR') & (presensi_df['Hari Kerja'] == 'Ya')]
             total_absen = absensi_df.groupby('ID').size().reset_index(name='Total_Tidak_Hadir')
             total_absen['Potongan_Absensi'] = total_absen['Total_Tidak_Hadir'] * potongan_per_hari_absen
 
-
             # Merge data untuk penggajian
-            penggajian_df = pd.merge(karyawan_terpilih, total_lembur, left_on='ID', right_on='Id', how='left').fillna(0)
+            penggajian_df = pd.merge(karyawan_terpilih, total_lembur, on='ID', how='left').fillna(0)
             penggajian_df = pd.merge(penggajian_df, total_telat[['ID', 'Potongan_Telat']], on='ID', how='left').fillna(0)
             penggajian_df = pd.merge(penggajian_df, total_absen[['ID', 'Potongan_Absensi']], on='ID', how='left').fillna(0)
-
 
             # Tentukan gaji pokok berdasarkan posisi karyawan
             penggajian_df['Gaji_Pokok'] = penggajian_df['Posisi'].map(gaji_pokok_map)
 
-
             # Hitung Gaji Bersih
             penggajian_df['Gaji_Bersih'] = penggajian_df['Gaji_Pokok'] + penggajian_df['Ongkos_Lembur'] - penggajian_df['Potongan_Telat'] - penggajian_df['Potongan_Absensi']
-
 
             # Kolom yang ingin disimpan
             kolom_penggajian = ['ID', 'Nama', 'Posisi', 'Gaji_Pokok', 'Ongkos_Lembur', 'Potongan_Telat', 'Potongan_Absensi', 'Gaji_Bersih']
 
-
             # Save the DataFrame to CSV
-            penggajian_df[kolom_penggajian].to_csv('employee_penggajian.csv', index=False)
+            with open('employee_penggajian.csv', mode='a', newline='') as file:
+                penggajian_df.to_csv(file, index=False, header=file.tell() == 0)
 
-
-            # Print the DataFrame using tabulate
-            print(tabulate(penggajian_df[kolom_penggajian], headers='keys', tablefmt='grid'))
-
+            # Print the DataFrame using tabulate with formatted values
+            penggajian_df[kolom_penggajian] = penggajian_df[kolom_penggajian].applymap(lambda x: f"{x:,.0f}" if isinstance(x, (int, float)) else x)
+            print("\nHasil Penggajian Karyawan:")
+            print(tabulate.tabulate(penggajian_df[kolom_penggajian], headers='keys', tablefmt='fancy_grid'))
 
             input("\nTekan [enter] untuk kembali ke menu utama")
             main_page_admin()
-
 
         penggajian()
 
@@ -1585,7 +2011,6 @@ def main_page_admin():
 
     else:
         main_page_admin()    # salah input, kembali ke menu utama admin
-    os.system('cls')
 
 # FITUR ADMIN
       
@@ -1707,6 +2132,7 @@ def main_page_employee():   # FITUR KARYAWAN
             # KARYAWAN YANG HENDAK PRESENSI BUKAN MERUPAKAN KARYAWAN SHIFT TERSEBUT
             else:   
                 input("\nPERHATIAN : Bukan jadwal presensi anda! Tekan [enter] untuk melanjutkan")
+            main_page_employee()
 
     # FITUR 1 SELESAI - UI : COMMENT : DESAIN
 
@@ -2053,46 +2479,43 @@ def main_page_employee():   # FITUR KARYAWAN
     # FITUR 5 tinggal r nya brili
 
     elif menu_choice == '6':  # FITUR 6 GAJI ANDA
-        def cetak_slip_gaji(karyawan_id):
-            # Membaca data dari file penggajian.csv dan employee_database.csv
-            penggajian_df = pd.read_csv('penggajian.csv')
-            employee_df = pd.read_csv('employee_database.csv')
+        def cetak_slip(launch_ID):
+            os.system('cls')  # Bersihkan console
+            print(f'++{"="*86}++\n|| karyawan>menu utama>gaji anda>{" "*46}||\n++{"-"*86}++\n||{" "*86}||\n||{" "*26}S L I P  G A J I  A N D A{" "*25}||\n||{" "*86}||\n++{"="*86}++\nwaktu : {datetime.datetime.now().strftime("%A, %d %B %Y | %H:%M:%S")}\n\n')
+           
+            with open('employee_penggajian.csv', 'r') as penggajian_file:
+                data_penggajian = penggajian_file.readlines()
 
-            # Cari data karyawan berdasarkan ID di employee_database.csv
-            data_karyawan = employee_df[employee_df['ID'] == karyawan_id]
 
-            # Cek apakah data karyawan ditemukan di employee_database.csv
-            if data_karyawan.empty:
-                print("Data karyawan tidak ditemukan di database karyawan.")
-                return
+            # Asumsi nama kolom file CSV adalah seperti berikut
+            kolom_penggajian = ['ID','Nama','Posisi','Password','durasi_jam','Ongkos_Lembur','Potongan_Telat','Potongan_Absensi','Gaji_Pokok','Gaji_Bersih']
+            # Membuat DataFrame Pandas dari data penggajian
+            df = pd.DataFrame([entry.strip().split(',') for entry in data_penggajian[1:]], columns=kolom_penggajian)
+            # Filter DataFrame berdasarkan ID yang sudah login
+            filtered_df = df.loc[df['ID'] == str(launch_ID)]
 
-            # Cari data penggajian karyawan berdasarkan ID
-            data_penggajian = penggajian_df[penggajian_df['ID'] == karyawan_id]
 
-            # Cek apakah data penggajian ditemukan
-            if data_penggajian.empty:
-                print("Data penggajian tidak ditemukan untuk karyawan ini.")
-                return
-            
-            # Print slip gaji
-            print("\n" + "="*40)
-            print("                SLIP GAJI KARYAWAN                ")
-            print("="*40)
-            print(f"ID Karyawan    : {data_karyawan.iloc[0]['ID']}")
-            print(f"Nama           : {data_karyawan.iloc[0]['Nama']}")
-            print(f"Posisi         : {data_karyawan.iloc[0]['Posisi']}")
-            print("-"*40)
-            print(f"Gaji Pokok     : Rp {data_penggajian.iloc[0]['Gaji_Pokok']:,}")
-            print(f"Ongkos Lembur  : Rp {data_penggajian.iloc[0]['Ongkos_Lembur']:,}")
-            print(f"Potongan Telat : Rp {data_penggajian.iloc[0]['Potongan_Telat']:,}")
-            print(f"Potongan Absen : Rp {data_penggajian.iloc[0]['Potongan_Absensi']:,}")
-            print("-"*40)
-            print(f"Gaji Bersih    : Rp {data_penggajian.iloc[0]['Gaji_Bersih']:,}")
-            print("="*40 + "\n")
+            # Menampilkan data pada slip gaji
+            if not filtered_df.empty:
+                data = filtered_df.iloc[0]
+                print(f"ID Karyawan    : {data['ID']}")
+                print(f"Nama           : {data['Nama']}")
+                print(f"Posisi         : {data['Posisi']}")
+                print("-"*86)
+                print(f"Gaji Pokok     : Rp {float(data['Gaji_Pokok']):,.2f}")
+                print(f"Ongkos Lembur  : Rp {float(data['Ongkos_Lembur']):,.2f}")
+                print(f"Potongan Telat : Rp {float(data['Potongan_Telat']):,.2f}")
+                print(f"Potongan Absen : Rp {float(data['Potongan_Absensi']):,.2f}")
+                print("-"*86)
+                print(f"Gaji Bersih    : Rp {float(data['Gaji_Bersih']):,.2f}")
+                input("="*86 + "\n")
+            else:
+                input("Data penggajian tidak ditemukan untuk ID ini.")
+            main_page_employee()
 
-        # Contoh pemanggilan fungsi
-        cetak_slip_gaji(tujuan)  # ID karyawan Budi Sugianto
 
+        cetak_slip(launch_ID)
+    
     # FITUR 6
 
     elif menu_choice == '7':  # FITUR 7 EULA
