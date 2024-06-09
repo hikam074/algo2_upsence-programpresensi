@@ -2545,11 +2545,11 @@ def main_page_employee():   # FITUR KARYAWAN
 def akun_pertama():
     os.system('cls')
 
-    # apabila database akun karyawan belum ada
-    if not(Path('employee_account_database.csv').is_file()):
+    # apabila database presensi admin belum ada
+    if not(Path('presensi_database_admin.csv').is_file()):
         #buat file dahulu sebelum mengakses fungsi tambah supaya bisa menambahkan header dulu
-        employee = open('employee_account_database.csv', 'w')
-        employee.close()
+        presensi = open('presensi_database_admin.csv', 'w')
+        presensi.close()
 
     # apabila database presensi employee belum ada
     if not(Path('presensi_database.csv').is_file()):
@@ -2557,11 +2557,12 @@ def akun_pertama():
         presensi = open('presensi_database.csv', 'w')
         presensi.close()
 
-    # apabila database presensi admin belum ada
-    if not(Path('presensi_database_admin.csv').is_file()):
+    # apabila database histori belum ada
+    if not(Path('histori_database.csv').is_file()):
         #buat file dahulu sebelum mengakses fungsi tambah supaya bisa menambahkan header dulu
-        presensi = open('presensi_database_admin.csv', 'w')
+        presensi = open('histori_database.csv', 'w')
         presensi.close()
+
 
     # apabila database perintah lembur belum ada
     if not(Path('perintah_lembur.csv').is_file()):
@@ -2575,10 +2576,18 @@ def akun_pertama():
         employee = open('employee_presensi_lembur.csv', 'w')
         employee.close()
 
+
     # apabila database gaji belum ada
-    if not(Path('penggajian_database.csv').is_file()):
+    if not(Path('employee_penggajian.csv').is_file()):
         #buat file dahulu sebelum mengakses fungsi tambah supaya bisa menambahkan header dulu
         employee = open('penggajian_database.csv', 'w')
+        employee.close()
+    
+
+    # apabila database akun karyawan belum ada
+    if not(Path('employee_account_database.csv').is_file()):
+        #buat file dahulu sebelum mengakses fungsi tambah supaya bisa menambahkan header dulu
+        employee = open('employee_account_database.csv', 'w')
         employee.close()
 
     # apabila database admin belum ada
@@ -2592,18 +2601,11 @@ def akun_pertama():
         first_Account_pass   = str(input("Masukkan passkey anda      : "))
 
         # memasukkan admin pertama 
-        first_input = f"{first_account_ID.upper()},{first_account_nama.upper()},{first_account_posisi.upper()},TRUE,TRUE,TRUE,TRUE,TRUE,FALSE,FALSE,{first_Account_pass}"
+        first_input = f"{first_account_ID.upper()},{first_account_nama.upper()},{first_account_posisi.upper()},{first_Account_pass}"
 
         with open('admin_account_database.csv', 'w', newline='') as fileAdmincsv:
             admin_list = csv.DictWriter(fileAdmincsv, fieldnames=[first_input],  delimiter='/') 
             admin_list.writeheader()
-
-    # apabila database histori belum ada
-    if not(Path('histori_database.csv').is_file()):
-        #buat file dahulu sebelum mengakses fungsi tambah supaya bisa menambahkan header dulu
-        presensi = open('histori_database.csv', 'w')
-        presensi.close()
-
 
 # FITUR AKUN PERTAMA SELESAI
 
@@ -2615,6 +2617,32 @@ def akun_pertama():
 
 def backendAutoPresensi():
     # MEMBUAT PENGECEK DATA PRESENSI SUDAH ADA ATAU BELUM
+
+    # MENGIMPOR DATA ADMIN
+    data_admin = []     # VARIABEL KOSONG UNTUK MENYIMPAN DATA ADMIN
+    with open('admin_account_database.csv') as csvfile_admin:       # MEMBUKA .CSV ADMIN
+        reader_Admin = csv.reader(csvfile_admin)
+        for row in reader_Admin:        # menjadikan file .csv menjadi list admin (menambahkan tiap baris pada .csv kedalam variabel data admin)
+            data_admin.append(row)
+    
+    # DATABASE PRESENSI ADMIN
+    data_presensi_admin = []
+    with open('presensi_database_admin.csv') as csvfile_presensi:
+        reader_presensi = csv.reader(csvfile_presensi)
+        for row in reader_presensi:
+            data_presensi_admin.append(row)
+
+    # INDIKATOR DATABASE PRESENSI ADMIN
+    data_presensi_admin_cond = []
+    g=0
+    with open('presensi_database_admin.csv') as csvfile_presensi:
+        reader_presensi = csv.reader(csvfile_presensi)
+        for row in reader_presensi:
+            data_presensi_admin_cond.append(row)
+            data_presensi_admin_cond[g][-1] = ""
+            data_presensi_admin_cond[g][-2] = ""
+            g+=1
+
     # INDIKATOR DATABASE KARYAWAN
     data_employee = []
     with open('employee_account_database.csv') as csvfile_employee:
@@ -2622,14 +2650,14 @@ def backendAutoPresensi():
         for row in reader_employee:
             data_employee.append(row)
 
-    # DATABASE PRESENSI
+    # DATABASE PRESENSI EMPLOYEE
     data_presensi = []
     with open('presensi_database.csv') as csvfile_presensi:
         reader_presensi = csv.reader(csvfile_presensi)
         for row in reader_presensi:
             data_presensi.append(row)
 
-    # INDIKATOR DATABASE PRESENSI
+    # INDIKATOR DATABASE PRESENSI EMPLOYEE
     data_presensi_cond = []
     g=0
     with open('presensi_database.csv') as csvfile_presensi:
@@ -2654,30 +2682,6 @@ def backendAutoPresensi():
         with open('histori_database.csv', 'a', newline='') as csvfile_histori:    # notifikasi ke admin
             writer_histori = csv.writer(csvfile_histori,quoting=csv.QUOTE_NONE, escapechar=None)
             writer_histori.writerow(tanggalUpdateHistori)
-
-    for tujuan in range (0, len(data_employee)):
-
-        hari_seminggu = ["SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU", "MINGGU"]
-        hari_seminggu_inggris = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
-        for nomor_hari in range(0,7):
-            if (datetime.datetime.now().strftime("%A").upper() == hari_seminggu_inggris[nomor_hari]):   
-
-                data_baru = [tanggal_presensi, data_employee[tujuan][0], data_employee[tujuan][1], hari_seminggu[nomor_hari],'TIDAK HADIR',datetime.datetime.now().strftime("%H:%M:%S")]
-
-                data_baru_cond = [f'{tanggal_presensi}', f'{data_employee[tujuan][0]}', f'{data_employee[tujuan][1]}', hari_seminggu[nomor_hari], '', '']
-
-                dataUpdateHistori = [f'{backend_tanggal_presensi} Karyawan {data_employee[tujuan][0]} {data_employee[tujuan][1]} tidak presensi']
-
-                if (data_baru_cond not in data_presensi_cond) and ((datetime.datetime.now().strftime("%H:%M:%S") ) not in (pre_presensi and time_range_kerja)) and (dataUpdateHistori not in dataHistory):
-                    data_presensi.append(data_baru)   # Menambahkan data baru ke dalam list data_presensi
-                    with open('presensi_database.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
-                        writer_presensi = csv.writer(csvfile_presensi)
-                        writer_presensi.writerows(data_presensi)
-                    with open('histori_database.csv', 'a', newline='') as csvfile_histori:    # notifikasi ke admin
-                        writer_histori = csv.writer(csvfile_histori,quoting=csv.QUOTE_NONE, escapechar='_')
-                        writer_histori.writerows([dataUpdateHistori])
-                else:
-                    pass
 
     # MENGIMPOR DATA PERINTAH LEMBUR
     data_perintah_lembur = [] 
@@ -2704,31 +2708,85 @@ def backendAutoPresensi():
             data_presensilembur_cond[g][-2] = ""
             g+=1
 
-    hari_seminggu = ["SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU", "MINGGU"]
-    hari_seminggu_inggris = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
-    
-    data_baru_lembur = []
+    # MULAI EKSEKUSI BACKEND
 
-    for nomor_hari in range(0,7):
-        if (datetime.datetime.now().strftime("%A").upper() == hari_seminggu_inggris[nomor_hari]):  
-            for tujuan_lembur in range (0, len(data_perintah_lembur)):
-                data_baru_lembur_kotak = []
-                data_baru_lembur_kotak = ([f'{tanggal_presensi}', f'{data_perintah_lembur[tujuan_lembur][2]}', f'{data_perintah_lembur[tujuan_lembur][3]}', f'{hari_seminggu[nomor_hari]}', "TIDAK HADIR", f'{datetime.datetime.now().strftime("%H:%M:%S")}'])
+    if datetime.datetime.now().strftime("%HH:%MM:%SS") > close_kerja:
 
-                data_baru_cond = [f'{tanggal_presensi}',f'{hari_seminggu[nomor_hari]}', f'{data_perintah_lembur[tujuan_lembur][2]}', f'{data_perintah_lembur[tujuan_lembur][3]}', '', '', '']
+        # AUTOABSEN PRESENSI ADMIN
+        for tujuan in range (0, len(data_admin)):
 
-                dataUpdateHistori = [f'{backend_tanggal_presensi} Karyawan {data_perintah_lembur[tujuan_lembur][2]} {data_perintah_lembur[tujuan_lembur][3]} tidak lembur']
+            hari_seminggu = ["SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU", "MINGGU"]
+            hari_seminggu_inggris = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
+            for nomor_hari in range(0,7):
+                if (datetime.datetime.now().strftime("%A").upper() == hari_seminggu_inggris[nomor_hari]):   
 
-                if (data_baru_cond not in data_presensilembur_cond) and ((datetime.datetime.now().strftime("%H:%M:%S") ) not in (pre_presensi and time_range_kerja and DateTimeRange(data_perintah_lembur[tujuan_lembur][-3], data_perintah_lembur[tujuan_lembur][-2]))) and (dataUpdateHistori not in dataHistory):
-                    data_baru_lembur.append(data_baru_lembur_kotak)   # Menambahkan data baru ke dalam list data_presensi
-                    with open('employee_presensi_lembur.csv', 'w', newline='') as csvfile_presensi_lembur:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
-                        writer_presensi_lembur = csv.writer(csvfile_presensi_lembur)
-                        writer_presensi_lembur.writerow(data_baru_lembur_kotak)
-                    with open('histori_database.csv', 'a', newline='') as csvfile_histori:    # notifikasi ke admin
-                        writer_histori = csv.writer(csvfile_histori,quoting=csv.QUOTE_NONE, escapechar='_')
-                        writer_histori.writerows([dataUpdateHistori])
-                else:
-                    pass
+                    data_baru = [tanggal_presensi, data_admin[tujuan][0], data_admin[tujuan][1], hari_seminggu[nomor_hari],'TIDAK HADIR',datetime.datetime.now().strftime("%H:%M:%S")]
+                    data_baru_cond = [f'{tanggal_presensi}', f'{data_admin[tujuan][0]}', f'{data_admin[tujuan][1]}', hari_seminggu[nomor_hari], '', '']
+                    dataUpdateHistori = [f'{backend_tanggal_presensi} Karyawan {data_admin[tujuan][0]} {data_admin[tujuan][1]} tidak presensi']
+
+                    if (data_baru_cond not in data_presensi_admin_cond) and ((datetime.datetime.now().strftime("%H:%M:%S") ) not in (pre_presensi and time_range_kerja)) and (dataUpdateHistori not in dataHistory):
+                        data_presensi_admin.append(data_baru)   # Menambahkan data baru ke dalam list data_presensi
+                        with open('presensi_database_admin.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
+                            writer_presensi = csv.writer(csvfile_presensi)
+                            writer_presensi.writerows(data_presensi)
+                        with open('histori_database.csv', 'a', newline='') as csvfile_histori:    # notifikasi ke admin
+                            writer_histori = csv.writer(csvfile_histori,quoting=csv.QUOTE_NONE, escapechar='_')
+                            writer_histori.writerows([dataUpdateHistori])
+                    else:
+                        pass
+
+        # AUTOABSEN PRESENSI EMPLOYEE
+        for tujuan in range (0, len(data_employee)):
+
+            hari_seminggu = ["SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU", "MINGGU"]
+            hari_seminggu_inggris = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
+            for nomor_hari in range(0,7):
+                if (datetime.datetime.now().strftime("%A").upper() == hari_seminggu_inggris[nomor_hari]):   
+
+                    data_baru = [tanggal_presensi, data_employee[tujuan][0], data_employee[tujuan][1], hari_seminggu[nomor_hari],'TIDAK HADIR',datetime.datetime.now().strftime("%H:%M:%S")]
+
+                    data_baru_cond = [f'{tanggal_presensi}', f'{data_employee[tujuan][0]}', f'{data_employee[tujuan][1]}', hari_seminggu[nomor_hari], '', '']
+
+                    dataUpdateHistori = [f'{backend_tanggal_presensi} Karyawan {data_employee[tujuan][0]} {data_employee[tujuan][1]} tidak presensi']
+
+                    if (data_baru_cond not in data_presensi_cond) and ((datetime.datetime.now().strftime("%H:%M:%S") ) not in (pre_presensi and time_range_kerja)) and (dataUpdateHistori not in dataHistory):
+                        data_presensi.append(data_baru)   # Menambahkan data baru ke dalam list data_presensi
+                        with open('presensi_database.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
+                            writer_presensi = csv.writer(csvfile_presensi)
+                            writer_presensi.writerows(data_presensi)
+                        with open('histori_database.csv', 'a', newline='') as csvfile_histori:    # notifikasi ke admin
+                            writer_histori = csv.writer(csvfile_histori,quoting=csv.QUOTE_NONE, escapechar='_')
+                            writer_histori.writerows([dataUpdateHistori])
+                    else:
+                        pass
+        
+        # AUTOABSENSI PRESENSI LEMBUR
+        if datetime.datetime.now().strftime("%HH:%MM:%SS") > close_lembur:
+            hari_seminggu = ["SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU", "MINGGU"]
+            hari_seminggu_inggris = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
+            
+            data_baru_lembur = []
+
+            for nomor_hari in range(0,7):
+                if (datetime.datetime.now().strftime("%A").upper() == hari_seminggu_inggris[nomor_hari]):  
+                    for tujuan_lembur in range (0, len(data_perintah_lembur)):
+                        data_baru_lembur_kotak = []
+                        data_baru_lembur_kotak = ([f'{tanggal_presensi}', f'{data_perintah_lembur[tujuan_lembur][2]}', f'{data_perintah_lembur[tujuan_lembur][3]}', f'{hari_seminggu[nomor_hari]}', "TIDAK HADIR", f'{datetime.datetime.now().strftime("%H:%M:%S")}'])
+                        data_baru_cond = [f'{tanggal_presensi}',f'{hari_seminggu[nomor_hari]}', f'{data_perintah_lembur[tujuan_lembur][2]}', f'{data_perintah_lembur[tujuan_lembur][3]}', '', '', '']
+                        dataUpdateHistori = [f'{backend_tanggal_presensi} Karyawan {data_perintah_lembur[tujuan_lembur][2]} {data_perintah_lembur[tujuan_lembur][3]} tidak lembur']
+
+                        if (data_baru_cond not in data_presensilembur_cond) and ((datetime.datetime.now().strftime("%H:%M:%S") ) not in (pre_presensi and time_range_kerja and DateTimeRange(data_perintah_lembur[tujuan_lembur][-3], data_perintah_lembur[tujuan_lembur][-2]))) and (dataUpdateHistori not in dataHistory):
+                            data_baru_lembur.append(data_baru_lembur_kotak)   # Menambahkan data baru ke dalam list data_presensi
+                            with open('employee_presensi_lembur.csv', 'w', newline='') as csvfile_presensi_lembur:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
+                                writer_presensi_lembur = csv.writer(csvfile_presensi_lembur)
+                                writer_presensi_lembur.writerow(data_baru_lembur_kotak)
+                            with open('histori_database.csv', 'a', newline='') as csvfile_histori:    # notifikasi ke admin
+                                writer_histori = csv.writer(csvfile_histori,quoting=csv.QUOTE_NONE, escapechar='_')
+                                writer_histori.writerows([dataUpdateHistori])
+                        else:
+                            pass
+       
+
 
 # BACKEND : OTOMATIS PRESENSI BILA TIDAK HADIR SELESAI
 
@@ -2842,30 +2900,14 @@ waktuRealTanggal = now_time.strftime("%Y-%m-%d")
 waktuRealJam = now_time.strftime("%H:%M:%S")
 tanggal_presensi = datetime.datetime.now().strftime("%Y-%m-%d")
 
-# # range jam shift
-# timeRangePagi = DateTimeRange("04:00:00", "09:59:59")
-# timeRangeSiang = DateTimeRange("10:00:00", "15:59:59")
-# timeRangeMalam = DateTimeRange("16:00:00", "21:59:59")
-
 # range jam kerja
 time_range_kerja = DateTimeRange("08:00:00", "16:59:59")
 pre_presensi = DateTimeRange("00:00:00", "07:59:59")
 open_presensi = "08:00:00"
 close_presensi = "08:59:59"
+close_kerja = "17:00:00"
+close_lembur = "23:59:59"
 global_close_presensi = "23:59:59"
-
-# # range presensi shift
-# prePresensiPagi = DateTimeRange("00:00:00", "03:59:59")
-# openPresensiPagi = "04:00:00"
-# closePresensiPagi = "05:00:00"
-# prePresensiSiang = DateTimeRange("00:00:00", "09:59:59")
-# openPresensiSiang = "10:00:00"
-# closePresensiSiang = "11:00:00"
-# prePresensiMalam = DateTimeRange("00:00:00", "15:59:59")
-# openPresensiMalam = "16:00:00"
-# closePresensiMalam = "17:00:00"
-
-# globalClosePresensi = "23:59:59"
 
 # untuk absensi otomatis
 waktuRealBackend = now_time.strftime("%A %d %B %Y")
