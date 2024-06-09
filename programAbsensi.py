@@ -750,58 +750,25 @@ def main_page_admin():
     # FITUR 4 SELESAI : UI : COMMENT : DESAIN
 
     elif menu_choice == '5':        # FITUR 5 LIHAT DATA
-        menu_choice_4 = input("[1] Lihat Data Admin\n[2] Lihat Data Karyawan\n[3] Lihat Presensi Karyawan\n[enter] Kembali ke menu utama\n\nPilih menu : ")
+        menu_choice_5 = input("[1] Lihat Data Admin\n[2] Lihat Data Karyawan\n[3] Lihat Presensi Karyawan\n[enter] Kembali ke menu utama\n\nPilih menu : ")
 
-        if menu_choice_4 == '1':    # FITUR 4.1 LIHAT DATA>LIHAT DATA ADMIN
+        if menu_choice_5 == '1':    # FITUR 5.1 LIHAT DATA>LIHAT DATA ADMIN
             os.system('cls')
-            print(f"++{'='*86}++\n|| {f"admin>menu utama>lihat data>lihat data admin>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*27}L I H A T   D A T A   A D M I N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n\n")
+            print(f"++{'='*86}++\n|| {f'admin>menu utama>lihat data>lihat data admin>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*27}L I H A T   D A T A   A D M I N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}\n")
+
             # MENAMPILKAN DATA
-            df = pd.DataFrame(data_admin, columns=kolom_admin)
-            print(tabulate.tabulate(df, headers="keys", tablefmt="grid", showindex=False))  
-            # FITUR SEARCH BERDASARKAN ID
-            search_ID = input("\nMasukkan ID yang hendak dicari : ")
-            # MEMBUKA KEMBALI DATABASE UNTUK SEARCHING
-            with open('admin_account_database.csv', 'r') as csvfile_admin:
-                data_admin_s = csvfile_admin.readlines()
-            df = pd.DataFrame([entry.strip().split(',') for entry in data_admin_s],columns=kolom_admin)
-            # HASIL SEARCH
-            if search_ID in df['ID'].values:    # SEARCHING ADA DI DATABASE  
-                os.system('cls')
-                print(f"++{'='*86}++\n|| {f"admin>menu utama>lihat data>lihat data admin>cari ID>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*27}L I H A T   D A T A   A D M I N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n") 
-                filtered_df = df.loc[df['ID'].str.contains(search_ID)]  # deklarasi data hasil filter
-                print(f'\nHasil Pencarian untuk ID "{search_ID}"\n')    # memunculkan data di terminal
-                print(tabulate.tabulate(filtered_df, headers='keys', tablefmt='grid', showindex=False))
+            df = pd.DataFrame(data_admin, columns=kolom_admin)    # MEMASUKKAN LIST DATA BESAR KE PANDAS
 
-            else:   # HASIL SEARCHING TIDAK DITEMUKAN
-                print("\nData yang anda cari tidak ada...")
-            
-            input("\nTekan [enter] untuk kembali ke menu utama") 
-            main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
-
-        # FITUR 4.1
-
-        elif menu_choice_4 == '2':    # FITUR 4.2 LIHAT DATA>LIHAT DATA KARYAWAN
-            os.system('cls')
-            print(f"++{'='*86}++\n|| {f'admin>menu utama>lihat data>lihat data karyawan>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*24}L I H A T   D A T A   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}\n\n\n\njadwal minggu ini\n")
-                
-            # MENAMPILKAN DATA
             # DISPLAY TABEL
-            df = pd.DataFrame(data_employee, columns=kolom_employee)    # MEMASUKKAN LIST DATA BESAR KE PANDAS                df = df.sort_values(by="ID")  # Mengurutkan DataFrame berdasarkan ID
-
-            # Menampilkan DataFrame dengan format tabel
-            print(tabulate.tabulate(df, headers="keys", tablefmt="grid", showindex=False))  # Menampilkan tabel
+            print(tabulate.tabulate(df.iloc[:, :2], headers="keys", tablefmt=kolom_fmt, showindex=False))
                 
             # FITUR SEARCH BERDASARKAN ID
-            search_ID = input("\nMasukkan ID yang hendak dicari: ")
+            search_ID = str(input("\nMasukkan ID yang hendak dicari : "))
                 
-            # Convert search_ID to the same data type as in the DataFrame
-            search_ID = str(search_ID)
-                
-            # Inisialisasi variabel untuk binary search
+            # MENCARI BERDASARKAN ID : BINARY SEARCH
             left, right = 0, len(df) - 1
             hasil_pencarian = None
                 
-            # Algoritma Binary Search
             while left <= right:
                 mid = (left + right) // 2
                 mid_id = df.iloc[mid]["ID"]
@@ -813,21 +780,67 @@ def main_page_admin():
                 else:
                     right = mid - 1               
                 
-                # Output hasil pencarian
+            # BILA DATA DITEMUKAN
             if hasil_pencarian is not None:
+                os.system('cls')
+                print(f"++{'='*86}++\n|| {f'admin>menu utama>lihat data>lihat data admin>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*27}L I H A T   D A T A   A D M I N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}\n")
+                # MEMUNCULKAN DATA YANG DITEMUKAN
+                print("Data Admin Ditemukan:")
+                table = [[hasil_pencarian['ID'], hasil_pencarian['Nama'], hasil_pencarian['Posisi'], hasil_pencarian['Password']]]
+                print(tabulate.tabulate(table, headers=kolom_admin, tablefmt=kolom_fmt))
+            # BILA DATA TIDAK DITEMUKAN
+            else:
+                print("PERHATIAN : Admin dengan ID tersebut tidak ditemukan.")
+                
+            input("\nTekan [enter] untuk kembali ke menu utama") 
+
+        # FITUR 5.1 SELESAI : UI : COMMENT : DESAIN
+
+        elif menu_choice_5 == '2':    # FITUR 5.2 LIHAT DATA>LIHAT DATA KARYAWAN
+            os.system('cls')
+            print(f"++{'='*86}++\n|| {f'admin>menu utama>lihat data>lihat data karyawan>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*24}L I H A T   D A T A   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}\n")
+                
+            # MENAMPILKAN DATA
+            df = pd.DataFrame(data_employee, columns=kolom_employee)    # MEMASUKKAN LIST DATA BESAR KE PANDAS
+
+            # DISPLAY TABEL
+            print(tabulate.tabulate(df.iloc[:, :2], headers="keys", tablefmt=kolom_fmt, showindex=False))
+                
+            # FITUR SEARCH BERDASARKAN ID
+            search_ID = str(input("\nMasukkan ID yang hendak dicari : "))
+                
+            # MENCARI BERDASARKAN ID : BINARY SEARCH
+            left, right = 0, len(df) - 1
+            hasil_pencarian = None
+                
+            while left <= right:
+                mid = (left + right) // 2
+                mid_id = df.iloc[mid]["ID"]
+                if mid_id == search_ID:
+                    hasil_pencarian = df.iloc[mid]
+                    break
+                elif mid_id < search_ID:
+                    left = mid + 1
+                else:
+                    right = mid - 1               
+                
+            # BILA DATA DITEMUKAN
+            if hasil_pencarian is not None:
+                os.system('cls')
+                print(f"++{'='*86}++\n|| {f'admin>menu utama>lihat data>lihat data karyawan>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*24}L I H A T   D A T A   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}\n")
+                # MEMUNCULKAN DATA YANG DITEMUKAN
                 print("Data Karyawan Ditemukan:")
-                print(f"ID: {hasil_pencarian['ID']}")
-                print(f"Nama: {hasil_pencarian['Nama']}")
-                print(f"Posisi: {hasil_pencarian['Posisi']}")
+                table = [[hasil_pencarian['ID'], hasil_pencarian['Nama'], hasil_pencarian['Posisi'], hasil_pencarian['Password']]]
+                print(tabulate.tabulate(table, headers=kolom_employee, tablefmt=kolom_fmt))
+            # BILA DATA TIDAK DITEMUKAN
             else:
                 print("Karyawan dengan ID tersebut tidak ditemukan.")
                 
-            input("\nTekan [enter] untuk kembali ke menu utama")  # Kembali ke menu utama
-            main_page_admin()  # MENGEMBALIKAN KE MENU UTAMA ADMIN    
+            input("\nTekan [enter] untuk kembali ke menu utama") 
 
-        # FITUR 4.2 
+        # FITUR 5.2 
 
-        elif menu_choice_4 == '3':    # FITUR 4.3 LIHAT DATA>LIHAT PRESENSI KARYAWAN
+        elif menu_choice_5 == '3':    # FITUR 5.3 LIHAT DATA>LIHAT PRESENSI KARYAWAN
             os.system('cls')
             print(f"++{'='*86}++\n|| {f'admin>menu utama>lihat data>lihat presensi karyawan>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}L I H A T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}\n")
 
@@ -965,12 +978,10 @@ def main_page_admin():
                 print("\nData yang anda cari tidak ada...")
 
             input("\nTekan [enter] untuk kembali ke menu utama")
-            main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
 
-        # FITUR 4.3
+        # FITUR 5.3
 
-        else:   # BILA INPUTAN PILIHAN SALAH
-            main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
+        main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
     
     # FITUR 5 SELESAI
 
@@ -2117,10 +2128,16 @@ def akun_pertama():
         employee = open('employee_account_database.csv', 'w')
         employee.close()
 
-    # apabila database presensi belum ada
+    # apabila database presensi employee belum ada
     if not(Path('presensi_database.csv').is_file()):
         #buat file dahulu sebelum mengakses fungsi tambah supaya bisa menambahkan header dulu
         presensi = open('presensi_database.csv', 'w')
+        presensi.close()
+
+    # apabila database presensi admin belum ada
+    if not(Path('presensi_database_admin.csv').is_file()):
+        #buat file dahulu sebelum mengakses fungsi tambah supaya bisa menambahkan header dulu
+        presensi = open('presensi_database_admin.csv', 'w')
         presensi.close()
 
     # apabila database perintah lembur belum ada
