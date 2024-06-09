@@ -135,7 +135,8 @@ def main_page_admin():
         for row in reader_Admin:        # menjadikan file .csv menjadi list admin (menambahkan tiap baris pada .csv kedalam variabel data admin)
             data_admin.append(row)
 
-    admin_column = [x[0] for x in data_admin]   # memecah data besar menjadi list-list data admin (menjadikan tiap data di list admin menjadi list-list terpisah)
+    admin_column = [x[0] for x in data_admin]   # memecah data besar menjadi list-list kolom admin (menjadikan tiap data di list admin menjadi list-list terpisah)
+    admin_posisi = [x[2] for x in data_admin]   # memecah data besar menjadi list-list kolom
 
     # MENGIMPOR DATA KARYAWAN
     data_employee = []  # VARIABEL KOSONG UNTUK MENYIMPAN DATA KARYAWAN
@@ -197,13 +198,16 @@ def main_page_admin():
     print()
 
     if menu_choice == '1':          # FITUR 1 PRESENSI SEKARANG
+
         # UI PRESENSI SEKARANG DAN PILIHAN SHIFT
         os.system('cls')
         print(f'++{'='*86}++\n|| admin>menu utama>presensi sekarang!>{' '*49}||\n++{'-'*86}++\n||{' '*86}||\n||{' '*26}P R E S E N S I   S E K A R A N G !{' '*25}||\n||{' '*86}||\n++{'='*86}++\nwaktu : {datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n')  
 
-        tanggal_presensi = datetime.datetime.now().strftime("%Y-%m-%d") # indikator tanggal riil
+        tanggal_presensi = datetime.datetime.now().strftime("%Y-%m-%d") # INDIKATOR TANGGAL RIIL
 
+        # HARI DALAM INDONESIA
         hari_seminggu = ["SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU", "MINGGU"]
+        # MENGECEK APAKAH NAMA HARI INI
         for nomor_hari in range(3,10):
     
             # KARYAWAN YANG HENDAK PRESENSI BENAR DI SENIN-JUMAT
@@ -240,124 +244,137 @@ def main_page_admin():
                             writer_presensi.writerows(data_presensi)
                         # IN-PROGRAM-NOTIFICATION DATA DICATAT
                         input(f'\nPresensi : {tanggal_presensi},{now_time.strftime("%H:%M:%S")},{data_employee[tujuan][0]},{data_employee[tujuan][1]},{hari_seminggu[nomor_hari]},{status_kehadiran} \nPERHATIAN : Presensi berhasil direkam!\n\nTekan [enter] untuk kembali ke menu utama')   
+                        main_page_admin()
                     # KARYAWAN SUDAH PRESENSI SEBELUMNYA
                     # IN-PROGRAM-NOTIFICATION DATA SUDAH ADA
                     else:
                         input(f'\nPERHATIAN : Data presensi "{tanggal_presensi},{data_employee[tujuan][0]},{data_employee[tujuan][1]},{hari_seminggu[nomor_hari]},{status_kehadiran}" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')    
-                
+                        main_page_admin()
+
                 # ABSENSI GLOBAL BELUM DIBUKA
                 elif x in pre_presensi:     
                     # MENGEMBALIKAN KE MENU UTAMA
                     input("\nPERHATIAN : Waktu belum menunjukkan jadwal presensi!\n\nTekan [enter] untuk kembali ke menu utama")
+                    main_page_admin()
             
             # KARYAWAN YANG HENDAK PRESENSI BUKAN MERUPAKAN KARYAWAN SHIFT TERSEBUT
             else:   
                 input("\nPERHATIAN : Bukan jadwal presensi anda! Tekan [enter] untuk melanjutkan")
+                main_page_admin()
+
         main_page_admin()
 
-    # FITUR 1 SELESAI
+    # FITUR 1 SELESAI UI : COMMENT : DESAIN
 
-    elif menu_choice == '2':          # FITUR 2 TAMBAHKAN ORANG
-        menu_choice_2 = input("[1] Tambahkan Admin\n[2] Tambahkan Karyawan\nPilih menu : ")     # pilihan menambahkan admin/karyawan
+    elif menu_choice == '2':        # FITUR 2 TAMBAHKAN ORANG
+        # PILIH MAU MENAMBAHKAN ADMIN ATAU KARYAWAN
+        menu_choice_2 = input("[1] Tambahkan Admin\n[2] Tambahkan Karyawan\nPilih menu : ")
         
-        if menu_choice_2 == '1':    # FITUR 1.1 TAMBAHKAN ORANG>TAMBAHKAN ADMIN
+        if menu_choice_2 == '1':    # FITUR 2.1 TAMBAHKAN ORANG>TAMBAHKAN ADMIN
             os.system('cls')
             print(f"++{'='*86}++\n|| {f"admin>menu utama>tambahkan orang>tambahkan admin>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*28}T A M B A H K A N   A D M I N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n")  # UI TAMBAHKAN ADMIN
             masukkanAdminID = input("Masukkan ID admin : ")     # ID YANG HENDAK DITAMBAHKAN
 
             # MENDETEKSI APAKAH DATA ID SUDAH ADA
             if masukkanAdminID not in admin_column:     # BILA ID YANG HENDAK DITAMBAHKAN BELUM ADA
-                masukkanAdminNama    = input("Masukkan nama admin : ")
-                Posisi = [
-                    ["CPO"],
-                    ["CEO"],
-                    ["CFO"],
-                    ["COO"],
-                    ["CMO"],
-                    ["CPO"],
-                    ["CTO"]
-                ]
-                print(tabulate.tabulate(Posisi, headers=["Posisi"], tablefmt="grid"))
-                masukkanAdminPosisi  = input("Masukkan posisi admin () : ")
-                if masukkanAdminPosisi not in admin_column:
+                
+                # LIST POSISI
+                Posisi = [["CPO"],["CEO"],["CFO"],["COO"],["CMO"],["CPO"],["CTO"]]
+                # MENJADIKAN LIST DIPRINT HORIZONTAL INSTEAD OF VERTIKAL
+                Posisi_horizontal = [pos[0] for pos in Posisi]
+                tabel_posisi = [Posisi_horizontal]
+                print(tabulate.tabulate(tabel_posisi, tablefmt=kolom_fmt))
+
+                masukkanAdminPosisi  = input("Masukkan posisi admin : ").upper()
+                # BILA POSISI ADMIN KOSONG
+                if masukkanAdminPosisi not in admin_posisi:
+                    masukkanAdminNama    = input("Masukkan nama admin : ")
                     masukkanAdminPass    = input("Masukkan passcode admin (case sensitive) : ")
-                    masukan_tambah_admin = [masukkanAdminID.upper(),masukkanAdminNama.upper(),masukkanAdminPosisi.upper(),masukkanAdminPass]    # data yang akan ditambahkan
-                    
-                    data_admin.append(masukan_tambah_admin)     # Menambahkan data baru ke dalam list data admin
-                    
-                    with open('admin_account_database.csv', 'w', newline='') as csvfile_admin:      # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
+                    # MEMBUAT DATA YANG AKAN DIMASUKKAN
+                    masukan_tambah_admin = [masukkanAdminID.upper(),masukkanAdminNama.upper(),masukkanAdminPosisi.upper(),masukkanAdminPass]
+                    # MEMASUKKAN DATA KE LIST 
+                    data_admin.append(masukan_tambah_admin)
+                    # MEMBUKA .CSV DAN MEMASUKKAN DATA
+                    with open('admin_account_database.csv', 'w', newline='') as csvfile_admin:
                         writer_admin = csv.writer(csvfile_admin)
                         writer_admin.writerows(data_admin)
-
+                    # NOTIFIKASI DATA BERHASIL DIMASUKKAN
                     input(f'\nData baru : {masukkanAdminID.upper()},{masukkanAdminNama.upper()},{masukkanAdminPosisi.upper()},{masukkanAdminPass}\nPERHATIAN : Data admin berhasil ditambahkan!\n\nTekan [enter] untuk kembali ke menu utama')    # IN-PROGRAM-NOTIFIKASI BAHWA DATA ADMIN BARU BERHASIL DITAMBAHKAN
+                # BILA POSISI ADMIN SUDAH ADA
                 else :
-                    input(f'\nPERHATIAN : Data admin "{masukkanAdminPosisi}" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')
-            else:       # BILA ID YANG HENDAK DITAMBAHKAN SUDAH ADA
-                input(f'\nPERHATIAN : Data admin "{masukkanAdminID}" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')      # IN-PROGRAM-NOTIFIKASI BAHWA DATA ADMIN SUDAH ADA DI DATABASE ADMIN
+                    input(f'\nPERHATIAN : Data admin "{masukkanAdminPosisi}" sudah ada!\nTekan [enter] untuk kembali ke menu utama')
+
+            # BILA ID YANG HENDAK DITAMBAHKAN SUDAH ADA
+            else:
+                input(f'\nPERHATIAN : Data admin "{masukkanAdminID}" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')
 
             main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
 
-        # FITUR 2.1 SELESAI
+        # FITUR 2.1 SELESAI UI : COMMENT : DESAIN
 
-        elif menu_choice_2 == '2':  # FITUR 1.2 TAMBAHKAN ORANG>TAMBAHKAN KARYAWAN
+        elif menu_choice_2 == '2':  # FITUR 2.2 TAMBAHKAN ORANG>TAMBAHKAN KARYAWAN
             os.system('cls')
             print(f"++{'='*86}++\n|| {f"admin>menu utama>tambahkan orang>tambahkan karyawan>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*25}T A M B A H K A N   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n")    # UI TAMBAHKAN KARYAWAN
 
             masukkanKaryawanID = input("Masukkan ID karyawan : ")
-            if masukkanKaryawanID not in [employee[0] for employee in data_employee]:
-                masukkanKaryawanNama = input("Masukkan nama karyawan : ")
-                Posisi = [
-                    ["Sekretaris"],
-                    ["Akuntan"],
-                    ["Sales Representative"],
-                    ["Tax"],
-                    ["Cs"],
-                    ["Admin"],
-                    ["Hr"],
-                    ["Digital Marketing"],
-                    ["Designer"],
-                    ["Pm"],
-                    ["Developer"],
-                    ["Data Analyst"],
-                ]
-                print(tabulate.tabulate(Posisi, headers=["Posisi","bidang"], tablefmt="grid"))
-                masukkanKaryawanPosisi = input("Masukkan posisi karyawan: ")
-                masukkanKaryawanPass = input("Masukkan passcode karyawan (case sensitive) : ")
-                masukan_tambah_karyawan = [masukkanKaryawanID.upper(), masukkanKaryawanNama.upper(), masukkanKaryawanPosisi.upper(), masukkanKaryawanPass]
 
+            # BILA ID TIDAK DITEMUKAN DI DB EMPLOYEE
+            if masukkanKaryawanID not in [employee[0] for employee in data_employee]:
+                # LIST POSISI
+                Posisi = [["Sekretaris"],["Akuntan"],["Sales Representative"],["Tax"],["Cs"],["Admin"],["Hr"],["Digital Marketing"],["Designer"],["Pm"],["Developer"],["Data Analyst"]]
+                # MENJADIKAN LIST DIPRINT HORIZONTAL INSTEAD OF VERTIKAL
+                Posisi_horizontal = [pos[0].upper() for pos in Posisi]
+                tabel_posisi = [Posisi_horizontal]
+                print(tabulate.tabulate(tabel_posisi, tablefmt=kolom_fmt))
+
+                masukkanKaryawanPosisi = input("Masukkan posisi karyawan: ")
+
+                masukkanKaryawanNama = input("Masukkan nama karyawan : ")
+                masukkanKaryawanPass = input("Masukkan passcode karyawan (case sensitive) : ")
+
+                # MEMBUAT DATA BARU
+                masukan_tambah_karyawan = [masukkanKaryawanID.upper(), masukkanKaryawanNama.upper(), masukkanKaryawanPosisi.upper(), masukkanKaryawanPass]
+                # MEMASUKKAN DATA BARU KE LIST
                 data_employee.append(masukan_tambah_karyawan)
+                # MEMBUKA .CSV DAN MEMASUKKAN LIST
                 with open('employee_account_database.csv', 'w', newline='') as csvfile_employee:
                     writer_employee = csv.writer(csvfile_employee)
                     writer_employee.writerows(data_employee)
-
+                # NOTIFIKASI DATA BERHASIL DITAMBAHKAN
                 input(f'\nData baru : {masukkanKaryawanID.upper()},{masukkanKaryawanNama.upper()},{masukkanKaryawanPosisi.upper()},{masukkanKaryawanPass}\nPERHATIAN : Data karyawan berhasil ditambahkan!\n\nTekan [enter] untuk kembali ke menu utama')
+            
+            # BILA ID DITEMUKAN SUDAH ADA DI DB
             else:
                 input(f'\nPERHATIAN : Data karyawan "{masukkanKaryawanID}" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')
 
             main_page_admin()
 
-        # FITUR 2.2 SELESAI
+        # FITUR 2.2 SELESAI UI : COMMENT : DESAIN
 
         else:                       # FITUR 2.3 BILA SALAH KEMBALI KE MENU UTAMA KARYAWAN
             main_page_admin()
 
         # FITUR 2.3 SELESAI - UI : COMMENT : DESAIN
 
-    # FITUR 2 SELESAI
+    # FITUR 2 SELESAI  UI : COMMENT : DESAIN
 
     elif menu_choice == '3':        # FITUR 3 EDIT DATA 
-        menu_choice_2 = input("[1] Edit Data Admin\n[2] Edit Data Karyawan\nPilih menu : ")     # pilihan mengedit data
+        #  PILIH HENDAK MENGUBAH DATA ADMIN ATAU KARYAWAN
+        menu_choice_3 = input("[1] Edit Data Admin\n[2] Edit Data Karyawan\nPilih menu : ")
 
-        if menu_choice_2 == '1':    # FITUR 3.1 EDIT DATA>EDIT DATA ADMIN
+        if menu_choice_3 == '1':    # FITUR 3.1 EDIT DATA>EDIT DATA ADMIN
             os.system('cls')
-            df = pd.DataFrame(data_admin, columns=kolom_admin)  # MENGUBAH LIST MENJADI TABEL DENGAN PANDAS
-            df.sort_values(by='ID', inplace=True)  # Sort the DataFrame by ID
-            masukan_edit_admin = input(f"++{'='*86}++\n|| {f'admin>menu utama>edit data>edit data admin>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*28}E D I T   D A T A   A D M I N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('%A, %d %B %Y | %H:%M:%S')}\n\n\ndata saat ini:\n\n{tabulate.tabulate(df, headers='keys', tablefmt='github', showindex=False)}\n\nMasukkan ID admin yang hendak diubah : ")  # UI EDIT ADMIN
+            # MENGUBAH LIST MENJADI TABEL DENGAN PANDAS
+            df = pd.DataFrame(data_admin, columns=kolom_admin)
+            # SORTING MENGGUNAKAN METHOD
+            df.sort_values(by='ID', inplace=True)
+            # UI ADMIN DAN INPUTAN ADMIN MANA YANG HENDAK DIEDIT
+            masukan_edit_admin = input(f"++{'='*86}++\n|| {f'admin>menu utama>edit data>edit data admin>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*28}E D I T   D A T A   A D M I N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('%A, %d %B %Y | %H:%M:%S')}\n\n\ndata saat ini:\n\n{tabulate.tabulate(df, headers='keys', tablefmt=kolom_fmt, showindex=False)}\n\nMasukkan ID admin yang hendak diubah : ")
 
-            # MENDETEKSI DATA ID YANG HENDAK DIUBAH ADA
+            # MENDETEKSI DATA ID YANG HENDAK DIUBAH ADA : BINARY SEARCH
             low, high = 0, len(df) - 1
             index_admin = -1
-            while low <= high:  # Binary search logic
+            while low <= high:  # LOGIKA BINARY SEARCH
                 mid = (low + high) // 2
                 if df.iloc[mid]['ID'] == masukan_edit_admin:
                     index_admin = mid
@@ -367,26 +384,34 @@ def main_page_admin():
                 else:
                     high = mid - 1
             
-            if index_admin != -1:   # BILA ID YANG HENDAK DIUBAH ITU ADA
-                baris_admin = df.iloc[index_admin]  # Get the row corresponding to the index
-                print(f"\nData yang akan diedit : \n{baris_admin.to_string(index=False, header=False)}\nMasukkan [enter] untuk melewati pengeditan\n")  # KONFIRMASI DATA YANG HENDAK DIEDIT
+            # BILA ID YANG HENDAK DIUBAH ITU ADA
+            if index_admin != -1:
+                # DARI DATA ID DIPANGGIL DATA FULL SATU BARISNYA
+                baris_admin = df.iloc[index_admin]
+                # NOTIFIKASI DATA YANG HENDAK DIEDIT
+                header = list(baris_admin.index)
+                values = list(baris_admin.values)
+                table = [header, values]
+                os.system('cls')
+                print(f"++{'='*86}++\n|| {f'admin>menu utama>edit data>edit data admin>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*28}E D I T   D A T A   A D M I N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('%A, %d %B %Y | %H:%M:%S')}\n")
+                print(f"Data yang akan diedit : \n{tabulate.tabulate(table, headers='firstrow', tablefmt=kolom_fmt)}\nMasukkan [enter] untuk melewati pengeditan\n")
                 
                 # MEMASUKKAN IDENTITAS BARU
-                IDBaru     = input("Masukkan ID baru: ")
-                namaBaru   = input("Masukkan nama baru: ")
-                Posisi = [
-                    ["CPO"],
-                    ["CEO"],
-                    ["CFO"],
-                    ["COO"],
-                    ["CMO"],
-                    ["CPO"],
-                    ["CTO"]
-                ]
-                print(tabulate.tabulate(Posisi, headers=["Posisi"], tablefmt="grid"))
-                posisiBaru = input("Masukkan posisi baru: ")
-                if posisiBaru not in admin_column:
-                    passBaru   = input("Masukkan passcode baru: ")
+                IDBaru = input("Masukkan ID baru      : ")
+
+                # LIST POSISI
+                Posisi = [["CPO"],["CEO"],["CFO"],["COO"],["CMO"],["CPO"],["CTO"]]
+                # MENJADIKAN LIST DIPRINT HORIZONTAL INSTEAD OF VERTIKAL
+                Posisi_horizontal = [pos[0] for pos in Posisi]
+                tabel_posisi = [Posisi_horizontal]
+                print(tabulate.tabulate(tabel_posisi, tablefmt=kolom_fmt))
+
+                posisiBaru = input("Masukkan posisi baru  : ").upper()
+
+                # BILA POSISI KOSONG
+                if posisiBaru not in admin_posisi:
+                    namaBaru = input("Masukkan nama baru    : ")
+                    passBaru = input("Masukkan passcode baru: ")
 
                     # LOGIKA INPUTAN DATA BARU : BILA '' MAKA SKIP, BILA TIDAK MAKA AKAN DI-REPLACE
 
@@ -413,27 +438,36 @@ def main_page_admin():
                     
                     # MENYIMPAN DATA BARU KE DATABASE
                     np.savetxt('admin_account_database.csv', df, delimiter=',', fmt='%s')
-
-                    print(f'\nData baru "{masukan_edit_admin}" telah diubah!\n\nData saat ini :\n{tabulate.tabulate(df, headers="keys", tablefmt="github", showindex=False)}\n')    # IN-PROGRAM-NOTIFICATION DATA BERHASIL DIUBAH
+                    # NOTIFIKASI DATA BERHASIL DIUBAH
+                    os.system('cls')
+                    print(f"++{'='*86}++\n|| {f'admin>menu utama>edit data>edit data admin>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*28}E D I T   D A T A   A D M I N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('%A, %d %B %Y | %H:%M:%S')}\n\nData baru \"{masukan_edit_admin}\" telah diubah!\n\nData saat ini :\n{tabulate.tabulate(df, headers="keys", tablefmt=kolom_fmt, showindex=False)}\n")
+                # BILA POSISI SUDAH ADA DI DB
                 else:
-                    input(f'\nPERHATIAN : Data admin "{masukkanAdminPosisi}" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')
-            else:   # DATA YANG HENDAK DIUBAH TIDAK ADA
+                    print(f'\nPERHATIAN : Data admin "{posisiBaru}" sudah ada!\n')
+
+            # DATA YANG HENDAK DIUBAH TIDAK ADA
+            else:
                 print(f'PERHATIAN : "{masukan_edit_admin}" tidak ada dalam database!')
             
+            # MENGEMBALIKAN KE MENU UTAMA ADMIN
             input("Tekan [enter] untuk kembali ke menu utama")
-            main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
+            main_page_admin()
 
-        # FITUR 2.1 
-        elif menu_choice_2 :
+        # FITUR 3.1 SELESAI : UI : COMMENT : DESAIN
+
+        elif menu_choice_3 == '2':        # FITUR 3.2 EDIT DATA KARYAWAN 
             os.system('cls')
-            df = pd.DataFrame(data_employee, columns=kolom_employee)    # MENGUBAH LIST MENJADI TABEL DENGAN PANDAS
-            df.sort_values(by='ID', inplace=True)  # Sort the DataFrame by ID
-            masukan_edit_employee = input(f"++{'='*86}++\n|| {f'admin>menu utama>edit data>edit data karyawan>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*25}E D I T   D A T A   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('%A, %d %B %Y | %H:%M:%S')}\n\n\n\n{tabulate.tabulate(df, headers='keys', tablefmt='github', showindex=False)}\n\nMasukkan ID karyawan yang hendak diubah : ")  # UI EDIT KARYAWAN
+            # MENGUBAH LIST MENJADI TABEL DENGAN PANDAS
+            df = pd.DataFrame(data_employee, columns=kolom_employee)
+            # SORTING ID MENGGUNAKAN METHOD
+            df.sort_values(by='ID', inplace=True)
+            # UI DAN INPUT ID MANA YANG HENDAK DIUBAH
+            masukan_edit_employee = input(f"++{'='*86}++\n|| {f'admin>menu utama>edit data>edit data karyawan>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*25}E D I T   D A T A   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('%A, %d %B %Y | %H:%M:%S')}\n\n\n\n{tabulate.tabulate(df, headers='keys', tablefmt=kolom_fmt, showindex=False)}\n\nMasukkan ID karyawan yang hendak diubah : ")
             
-            # MENDETEKSI DATA ID YANG HENDAK DIUBAH ADA
+            # MENDETEKSI DATA ID YANG HENDAK DIUBAH ADA : BINARY SEARCH
             low, high = 0, len(df) - 1
             index_employee = -1
-            while low <= high:  # Binary search logic
+            while low <= high:  # LOGIKA BINARY SEARCH
                 mid = (low + high) // 2
                 if df.iloc[mid]['ID'] == masukan_edit_employee:
                     index_employee = mid
@@ -443,14 +477,17 @@ def main_page_admin():
                 else:
                     high = mid - 1
 
-            if index_employee != -1:    # BILA ID YANG HENDAK DIUBAH ITU ADA
-                baris_employee = df.iloc[index_employee]  # Get the row corresponding to the index
-                print(f"\nData yang akan diedit : \n{baris_employee.to_string(index=False, header=False)}\nMasukkan [enter] untuk melewati pengeditan\n")  # KONFIRMASI DATA YANG HENDAK DIEDIT
+            # BILA ID YANG HENDAK DIUBAH ITU ADA
+            if index_employee != -1:
+                # DARI ID DIPANGGIL DATA SATU BARIS PENUHNYA
+                baris_employee = df.iloc[index_employee]
+                # NOTIFIKASI DATA YANG HENDAK DIEDIT
+                print(f"\nData yang akan diedit : \n{baris_employee.to_string(index=False, header=False)}\nMasukkan [enter] untuk melewati pengeditan\n") 
                 
                 # MEMASUKKAN IDENTITAS BARU
-                IDBaru     = input("Masukkan ID baru: ")
-                namaBaru   = input("Masukkan nama baru: ")
-                posisiBaru = input("Masukkan posisi baru: ")
+                IDBaru     = input("Masukkan ID baru      : ")
+                namaBaru   = input("Masukkan nama baru    : ")
+                posisiBaru = input("Masukkan posisi baru  : ")
                 passBaru   = input("Masukkan passcode baru: ")
 
                 # LOGIKA INPUTAN DATA BARU : BILA '' MAKA SKIP, BILA TIDAK MAKA AKAN DI-REPLACE
@@ -478,22 +515,19 @@ def main_page_admin():
                 
                 # MENYIMPAN DATA BARU KE DATABASE
                 np.savetxt('employee_account_database.csv', df, delimiter=',', fmt='%s')
+                # IN-PROGRAM-NOTIFICATION DATA BERHASIL DIUBAH
+                print(f'\nData baru untuk "{df.iloc[index_employee].to_string(header=False, index=False)}" telah diubah!\n\nData saat ini :\n{tabulate.tabulate(df, headers="keys", tablefmt=kolom_fmt, showindex=False)}\n')
 
-                print(f'\nData baru untuk "{df.iloc[index_employee].to_string(header=False, index=False)}" telah diubah!\n\nData saat ini :\n{tabulate.tabulate(df, headers="keys", tablefmt="github", showindex=False)}\n')  # IN-PROGRAM-NOTIFICATION DATA BERHASIL DIUBAH
-                input()
+            # DATA YANG HENDAK DIUBAH TIDAK ADA
+            else:   
+                input("PERHATIAN : Kesalahan input atau data tidak ada...")    
 
-    # FITUR 2.2
-
-            else:    # DATA YANG HENDAK DIUBAH TIDAK ADA
-                input("PERHATIAN : Kesalahan input atau data tidak ada...\nTekan [enter] untuk kembali ke menu utama")    
-
+            input("\nTekan [enter] untuk kembali ke menu utama")
             main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
 
-        else:
-            input("Tekan [enter] untuk kembali ke menu utama")
-            main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
+        # FITUR 3.2 SELESAI : UI : COMMENT : DESAIN
 
-    # FITUR 3 SELESAI
+    # FITUR 3 SELESAI : UI : COMMENT : DESAIN
 
     elif menu_choice == '4':        # FITUR 4 EDIT DATA PRESENSI
         os.system('cls')
@@ -1054,6 +1088,8 @@ def main_page_admin():
 
         input("\nTekan [enter] untuk kembali ke menu utama")
         main_page_admin()    # FITUR 7
+
+    # FITUR 7 SELESAI
 
     elif menu_choice == '8':        # FTUR 8 LEMBUR
         def baca_data_karyawan():
@@ -1767,10 +1803,92 @@ def main_page_employee():   # FITUR KARYAWAN
                 # KARYAWAN YANG HENDAK PRESENSI BUKAN MERUPAKAN KARYAWAN SHIFT TERSEBUT
                 else:   
                     input("\nPERHATIAN : Bukan jadwal presensi anda! Tekan [enter] untuk melanjutkan")
+                    
+                menu_lembur_karyawan()
         
         def lihat_riwayat_lembur():
-            pass
-        
+            perintah_lembur = []
+            try:
+                with open("perintah_lembur.csv", "r", newline="") as csvfile:
+                    reader = csv.DictReader(csvfile, fieldnames=["tgl", "hari", "id", "nama", "jam_mulai", "jam_selesai", "durasi_jam"])
+                    # Cek apakah file CSV kosong
+                    if sum(1 for row in reader) <= 1:  # Kurang dari atau sama dengan 1 karena satu baris adalah header
+                        print("File perintah_lembur.csv kosong.")
+                        
+                    else:
+                        csvfile.seek(0)  # Reset posisi file ke awal setelah iterasi sebelumnya
+                        next(reader)     # Lewati baris header
+                        for row in reader:
+                            perintah_lembur.append({
+                                "tgl": row["tgl"],
+                                "hari": row["hari"],
+                                "id": row["id"],
+                                "nama": row["nama"],
+                                "jam_mulai": row["jam_mulai"],
+                                "jam_selesai": row["jam_selesai"],
+                                "durasi_jam": row["durasi_jam"]
+                            })
+                        
+            except FileNotFoundError:
+                print("File perintah_lembur.csv tidak ditemukan, memulai dengan data lembur kosong.")
+            
+            if perintah_lembur:
+                while True:
+                    os.system('cls')
+                    print("\nPilih Rentang Waktu:")
+                    print("1. Hari Ini")
+                    print("2. Minggu Ini")
+                    print("3. Bulan Ini")
+                    print("4. Semua")
+                    print("5. Kembali ke Menu Utama")
+                    
+                    rentang_waktu = input("Pilih rentang waktu: ")
+                    
+                    if rentang_waktu == "1":
+                        rentang_waktu_str = "hari ini"
+                    elif rentang_waktu == "2":
+                        rentang_waktu_str = "minggu ini"
+                    elif rentang_waktu == "3":
+                        rentang_waktu_str = "bulan ini"
+                    elif rentang_waktu == "4":
+                        rentang_waktu_str = "semua"
+                    elif rentang_waktu == "5":
+                        return  # Kembali ke menu utama
+                    else:
+                        print("Pilihan tidak valid, silakan coba lagi.")
+                        continue
+
+                    data = []
+                    hari_ini = datetime.datetime.now().date()
+                    if rentang_waktu_str == "hari ini":
+                        for entry in perintah_lembur:
+                            if entry['tgl'] == str(hari_ini):
+                                data.append([entry['tgl'], entry['hari'], entry['id'], entry['nama'], entry['jam_mulai'], entry['jam_selesai'], entry['durasi_jam']])
+                    elif rentang_waktu_str == "minggu ini":
+                        minggu_ini = hari_ini - timedelta(days=hari_ini.weekday())
+                        for entry in perintah_lembur:
+                            entry_date = datetime.datetime.strptime(entry['tgl'], "%Y-%m-%d").date()
+                            if minggu_ini <= entry_date <= hari_ini:
+                                data.append([entry['tgl'], entry['hari'], entry['id'], entry['nama'], entry['jam_mulai'], entry['jam_selesai'], entry['durasi_jam']])
+                    elif rentang_waktu_str == "bulan ini":
+                        bulan_ini = hari_ini.replace(day=1)
+                        for entry in perintah_lembur:
+                            entry_date = datetime.datetime.strptime(entry['tgl'], "%Y-%m-%d").date()
+                            if entry_date.month == bulan_ini.month:
+                                data.append([entry['tgl'], entry['hari'], entry['id'], entry['nama'], entry['jam_mulai'], entry['jam_selesai'], entry['durasi_jam']])
+                    else:  # Semua data
+                        for entry in perintah_lembur:
+                            data.append([entry['tgl'], entry['hari'], entry['id'], entry['nama'], entry['jam_mulai'], entry['jam_selesai'], entry['durasi_jam']])
+
+                    headers = ["Tanggal", "Hari", "ID", "Nama", "Jam Mulai", "Jam Selesai", "Durasi Jam"]
+                    print(tabulate.tabulate(data, headers=headers, tablefmt="grid"))
+                    
+                    input("Tekan enter untuk kembali ke menu")
+                    
+            else:
+                print("Tidak ada data lembur yang tersedia.")
+            menu_lembur_karyawan()
+
         def menu_lembur_karyawan():
             os.system('cls')
             print(f'++{'='*86}++\n|| karyawan>menu utama>lembur>{' '*58}||\n++{'-'*86}++\n||{' '*86}||\n||{' '*26}            L E M B U R            {' '*25}||\n||{' '*86}||\n++{'='*86}++\nwaktu : {datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n')  
@@ -2064,8 +2182,10 @@ kolom_presensi = ["Tanggal", "ID", "Nama", "Hari Kerja", "Kehadiran", "Waktu"]
 kolom_penggajian = ["ID", "Nama", "Posisi", "Gaji Pokok", "Ongkos Lembur", "Potongan Absensi", "Gaji Bersih" ]
 kolom_lembur   = ["Tanggal","Hari","ID","Nama","Jam Mulai","Jam Selesai","durasi_jam"]
 
+kolom_fmt = "grid"
+
 # lama freeze welcome page
-delayWelcome = 3
+delayWelcome = 0
 
 # menentukan berapa karyawan dalam toko
 # qKasir = 3
