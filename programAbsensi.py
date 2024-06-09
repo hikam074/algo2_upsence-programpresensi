@@ -147,12 +147,19 @@ def main_page_admin():
 
     employee_column = [y[0] for y in data_employee]     # memecah data besar menjadi list-list data karyawan (menjadikan tiap data di list karyawan menjadi list-list terpisah)
 
-    # MENGIMPOR DATA PRESENSI
+    # MENGIMPOR DATA PRESENSI KARYAWAN
     data_presensi = []  # VARIABEL KOSONG UNTUK MENYIMPAN DATA PRESENSI
     with open('presensi_database.csv') as csvfile_presensi:     # MEMBUKA .CSV PRESENSI
         reader_presensi = csv.reader(csvfile_presensi)      # menjadikan file .csv menjadi list presensi (menambahkan tiap baris pada .csv kedalam variabel data presensi)
         for row in reader_presensi:
             data_presensi.append(row)
+
+    # MENGIMPOR DATA PRESENSI ADMIN
+    data_presensi_admin = []  # VARIABEL KOSONG UNTUK MENYIMPAN DATA PRESENSI
+    with open('presensi_database_admin.csv') as csvfile_presensi_admin:     # MEMBUKA .CSV PRESENSI
+        reader_presensi_admin = csv.reader(csvfile_presensi_admin)      # menjadikan file .csv menjadi list presensi (menambahkan tiap baris pada .csv kedalam variabel data presensi)
+        for row in reader_presensi_admin:
+            data_presensi_admin.append(row)
 
     # MENGIMPOR DATA HISTORI
     data_history = []  # VARIABEL KOSONG UNTUK MENYIMPAN DATA PRESENSI
@@ -186,6 +193,17 @@ def main_page_admin():
             data_presensi_cond.append(row)
             data_presensi_cond[g][-1] = ""      # MENAMBAHKAN TIAP DATA PRESENSI KE VARIABEL KONDISI DENGAN MENGHAPUS DATA KOLOM "WAKTU"
             g+=1
+
+    # MEMBUAT DATA PENGKONDISIAN UNTUK PENGECEKAN DATA SUDAH ADA ATAU BELUM
+    data_presensi_cond_admin = [] # VARIABEL KOSONG UNTUK MENYIMPAN DATA KONDISI
+    g=0 # TRIGGER BARIS KE-
+    with open('presensi_database_admin.csv') as csvfile_presensi:     # MEMBUKA .CSV PRESENSI
+        reader_presensi = csv.reader(csvfile_presensi)      #menjadikan file .csv menjadi list presensi (menambahkan tiap baris pada .csv kedalam variabel data presensi)
+        for row in reader_presensi:
+            data_presensi_cond_admin.append(row)
+            data_presensi_cond_admin[g][-1] = ""      # MENAMBAHKAN TIAP DATA PRESENSI KE VARIABEL KONDISI DENGAN MENGHAPUS DATA KOLOM "WAKTU"
+            g+=1
+
 
     # MENDETEKSI NAMA ADMIN MENGGUNAKAN ID
     if launch_ID in admin_column:   # ID DAN PASSCODE ADA DI DATABASE ADMIN
@@ -237,11 +255,11 @@ def main_page_admin():
                     
                     # MENDETEKSI APAKAH KARYAWAN SUDAH MELAKUKAN PRESENSI DI SHIFT YANG SAMA HARI INI
                     # KARYAWAN BELUM PRESENSI
-                    if data_baru_cond not in data_presensi_cond:    
-                        data_presensi.append(data_baru) # Menambahkan data baru ke dalam list data_presensi
-                        with open('presensi_database.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
+                    if data_baru_cond not in data_presensi_cond_admin:    
+                        data_presensi_admin.append(data_baru) # Menambahkan data baru ke dalam list data_presensi
+                        with open('presensi_database_admin.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
                             writer_presensi = csv.writer(csvfile_presensi)
-                            writer_presensi.writerows(data_presensi)
+                            writer_presensi.writerows(data_presensi_admin)
                         # IN-PROGRAM-NOTIFICATION DATA DICATAT
                         input(f'\nPresensi : {tanggal_presensi},{now_time.strftime("%H:%M:%S")},{data_employee[tujuan][0]},{data_employee[tujuan][1]},{hari_seminggu[nomor_hari]},{status_kehadiran} \nPERHATIAN : Presensi berhasil direkam!\n\nTekan [enter] untuk kembali ke menu utama')   
                         main_page_admin()
@@ -531,101 +549,205 @@ def main_page_admin():
 
     elif menu_choice == '4':        # FITUR 4 EDIT DATA PRESENSI
         os.system('cls')
-        df = pd.DataFrame(data_presensi, columns=kolom_presensi)    # MENGUBAH LIST MENJADI TABEL DENGAN PANDAS
-        edit_choice = input(F"++{'='*86}++\n|| {f"admin>menu utama>edit presensi >":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}E D I T   P R E S E N S I ':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}\n\n\n\nketik [1] untuk presensi admin, ketik [2] untuk presensi karyawan : ")  # UI EDIT PRESENSI
+        # MENGUBAH LIST MENJADI TABEL DENGAN PANDAS
+        df = pd.DataFrame(data_presensi_admin, columns=kolom_presensi)    
+        print(f"++{'='*86}++\n|| {f"admin>menu utama>edit presensi >":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*31}E D I T   P R E S E N S I ':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}\n")
+        # PILIH HENDAK MENGAKSES MENU EDIT ADMIN ATAU KARYAWAN
+        edit_choice = input("\n[1] Edit Presensi Admin\n[2] Edit Presensi Karyawan\n\n[3 atau lainnya] Kembali ke Menu Utama\n\nPilih menu : ")
 
+        if edit_choice == '1':      # FITUR 4.1 EDIT DATA PRESENSI>EDIT PRESENSI ADMIN
+            os.system('cls')
+            print(F"++{'='*86}++\n|| {f"admin>menu utama>edit presensi>edit presensi admin>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*25}E D I T   P R E S E N S I   A D M I N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}\n")
+            # MENAMPILKAN SELURUH DATA ADMIN
+            print(tabulate.tabulate(data_admin, headers=kolom_employee, tablefmt=kolom_fmt, showindex=False)) 
+            # INPUT ID ADMIN MANA YANG HENDAK DIEDIT
+            masukan_edit_presensi_id = input("\nMasukkan ID admin yang hendak diubah : ")
 
-        if edit_choice == '1':
-            pass
-        # MENDETEKSI DATA PRESENSI YANG HENDAK DIUBAH ITU ADA
-        elif edit_choice == '2':
-            print(F"++{'='*86}++\n|| {f"admin>menu utama>edit presensi> edit presensi karyawan>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}E D I T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}")
-            print(tabulate.tabulate(data_employee, headers="keys", tablefmt="grid", showindex=False)) 
-            masukan_edit_presensi_id = input("Masukkan ID karyawan yang hendak diubah : ")
-            if masukan_edit_presensi_id in df['ID'].values:     # BILA DATA YANG HENDAK DIUBAH ITU ADA
-                masukan_edit_presensi_tanggal = input("Masukkan tanggal yang dicari : ")    # MENCARI DATA YANG MEMILIKI ISI YANG SESUAI
+            # BILA DATA YANG HENDAK DIUBAH ITU ADA
+            if masukan_edit_presensi_id in df['ID'].values:     
+                # MENCARI DATA YANG MEMILIKI ISI YANG SESUAI
+                masukan_edit_presensi_tanggal = input("Masukkan tanggal yang dicari : ")    
                 # FILTRASI DATA PANDAS YANG SESUAI DENGAN ID
                 filtered_df = df.loc[df['ID'].str.contains(masukan_edit_presensi_id)]   # FILTRASI ID SESUAI
                 filtered_df = filtered_df.loc[df['Tanggal'].str.contains(masukan_edit_presensi_tanggal)]    # FILTRASI TANGGAL SESUAI
                 
                 # BILA HASIL FILTRASI TIDAK ADA (DATA YANG DICARI TIDAK ADA)
                 if len(filtered_df) == 0 :
-                    print("\nData yang anda cari tidak ditemukan...\n")
-                
+                    print("\nPERHATIAN : Data yang anda cari tidak ditemukan...\n")
                 # BILA HASIL FILTRASI ADA (DATA YANG DICARI ADA)
                 else :
-                    print(f'\nHasil pencarian :\n\n{tabulate.tabulate(filtered_df, headers="keys", tablefmt="github")}')
-                    masukan_edit_presensi_index = int(input("\npilih index yang akan diedit: "))    # KONFIRMASI DATA PRESENSI YANG HENDAK DIEDIT
+                    try:
+                        os.system('cls')
+                        print(F"++{'='*86}++\n|| {f"admin>menu utama>edit presensi>edit presensi admin>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*25}E D I T   P R E S E N S I   A D M I N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}\n")
+                        print(f'\nHasil pencarian :\n\n{tabulate.tabulate(filtered_df, headers="keys", tablefmt=kolom_fmt)}')
+                        # KONFIRMASI DATA PRESENSI YANG HENDAK DIEDIT
+                        masukan_edit_presensi_index = int(input("\nPilih index yang akan diedit: "))    
 
-                    # MENCOCOKKAN INDEX DATA YANG ADA DENGAN INDEX DATA YANG HENDAK DIEDIT
-                    if masukan_edit_presensi_index == filtered_df.index :
-                        print(f"\nData yang akan diedit : \n{tabulate.tabulate((df[masukan_edit_presensi_index:masukan_edit_presensi_index+1]), headers="keys", tablefmt="github", showindex=False)}\n\nTekan [enter] untuk melewati perubahan\n")  # KONFIRMASI PENGEDITAN
+                        # MENCOCOKKAN INDEX DATA YANG ADA DENGAN INDEX DATA YANG HENDAK DIEDIT
+                        # BILA INDEX DIMASUKKAN ADA
+                        if masukan_edit_presensi_index == filtered_df.index :
+                            os.system('cls')
+                            print(F"++{'='*86}++\n|| {f"admin>menu utama>edit presensi>edit presensi admin>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*25}E D I T   P R E S E N S I   A D M I N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}\n")
+                            print(f"\nData yang akan diedit : \n{tabulate.tabulate((df[masukan_edit_presensi_index:masukan_edit_presensi_index+1]), headers="keys", tablefmt=kolom_fmt, showindex=False)}\n\nTekan [enter] untuk melewati perubahan\n")  # KONFIRMASI PENGEDITAN
 
-                        # INPUTAN DATA
-                        masukanEditPresensiTanggalBaru = input("Masukkan tanggal baru : ")  
-                        masukanEditPresensiIDBaru      = input("Masukkan ID baru : ")
-                        masukanEditPresensiNamaBaru    = input("Masukkan Nama baru : ") 
-                        masukanEditPresensiHariBaru    = input("Masukkan Hari baru : ")
-                        masukanEditPresensiStatusBaru  = input("Masukkan Status kehadiran baru : ")
-                        masukanEditPresensiWaktuBaru   = input("Masukkan waktu baru : ")
+                            # INPUTAN DATA
+                            masukanEditPresensiTanggalBaru = input("Masukkan tanggal baru : ")  
+                            masukanEditPresensiIDBaru      = input("Masukkan ID baru      : ")
+                            masukanEditPresensiNamaBaru    = input("Masukkan Nama baru    : ") 
+                            masukanEditPresensiHariBaru    = input("Masukkan Hari baru    : ")
+                            masukanEditPresensiStatusBaru  = input("Masukkan Status kehadiran baru : ")
+                            masukanEditPresensiWaktuBaru   = input("Masukkan waktu baru   : ")
+                            
+                            # LOGIKA INPUTAN DATA BARU : BILA '' MAKA SKIP, BILA TIDAK MAKA AKAN DI-REPLACE
+
+                            # TANGGAL
+                            if masukanEditPresensiTanggalBaru == '':# SKIP
+                                pass
+                            else:                                   # REPLACE
+                                df.iloc[masukan_edit_presensi_index, 0] = masukanEditPresensiTanggalBaru.upper()
+                            # ID
+                            if masukanEditPresensiIDBaru == '':     # SKIP
+                                pass
+                            else:                                   # REPLACE
+                                df.iloc[masukan_edit_presensi_index, 1] = masukanEditPresensiIDBaru.upper()
+                            # NAMA
+                            if masukanEditPresensiNamaBaru == '':   # SKIP
+                                pass
+                            else:                                   # REPLACE
+                                df.iloc[masukan_edit_presensi_index, 2] = masukanEditPresensiNamaBaru.upper()
+                            # HARI
+                            if masukanEditPresensiHariBaru == '': #SKIP
+                                pass
+                            else:                                   # REPLACE
+                                df.iloc[masukan_edit_presensi_index, 3] = masukanEditPresensiStatusBaru.upper()
+                            # STATUS KEHADIRAN
+                            if masukanEditPresensiStatusBaru == '': #SKIP
+                                pass
+                            else:                                   # REPLACE
+                                df.iloc[masukan_edit_presensi_index, 4] = masukanEditPresensiStatusBaru.upper()
+                            # WAKTU
+                            if masukanEditPresensiWaktuBaru == '':  # SKIP
+                                pass
+                            else:                                   # REPLACE
+                                df.iloc[masukan_edit_presensi_index, 5] = masukanEditPresensiWaktuBaru.upper()
+
+                            # MENYIMPAN DATA BARU KE DATABASE
+                            np.savetxt('presensi_database_admin.csv',df,delimiter=',',fmt='%s')
+                            # IN-PROGRAM-NOTIFICATION DATA BERHASIL DIUBAH
+                            print(f'\nData baru "{masukan_edit_presensi_id}" telah diubah!\n\nData saat ini :\n{tabulate.tabulate((df[masukan_edit_presensi_index:masukan_edit_presensi_index+1]), headers="keys", tablefmt=kolom_fmt, showindex=False)}\n') 
                         
-                        # LOGIKA INPUTAN DATA BARU : BILA '' MAKA SKIP, BILA TIDAK MAKA AKAN DI-REPLACE
-
-                        # TANGGAL
-                        if masukanEditPresensiTanggalBaru == '':# SKIP
-                            pass
-                        else:                                   # REPLACE
-                            df.iloc[masukan_edit_presensi_index, 0] = masukanEditPresensiTanggalBaru.upper()
-                        
-                        # ID
-                        if masukanEditPresensiIDBaru == '':     # SKIP
-                            pass
-                        else:                                   # REPLACE
-                            df.iloc[masukan_edit_presensi_index, 1] = masukanEditPresensiIDBaru.upper()
-
-                        # NAMA
-                        if masukanEditPresensiNamaBaru == '':   # SKIP
-                            pass
-                        else:                                   # REPLACE
-                            df.iloc[masukan_edit_presensi_index, 2] = masukanEditPresensiNamaBaru.upper()
-                        
-                        # HARI
-                        if masukanEditPresensiHariBaru == '': #SKIP
-                            pass
-                        else:                                   # REPLACE
-                            df.iloc[masukan_edit_presensi_index, 3] = masukanEditPresensiStatusBaru.upper()
-
-                        # STATUS KEHADIRAN
-                        if masukanEditPresensiStatusBaru == '': #SKIP
-                            pass
-                        else:                                   # REPLACE
-                            df.iloc[masukan_edit_presensi_index, 4] = masukanEditPresensiStatusBaru.upper()
-
-                        # WAKTU
-                        if masukanEditPresensiWaktuBaru == '':  # SKIP
-                            pass
-                        else:                                   # REPLACE
-                            df.iloc[masukan_edit_presensi_index, 5] = masukanEditPresensiWaktuBaru.upper()
-
-                        # MENYIMPAN DATA BARU KE DATABASE
-                        np.savetxt('presensi_database.csv',df,delimiter=',',fmt='%s')
-                        print(f'\nData baru "{masukan_edit_presensi_id}" telah diubah!\n\nData saat ini :\n{tabulate.tabulate((df[masukan_edit_presensi_index:masukan_edit_presensi_index+1]), headers="keys", tablefmt="github", showindex=False)}\n') # IN-PROGRAM-NOTIFICATION DATA BERHASIL DIUBAH
-                    
-                    # INDEX MASUKAN TIDAK COCOK DENGAN YANG HENDAK DIUBAH
-                    else:
-                        print("Input anda tidak dalam range yang hendak diedit!\n")
+                        # INDEX MASUKAN TIDAK COCOK DENGAN YANG HENDAK DIUBAH
+                        else:
+                            print("PERHATIAN : Input anda tidak dalam range yang hendak diedit!\n")
+                    except:
+                        print("PERHATIAN : format input yang anda cari tidak tepat")
 
             # DATA YANG HENDAK DIUBAH TIDAK ADA
             else:
-                print(f"{masukan_edit_presensi_id} tidak ada dalam database.")
-    
-            input("Tekan [enter] untuk kembali ke menu utama")  # back to main menu
-            main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
+                print(f"PERHATIAN : {masukan_edit_presensi_id} tidak ada dalam database.")
 
-        input("Tekan [enter] untuk kembali ke menu utama") 
+        # FITUR 4.1 SELESAI : UI :COMMENT : DESAIN
+
+        elif edit_choice == '2':    # FITUR 4.2 EDIT DATA PRESENSI>EDIT PRESENSI KARYAWAN
+            os.system('cls')
+            print(F"++{'='*86}++\n|| {f"admin>menu utama>edit presensi>edit presensi karyawan>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}E D I T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}\n")
+            # MENAMPILKAN SELURUH DATA KARYAWAN
+            print(tabulate.tabulate(data_employee, headers=kolom_employee, tablefmt=kolom_fmt, showindex=False)) 
+            # INPUT ID KARYAWAN MANA YANG HENDAK DIEDIT
+            masukan_edit_presensi_id = input("\nMasukkan ID karyawan yang hendak diubah : ")
+
+            # BILA DATA YANG HENDAK DIUBAH ITU ADA
+            if masukan_edit_presensi_id in df['ID'].values:     
+                # MENCARI DATA YANG MEMILIKI ISI YANG SESUAI
+                masukan_edit_presensi_tanggal = input("Masukkan tanggal yang dicari : ")    
+                # FILTRASI DATA PANDAS YANG SESUAI DENGAN ID
+                filtered_df = df.loc[df['ID'].str.contains(masukan_edit_presensi_id)]   # FILTRASI ID SESUAI
+                filtered_df = filtered_df.loc[df['Tanggal'].str.contains(masukan_edit_presensi_tanggal)]    # FILTRASI TANGGAL SESUAI
+                
+                # BILA HASIL FILTRASI TIDAK ADA (DATA YANG DICARI TIDAK ADA)
+                if len(filtered_df) == 0 :
+                    print("\nPERHATIAN : Data yang anda cari tidak ditemukan...\n")
+                # BILA HASIL FILTRASI ADA (DATA YANG DICARI ADA)
+                else :
+                    try:
+                        os.system('cls')
+                        print(F"++{'='*86}++\n|| {f"admin>menu utama>edit presensi>edit presensi karyawan>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}E D I T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}\n")
+                        print(f'\nHasil pencarian :\n\n{tabulate.tabulate(filtered_df, headers="keys", tablefmt=kolom_fmt)}')
+                        # KONFIRMASI DATA PRESENSI YANG HENDAK DIEDIT
+                        masukan_edit_presensi_index = int(input("\nPilih index yang akan diedit: "))    
+
+                        # MENCOCOKKAN INDEX DATA YANG ADA DENGAN INDEX DATA YANG HENDAK DIEDIT
+                        # BILA INDEX DIMASUKKAN ADA
+                        if masukan_edit_presensi_index == filtered_df.index :
+                            os.system('cls')
+                            print(F"++{'='*86}++\n|| {f"admin>menu utama>edit presensi>edit presensi karyawan>":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}E D I T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('\r%A, %d %B %Y | %H:%M:%S')}\n")
+                            print(f"\nData yang akan diedit : \n{tabulate.tabulate((df[masukan_edit_presensi_index:masukan_edit_presensi_index+1]), headers="keys", tablefmt=kolom_fmt, showindex=False)}\n\nTekan [enter] untuk melewati perubahan\n")  # KONFIRMASI PENGEDITAN
+
+                            # INPUTAN DATA
+                            masukanEditPresensiTanggalBaru = input("Masukkan tanggal baru : ")  
+                            masukanEditPresensiIDBaru      = input("Masukkan ID baru      : ")
+                            masukanEditPresensiNamaBaru    = input("Masukkan Nama baru    : ") 
+                            masukanEditPresensiHariBaru    = input("Masukkan Hari baru    : ")
+                            masukanEditPresensiStatusBaru  = input("Masukkan Status kehadiran baru : ")
+                            masukanEditPresensiWaktuBaru   = input("Masukkan waktu baru   : ")
+                            
+                            # LOGIKA INPUTAN DATA BARU : BILA '' MAKA SKIP, BILA TIDAK MAKA AKAN DI-REPLACE
+
+                            # TANGGAL
+                            if masukanEditPresensiTanggalBaru == '':# SKIP
+                                pass
+                            else:                                   # REPLACE
+                                df.iloc[masukan_edit_presensi_index, 0] = masukanEditPresensiTanggalBaru.upper()
+                            # ID
+                            if masukanEditPresensiIDBaru == '':     # SKIP
+                                pass
+                            else:                                   # REPLACE
+                                df.iloc[masukan_edit_presensi_index, 1] = masukanEditPresensiIDBaru.upper()
+                            # NAMA
+                            if masukanEditPresensiNamaBaru == '':   # SKIP
+                                pass
+                            else:                                   # REPLACE
+                                df.iloc[masukan_edit_presensi_index, 2] = masukanEditPresensiNamaBaru.upper()
+                            # HARI
+                            if masukanEditPresensiHariBaru == '': #SKIP
+                                pass
+                            else:                                   # REPLACE
+                                df.iloc[masukan_edit_presensi_index, 3] = masukanEditPresensiStatusBaru.upper()
+                            # STATUS KEHADIRAN
+                            if masukanEditPresensiStatusBaru == '': #SKIP
+                                pass
+                            else:                                   # REPLACE
+                                df.iloc[masukan_edit_presensi_index, 4] = masukanEditPresensiStatusBaru.upper()
+                            # WAKTU
+                            if masukanEditPresensiWaktuBaru == '':  # SKIP
+                                pass
+                            else:                                   # REPLACE
+                                df.iloc[masukan_edit_presensi_index, 5] = masukanEditPresensiWaktuBaru.upper()
+
+                            # MENYIMPAN DATA BARU KE DATABASE
+                            np.savetxt('presensi_database.csv',df,delimiter=',',fmt='%s')
+                            # IN-PROGRAM-NOTIFICATION DATA BERHASIL DIUBAH
+                            print(f'\nData baru "{masukan_edit_presensi_id}" telah diubah!\n\nData saat ini :\n{tabulate.tabulate((df[masukan_edit_presensi_index:masukan_edit_presensi_index+1]), headers="keys", tablefmt="github", showindex=False)}\n') 
+                        
+                        # INDEX MASUKAN TIDAK COCOK DENGAN YANG HENDAK DIUBAH
+                        else:
+                            print("PERHATIAN : Input anda tidak dalam range yang hendak diedit!\n")
+                    except:
+                        print("PERHATIAN : format input yang anda cari tidak tepat")
+
+            # DATA YANG HENDAK DIUBAH TIDAK ADA
+            else:
+                print(f"PERHATIAN : {masukan_edit_presensi_id} tidak ada dalam database.")
+
+        # FITUR 4.2 SELESAI : UI :COMMENT : DESAIN
+
+        else :
+            main_page_admin()
+
+        input("Tekan [enter] untuk kembali ke Menu Utama") 
         main_page_admin()
     
-    # FITUR 4 SELESAI
+    # FITUR 4 SELESAI : UI : COMMENT : DESAIN
 
     elif menu_choice == '5':        # FITUR 5 LIHAT DATA
         menu_choice_4 = input("[1] Lihat Data Admin\n[2] Lihat Data Karyawan\n[3] Lihat Presensi Karyawan\n[enter] Kembali ke menu utama\n\nPilih menu : ")
