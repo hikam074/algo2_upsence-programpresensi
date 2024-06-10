@@ -1657,7 +1657,7 @@ def main_page_admin():
 
         main_page_admin()    # FITUR 7
 
-    # FITUR 7 SELESAI 
+    # FITUR 7 SELESAI : UI
 
     elif menu_choice == '8':        # FTUR 8 LEMBUR
         def baca_data_karyawan():
@@ -1865,7 +1865,7 @@ def main_page_admin():
 
         menu()
 
-    # FITUR 8 SELESAI
+    # FITUR 8 SELESAI : UI 
 
     elif menu_choice == '9':        # FITUR 9 PENGGAJIAN
         def penggajian():
