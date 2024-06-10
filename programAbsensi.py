@@ -1664,14 +1664,9 @@ def main_page_admin():
             data_karyawan = []
             try:
                 with open("employee_account_database.csv", "r", newline="") as csvfile:
-                    reader = csv.DictReader(csvfile, fieldnames=["ID", "Nama", "Posisi", "Password"])
+                    reader = csv.reader(csvfile)
                     for row in reader:
-                        data_karyawan.append({
-                            "ID": row["ID"],
-                            "Nama": row["Nama"],
-                            "Posisi": row["Posisi"],
-                            "Password": row["Password"]
-                        })
+                        data_karyawan.append([row[0],row[1],row[2],row[3]])
             except KeyError as e:
                 print(f"Error: Kolom {e} tidak ditemukan di file CSV.")
             return data_karyawan
@@ -1694,7 +1689,7 @@ def main_page_admin():
             perintah_lembur = []
             try:
                 with open("perintah_lembur.csv", "r", newline="") as csvfile:
-                    reader = csv.DictReader(csvfile, fieldnames=["tgl", "hari", "id", "nama", "jam_mulai", "jam_selesai", "durasi_jam"])
+                    reader = csv.reader(csvfile)
                     # Cek apakah file CSV kosong
                     if sum(1 for row in reader) <= 1:  # Kurang dari atau sama dengan 1 karena satu baris adalah header
                         print("File perintah_lembur.csv kosong.")
@@ -1703,15 +1698,7 @@ def main_page_admin():
                         csvfile.seek(0)  # Reset posisi file ke awal setelah iterasi sebelumnya
                         next(reader)     # Lewati baris header
                         for row in reader:
-                            perintah_lembur.append({
-                                "tgl": row["tgl"],
-                                "hari": row["hari"],
-                                "id": row["id"],
-                                "nama": row["nama"],
-                                "jam_mulai": row["jam_mulai"],
-                                "jam_selesai": row["jam_selesai"],
-                                "durasi_jam": row["durasi_jam"]
-                            })
+                            perintah_lembur.append([row[0],row[1],row[2],row[3],row[4], row[5],row[6]])
             except FileNotFoundError:
                 print("File perintah_lembur.csv tidak ditemukan, memulai dengan data lembur kosong.")
             return perintah_lembur
@@ -1720,7 +1707,7 @@ def main_page_admin():
             global perintah_lembur
             # Periksa apakah ID karyawan tersedia
             data_karyawan = baca_data_karyawan()
-            karyawan = next((data for data in data_karyawan if data["ID"] == id_karyawan), None)
+            karyawan = next((data for data in data_karyawan if data[0] == id_karyawan), None)
             if karyawan is None:
                 print(f"Error: Employee dengan ID '{id_karyawan}' tidak ditemukan.")
                 return
@@ -1735,21 +1722,15 @@ def main_page_admin():
                     hari = hari_seminggu[nomor_hari]
 
             durasi_jam = hitung_durasi_jam(jam_mulai, jam_selesai)
-            perintah_lembur.append({
-                "tgl": tgl,
-                "hari": hari,
-                "id": id_karyawan,
-                "nama": karyawan["Nama"],
-                "jam_mulai": jam_mulai,
-                "jam_selesai": jam_selesai,
-                "durasi_jam": durasi_jam
-            })
-            print(f"Lembur untuk ID '{id_karyawan}' pada tanggal {tgl} ({hari}) berhasil dicatat.")
+            perintah_lembur.append([tgl,hari,id_karyawan,karyawan[1],jam_mulai,jam_selesai,durasi_jam])
+            print(f"\nLembur untuk ID '{id_karyawan}' pada tanggal {tgl} ({hari}) berhasil dicatat!")
 
         def buat_csv_lembur():
+
             with open("perintah_lembur.csv", "w", newline="") as csvfile:
-                fieldnames = ["tgl", "hari", "id", "nama", "jam_mulai", "jam_selesai", "durasi_jam"]
-                writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+                fieldname = ["tgl", "hari", "id", "nama", "jam_mulai", "jam_selesai", "durasi_jam"]
+                writer = csv.writer(csvfile)
+                writer.writerow(fieldname)
                 for data in perintah_lembur:
                     writer.writerow(data)
             print("Data lembur telah disimpan ke file perintah_lembur.csv")
@@ -1758,13 +1739,12 @@ def main_page_admin():
             global perintah_lembur
             if perintah_lembur:
                 while True:
-                    os.system('cls')
-                    print("\nPilih Rentang Waktu:")
-                    print("1. Hari Ini")
-                    print("2. Minggu Ini")
-                    print("3. Bulan Ini")
-                    print("4. Semua")
-                    print("5. Kembali ke Menu Utama")
+                    print("Pilih Rentang Waktu:")
+                    print("[1] Hari Ini")
+                    print("[2] Minggu Ini")
+                    print("[3] Bulan Ini")
+                    print("[4] Semua")
+                    print("[5] Kembali ke Menu Utama")
                     
                     rentang_waktu = input("Pilih rentang waktu: ")
                     
@@ -1786,26 +1766,29 @@ def main_page_admin():
                     hari_ini = datetime.datetime.now().date()
                     if rentang_waktu_str == "hari ini":
                         for entry in perintah_lembur:
-                            if entry['tgl'] == str(hari_ini):
-                                data.append([entry['tgl'], entry['hari'], entry['id'], entry['nama'], entry['jam_mulai'], entry['jam_selesai'], entry['durasi_jam']])
+                            if entry[0] == str(hari_ini):
+                                data.append([entry[0], entry[1], entry[2], entry[3], entry[4], entry[5], entry[6]])
                     elif rentang_waktu_str == "minggu ini":
                         minggu_ini = hari_ini - timedelta(days=hari_ini.weekday())
                         for entry in perintah_lembur:
-                            entry_date = datetime.datetime.strptime(entry['tgl'], "%Y-%m-%d").date()
+                            entry_date = datetime.datetime.strptime(entry[0], "%Y-%m-%d").date()
                             if minggu_ini <= entry_date <= hari_ini:
-                                data.append([entry['tgl'], entry['hari'], entry['id'], entry['nama'], entry['jam_mulai'], entry['jam_selesai'], entry['durasi_jam']])
+                                data.append([entry[0], entry[1], entry[2], entry[3], entry[4], entry[5], entry[6]])
                     elif rentang_waktu_str == "bulan ini":
                         bulan_ini = hari_ini.replace(day=1)
                         for entry in perintah_lembur:
-                            entry_date = datetime.datetime.strptime(entry['tgl'], "%Y-%m-%d").date()
+                            entry_date = datetime.datetime.strptime(entry[0], "%Y-%m-%d").date()
                             if entry_date.month == bulan_ini.month:
-                                data.append([entry['tgl'], entry['hari'], entry['id'], entry['nama'], entry['jam_mulai'], entry['jam_selesai'], entry['durasi_jam']])
+                                data.append([entry[0], entry[1], entry[2], entry[3], entry[4], entry[5], entry[6]])
                     else:  # Semua data
                         for entry in perintah_lembur:
-                            data.append([entry['tgl'], entry['hari'], entry['id'], entry['nama'], entry['jam_mulai'], entry['jam_selesai'], entry['durasi_jam']])
+                            print(entry)
+                            data.append([entry[0], entry[1], entry[2], entry[3], entry[4], entry[5], entry[6]])
 
                     headers = ["Tanggal", "Hari", "ID", "Nama", "Jam Mulai", "Jam Selesai", "Durasi Jam"]
-                    print(tabulate.tabulate(data, headers=headers, tablefmt="grid"))
+                    os.system('cls')
+                    print(f"++{'='*86}++\n|| {f'admin>menu utama>lembur>lihat data lembur>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*35}L E M B U R':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('%A, %d %B %Y | %H:%M:%S')}\n")
+                    print(tabulate.tabulate(data, headers=headers, tablefmt=kolom_fmt))
                     
                     input("Tekan enter untuk kembali ke menu")
                     break
@@ -1819,52 +1802,66 @@ def main_page_admin():
                 return
 
             print("Data Lembur:")
-            for idx, data in enumerate(perintah_lembur):
-                print(f"{idx + 1}. Tanggal: {data['tgl']}, Hari: {data['hari']}, ID: {data['id']}, Nama: {data['nama']}, Jam Mulai: {data['jam_mulai']}, Jam Selesai: {data['jam_selesai']}, Durasi Jam: {data['durasi_jam']} jam")
+            
+            perintah_lembur = pd.DataFrame(perintah_lembur)
 
-            pilihan_hapus = int(input("Pilih nomor lembur yang ingin dihapus: ")) - 1
-            if 0 <= pilihan_hapus < len(perintah_lembur):
-                perintah_lembur.pop(pilihan_hapus)
-                print("Data lembur berhasil dihapus.")
-            else:
-                print("Pilihan tidak valid.")
+            header = ['tgl','hari','id','nama','jam_mulai','jam_selesai','durasi_jam']
+            print(tabulate.tabulate(perintah_lembur, headers=header, tablefmt=kolom_fmt,))
+            try:
+                pilihan_hapus = int(input("Pilih nomor lembur yang ingin dihapus: "))
+                if 0 <= pilihan_hapus < len(perintah_lembur):
+                    perintah_lembur.drop(index=pilihan_hapus, inplace=True)
+                    print("Data lembur berhasil dihapus.")
+                    perintah_lembur = perintah_lembur.values.tolist()
+                    buat_csv_lembur()
+                else:
+                    print("Pilihan tidak valid.")
+            except Exception as e:
+                print("PERHATIAN : Pilihan anda tidak valid")
+            finally:
+                def is_df(var):
+                    return isinstance(var, pd.DataFrame)
+                if is_df(perintah_lembur):
+                    perintah_lembur = perintah_lembur.values.tolist()
 
         def menu():
             global perintah_lembur
             perintah_lembur = baca_perintah_lembur()
             while True:
                 os.system('cls')
-                print("\nMenu:")
-                print("1. Perintahkan Lembur")
-                print("2. Lihat Semua Data Lembur")
-                print("3. Hapus Lembur")
-                print("4. Keluar")
+                print(f"++{'='*86}++\n|| {f'admin>menu utama>lembur>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*35}L E M B U R':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('%A, %d %B %Y | %H:%M:%S')}\n")
+
+                print("[1] Perintahkan Lembur")
+                print("[2] Lihat Semua Data Lembur")
+                print("[3] Hapus Lembur")
+                print("[4] Keluar")
                 
-                pilihan = input("Pilih opsi: ")
+                pilihan = input("Pilih opsi : ")
                 
                 if pilihan == "1":
                     os.system('cls')
+                    print(f"++{'='*86}++\n|| {f'admin>menu utama>lembur>perintahkan lembur>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*35}L E M B U R':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('%A, %d %B %Y | %H:%M:%S')}\n")
+
                     id_karyawan = input("Masukkan ID karyawan: ")
                     tgl = input("Masukkan tanggal (YYYY-MM-DD): ")
                     jam_mulai = input("Masukkan jam mulai (HH:MM): ")
                     jam_selesai = input("Masukkan jam selesai (HH:MM): ")
                     catat_lembur(id_karyawan, tgl, jam_mulai, jam_selesai)
                     buat_csv_lembur()
-                    input("Tekan enter untuk kembali ke menu")
+                    input("\nTekan [Enter] untuk kembali ke menu")
                 elif pilihan == "2":
                     os.system('cls')
+                    print(f"++{'='*86}++\n|| {f'admin>menu utama>lembur>lihat data lembur>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*35}L E M B U R':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('%A, %d %B %Y | %H:%M:%S')}\n")
                     lihat_perintah_lembur()
                 elif pilihan == "3":
                     os.system('cls')
+                    print(f"++{'='*86}++\n|| {f'admin>menu utama>lembur>hapus lembur>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*35}L E M B U R':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('%A, %d %B %Y | %H:%M:%S')}\n")
                     hapus_lembur()
-                    buat_csv_lembur()
-                    input("Tekan enter untuk kembali ke menu")
+                    input("Tekan [Enter] untuk kembali ke menu")
                 elif pilihan == "4":
                     main_page_admin()
-                    break
                 else:
-                    print("Pilihan tidak valid, silakan coba lagi.")
-                    input("Tekan enter untuk kembali ke menu")
+                    menu()
 
         menu()
 
