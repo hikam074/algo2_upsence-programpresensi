@@ -1874,15 +1874,11 @@ def main_page_admin():
 
             # Membaca file csv dari ketiga csv
             try:
-                kolom_employee = ['ID', 'Nama', 'Posisi', 'Password']
-                kolom_lembur = ["Tanggal", "Hari", "ID", "Nama", "Jam Mulai", "Jam Selesai", "durasi_jam"]
-                kolom_presensi = ["Tanggal", "ID", "Nama", "Hari Kerja", "Kehadiran", "Waktu"]
                 employee_df = pd.read_csv('employee_account_database.csv', names=kolom_employee, header=None)
-                lembur_df = pd.read_csv('perintah_lembur.csv', names=kolom_lembur, header=None)
+                lembur_df = pd.read_csv('employee_presensi_lembur.csv', names=kolom_lembur, header=None)
                 presensi_df = pd.read_csv('presensi_database.csv', names=kolom_presensi, header=None)
             except FileNotFoundError as e:
                 print(f"Error: {e}")
-                input("Tekan [enter] untuk kembali ke menu utama")
                 return
 
             # Set ongkos lembur per jam dan potongan per jam keterlambatan dan per hari ketidakhadiran
@@ -1907,12 +1903,15 @@ def main_page_admin():
                     pilihan = int(input("Masukkan nomor posisi yang dipilih: "))
                     if 1 <= pilihan <= len(posisi_karyawan):
                         posisi_terpilih = posisi_karyawan[pilihan - 1].upper()  # Konversi ke huruf besar
+
+                        # Konversi kolom Posisi menjadi string dan tangani NaN
+                        employee_df['Posisi'] = employee_df['Posisi'].astype(str).fillna('')
                         karyawan_terpilih = employee_df[employee_df['Posisi'].str.upper() == posisi_terpilih]  # Bandingkan dalam huruf besar
                         print(f"\nPosisi yang dipilih: {posisi_terpilih.title()}\n")
 
                         if karyawan_terpilih.empty:
                             input(f"Tidak ada karyawan untuk posisi: {posisi_terpilih.title()}. Tekan [enter] untuk keluar.")
-                            return
+                            main_page_admin()
                         else:
                             break
                     else:
@@ -1936,36 +1935,40 @@ def main_page_admin():
                 'DATA ANALYST': 6000000
             }
 
-            # Pastikan kolom 'durasi_jam' ada dan berisi nilai float
+            # Hitung total lembur dan ongkos lembur
             if 'durasi_jam' in lembur_df.columns:
-                lembur_df['durasi_jam'] = pd.to_numeric(lembur_df['durasi_jam'], errors='coerce').fillna(0).astype(float)
+                lembur_df['durasi_jam'] = pd.to_numeric(lembur_df['durasi_jam'], errors='coerce')  # Konversi ke numerik, jika gagal menjadi NaN
+                lembur_df['durasi_jam'] = lembur_df['durasi_jam'].fillna(0)  # Mengisi NaN dengan 0
                 total_lembur = lembur_df.groupby('ID')['durasi_jam'].sum().reset_index()
                 total_lembur['Ongkos_Lembur'] = total_lembur['durasi_jam'] * ongkos_lembur_per_jam
+                karyawan_terpilih.loc[:,'ID'] = karyawan_terpilih['ID'].astype(total_lembur['ID'].dtype)
+
             else:
                 print("Kolom 'durasi_jam' tidak ditemukan dalam DataFrame lembur. Pastikan kolom tersebut ada di file CSV.")
-                input("Tekan [enter] untuk kembali ke menu utama")
                 return
 
             # Hitung total keterlambatan
-            presensi_df['Waktu'] = pd.to_datetime(presensi_df['Waktu'], errors='coerce').dt.time
-
-            presensi_df['TERLAMBAT'] = presensi_df.apply(
+            presensi_df['Waktu'] = pd.to_datetime(presensi_df['Waktu'], format='%H:%M:%S', errors='coerce').dt.time
+            presensi_df['Kehadiran'] = presensi_df['Kehadiran'].astype(str).fillna('')
+            presensi_df['Telat'] = presensi_df.apply(
                 lambda row: max(
-                    (datetime.datetime.combine(datetime.date.today(), row['Waktu']) - datetime.datetime.combine(datetime.date.today(), datetime.time(9, 0))).seconds // 3600, 0
-                ) if row['Kehadiran'] == 'HADIR' and row['Waktu'] > datetime.time(9, 0) else 0, axis=1
-            )
-            total_telat = presensi_df.groupby('ID')['TERLAMBAT'].sum().reset_index()
-            total_telat['Potongan_Telat'] = total_telat['TERLAMBAT'] * potongan_per_jam_telat
+                    (datetime.datetime.combine(datetime.date.today(), row['Waktu']) - 
+                    datetime.datetime.combine(datetime.date.today(), datetime.time(9, 0))).seconds // 3600, 1
+                ) if row['Kehadiran'].upper() == 'HADIR' and row['Waktu'] >= datetime.time(9, 0) else 0, axis=1)
+
+            total_telat = presensi_df.groupby('ID')['Telat'].sum().reset_index()
+            total_telat['Potongan_Telat'] = total_telat['Telat'] * potongan_per_jam_telat
 
             # Hitung total ketidakhadiran
-            absensi_df = presensi_df[(presensi_df['Kehadiran'] == 'TIDAK HADIR') & (presensi_df['Hari Kerja'] == 'Ya')]
+            absensi_df = presensi_df[(presensi_df['Kehadiran'].str.upper() == 'TIDAK HADIR') & (presensi_df['Hari Kerja'].str.upper() == 'YA')]
             total_absen = absensi_df.groupby('ID').size().reset_index(name='Total_Tidak_Hadir')
             total_absen['Potongan_Absensi'] = total_absen['Total_Tidak_Hadir'] * potongan_per_hari_absen
 
             # Merge data untuk penggajian
-            penggajian_df = pd.merge(karyawan_terpilih, total_lembur, on='ID', how='left').fillna(0)
+            penggajian_df = pd.merge(karyawan_terpilih, total_lembur, left_on='ID', right_on='ID', how='left').fillna(0)
             penggajian_df = pd.merge(penggajian_df, total_telat[['ID', 'Potongan_Telat']], on='ID', how='left').fillna(0)
             penggajian_df = pd.merge(penggajian_df, total_absen[['ID', 'Potongan_Absensi']], on='ID', how='left').fillna(0)
+            
 
             # Tentukan gaji pokok berdasarkan posisi karyawan
             penggajian_df['Gaji_Pokok'] = penggajian_df['Posisi'].map(gaji_pokok_map)
@@ -1976,12 +1979,13 @@ def main_page_admin():
             # Kolom yang ingin disimpan
             kolom_penggajian = ['ID', 'Nama', 'Posisi', 'Gaji_Pokok', 'Ongkos_Lembur', 'Potongan_Telat', 'Potongan_Absensi', 'Gaji_Bersih']
 
-            # Save the DataFrame to CSV
-            with open('employee_penggajian.csv', mode='a', newline='') as file:
-                penggajian_df.to_csv(file, index=False, header=file.tell() == 0)
+            # Tentukan apakah file ada
+            file_exists = os.path.isfile('penggajian_database.csv')
 
-            # Print the DataFrame using tabulate with formatted values
-            penggajian_df[kolom_penggajian] = penggajian_df[kolom_penggajian].applymap(lambda x: f"{x:,.0f}" if isinstance(x, (int, float)) else x)
+            # Save the DataFrame to CSV
+            penggajian_df[kolom_penggajian].to_csv('penggajian_database.csv', mode='a', index=False, header=not file_exists)
+
+            # Print the DataFrame using tabulate
             print("\nHasil Penggajian Karyawan:")
             print(tabulate.tabulate(penggajian_df[kolom_penggajian], headers='keys', tablefmt='fancy_grid'))
 
@@ -1989,6 +1993,10 @@ def main_page_admin():
             main_page_admin()
 
         penggajian()
+
+
+
+
 
     # FITUR 9 
 
@@ -2049,6 +2057,16 @@ def main_page_employee():   # FITUR KARYAWAN
         reader_presensi_lembur = csv.reader(csvfile_presensi_lembur)      # menjadikan file .csv menjadi list presensi (menambahkan tiap baris pada .csv kedalam variabel data presensi)
         for row in reader_presensi_lembur:
             data_presensi_lembur.append(row)
+    
+    # MEMBUAT DATA PENGKONDISIAN UNTUK PENGECEKAN DATA SUDAH ADA ATAU BELUM
+    data_presensi_lembur_cond = [] # VARIABEL KOSONG UNTUK MENYIMPAN DATA KONDISI
+    g=0 # TRIGGER BARIS KE-
+    with open('employee_presensi_lembur.csv') as csvfile_presensi:     # MEMBUKA .CSV PRESENSI
+        reader_presensi = csv.reader(csvfile_presensi)      #menjadikan file .csv menjadi list presensi (menambahkan tiap baris pada .csv kedalam variabel data presensi)
+        for row in reader_presensi:
+            data_presensi_lembur_cond.append(row)
+            data_presensi_lembur_cond[g][-1] = ""      # MENAMBAHKAN TIAP DATA PRESENSI KE VARIABEL KONDISI DENGAN MENGHAPUS DATA KOLOM "WAKTU"
+            g+=1
 
     # MEMBUAT DATA PENGKONDISIAN UNTUK PENGECEKAN DATA SUDAH ADA ATAU BELUM
     data_presensi_cond = [] # VARIABEL KOSONG UNTUK MENYIMPAN DATA KONDISI
@@ -2313,9 +2331,9 @@ def main_page_employee():   # FITUR KARYAWAN
             for nomor_hari in range(3,10):
         
                 # KARYAWAN YANG HENDAK PRESENSI BENAR DI SENIN-JUMAT
-                if datetime.datetime.now().strftime("%A").upper() != "SATURDAY" and datetime.datetime.now().strftime("%A").upper() != "SUNDAY":  
+                if datetime.datetime.now().strftime("%HH:%MM:%SS") <= close_lembur:  
         
-                    time_range = DateTimeRange(open_presensi,close_presensi)
+                    time_range = DateTimeRange(open_lembur,close_lembur)
                     x = datetime.datetime.now().strftime("%H:%M:%S")    # DEKLARASI WAKTU TERBARU
                     
                     # BILA DALAM WAKTU GLOBAL PRESENSI
@@ -2324,8 +2342,6 @@ def main_page_employee():   # FITUR KARYAWAN
                         if x in time_range :    
                             status_kehadiran = "HADIR" 
                         # TIDAK DALAM RENTANG PRESENSI TAPI MASIH PADA SHIFT
-                        elif x in time_range_kerja:    
-                            status_kehadiran = "TERLAMBAT"
                         # PRESENSI DILUAR JAM SHIFT
                         else :          
                             input("\nPERHATIAN : Bukan jadwal presensi! Tekan [enter] untuk kembali ke menu utama")
@@ -2339,7 +2355,7 @@ def main_page_employee():   # FITUR KARYAWAN
                         
                         # MENDETEKSI APAKAH KARYAWAN SUDAH MELAKUKAN PRESENSI DI SHIFT YANG SAMA HARI INI
                         # KARYAWAN BELUM PRESENSI
-                        if data_baru_cond not in data_presensi_cond:    
+                        if data_baru_cond not in data_presensi_lembur_cond:    
                             data_presensi.append(data_baru) # Menambahkan data baru ke dalam list data_presensi
                             with open('employee_presensi_lembur.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
                                 writer_presensi = csv.writer(csvfile_presensi)
@@ -2480,14 +2496,20 @@ def main_page_employee():   # FITUR KARYAWAN
             os.system('cls')  # Bersihkan console
             print(f'++{"="*86}++\n|| karyawan>menu utama>gaji anda>{" "*46}||\n++{"-"*86}++\n||{" "*86}||\n||{" "*26}S L I P  G A J I  A N D A{" "*25}||\n||{" "*86}||\n++{"="*86}++\nwaktu : {datetime.datetime.now().strftime("%A, %d %B %Y | %H:%M:%S")}\n\n')
            
-            with open('employee_penggajian.csv', 'r') as penggajian_file:
-                data_penggajian = penggajian_file.readlines()
+            penggajian = []
+
+            with open("penggajian_database.csv", "r", newline="") as csvfile:
+                reader = csv.reader(csvfile)
+                for row in reader:
+                    penggajian.append(row)
+
+
 
 
             # Asumsi nama kolom file CSV adalah seperti berikut
-            kolom_penggajian = ['ID','Nama','Posisi','Password','durasi_jam','Ongkos_Lembur','Potongan_Telat','Potongan_Absensi','Gaji_Pokok','Gaji_Bersih']
+            kolom_penggajian = ['ID', 'Nama', 'Posisi', 'Gaji_Pokok', 'Ongkos_Lembur', 'Potongan_Telat', 'Potongan_Absensi', 'Gaji_Bersih']
             # Membuat DataFrame Pandas dari data penggajian
-            df = pd.DataFrame([entry.strip().split(',') for entry in data_penggajian[1:]], columns=kolom_penggajian)
+            df = pd.DataFrame(penggajian, columns=kolom_penggajian)
             # Filter DataFrame berdasarkan ID yang sudah login
             filtered_df = df.loc[df['ID'] == str(launch_ID)]
 
@@ -2575,7 +2597,7 @@ def akun_pertama():
 
 
     # apabila database gaji belum ada
-    if not(Path('employee_penggajian.csv').is_file()):
+    if not(Path('penggajian_database.csv').is_file()):
         #buat file dahulu sebelum mengakses fungsi tambah supaya bisa menambahkan header dulu
         employee = open('penggajian_database.csv', 'w')
         employee.close()
@@ -2758,7 +2780,7 @@ def backendAutoPresensi():
                         pass
         
         # AUTOABSENSI PRESENSI LEMBUR
-        if datetime.datetime.now().strftime("%HH:%MM:%SS") > close_lembur:
+        if open_lembur > datetime.datetime.now().strftime("%HH:%MM:%SS") > close_lembur:
             hari_seminggu = ["SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU", "MINGGU"]
             hari_seminggu_inggris = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
             
@@ -2903,8 +2925,11 @@ pre_presensi = DateTimeRange("00:00:00", "07:59:59")
 open_presensi = "08:00:00"
 close_presensi = "08:59:59"
 close_kerja = "17:00:00"
-close_lembur = "23:59:59"
+
 global_close_presensi = "23:59:59"
+
+open_lembur = "17:00:00"
+close_lembur = "23:59:59"
 
 # untuk absensi otomatis
 waktuRealBackend = now_time.strftime("%A %d %B %Y")
