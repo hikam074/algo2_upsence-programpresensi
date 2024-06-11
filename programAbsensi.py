@@ -11,6 +11,7 @@ from datetime import timedelta          # melakukan operasi matematika pada obje
 import calendar                         # import kalender untuk melakukan operasi kalender
 import matplotlib.pyplot as plt         # import matlib agar bisa menampilkan diagram
 import tkinter as tk                    # import tkinter agar bisa engatur letak diagram agar tertata
+import sys                              # import untuk bisa menghentikan program
 
 # HALAMAN LOGIN DAN LAUNCH PAGE ------------------------------------------------------------------------------------------------------------------------------
 def launchPage():
@@ -112,7 +113,7 @@ def launchPage():
             print("\n\n©Kelompok 2 Tugas Akhir Algo 1\n2023\n\n")     # UI LOGO UNTUK DAN CLOSING PAGE
             time.sleep(0.5)
             launch_page_condition = False   # MENGENTIKAN LOOPING LAUNCH&LOGIN
-            break   # SELURH PROGRAM DIHENTIKAN
+            sys.exit()   # SELURH PROGRAM DIHENTIKAN
         
         # INPUT YANG DIMASUKKAN SALAH
         else:
@@ -1433,8 +1434,7 @@ def main_page_admin():
                             input("\nMembatalkan ... Tekan [enter] untuk kembali ke menu utama")
                             main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
                     else:   # DATA TIDAK COCOK
-                        input("\nData tidak ada ... Tekan [enter] untuk kembali ke menu utama")
-                        main_page_admin()   # MENGEMBALIKAN KE MENU UTAMA ADMIN
+                        pass
 
             else:   # BILA DATA YANG HENDAK DIHAPUS TIDAK ADA
                 input("\nData tidak ada ... Tekan [enter] untuk kembali ke menu utama")
@@ -1528,12 +1528,12 @@ def main_page_admin():
     # FITUR 6 SELESAI : UI : COMMENT : DESAIN
 
     elif menu_choice == '7':        # FITUR 7 KARYAWAN TERBAIK ATAU TERBURUK
-        os.system('cls')
-        print(f"++{'='*86}++\n|| {f'admin>menu utama>lihat data>lihat presensi karyawan>urutkan karyawan>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}L I H A T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('%A, %d %B %Y | %H:%M:%S')}\n")
-
         # opsi pemilihan waktu
         ulangAdmin4 = True
         while ulangAdmin4:
+            os.system('cls')
+            print(f"++{'='*86}++\n|| {f'admin>menu utama>lihat data>lihat presensi karyawan>urutkan karyawan>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}L I H A T   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('%A, %d %B %Y | %H:%M:%S')}\n")
+
             rekap_choice = input("\nPilih jenis rekapitulasi\n[1] Minggu Ini\n[2] Bulan Ini\n[3] Tahun Ini\n[4] Minggu Lalu\n[5] Bulan Lalu\n[6] Kembali ke menu utama\n\nMasukkan pilihan : ")
 
             now = datetime.datetime.now()
@@ -1570,7 +1570,6 @@ def main_page_admin():
                 input("\nTekan [enter] untuk kembali ke menu utama")
                 main_page_admin()
             else:
-                input('Pilihan yang anda berikan tidak ada!\nCoba lagi')  # Invalid input, try again
                 ulangAdmin4 = True
 
         # Convert data_presensi to DataFrame
@@ -1625,38 +1624,41 @@ def main_page_admin():
         # Convert back to DataFrame
         sorted_df = pd.DataFrame(sorted_list)
 
-        # Plot the data
-        plt.figure(figsize=(6, 5))
-        plt.bar(sorted_df['Nama'], sorted_df['Total Kehadiran'], color='blue')
-        plt.xlabel('Nama Karyawan')
-        plt.ylabel('Total Kehadiran')
-        plt.title(f'Total Kehadiran Karyawan dari {"terbaik ke terburuk" if sort_order == "1" else "terburuk ke terbaik"} \nuntuk periode "{rekap_choice_word}"')
-        plt.xticks(rotation=45, ha='right')
-        plt.tight_layout()
+        if sorted_df.empty:
+            input("\nINFORMASI : Data kosong...\nTekan [Enter] untuk kembali ke Main Menu")
+        else:
+            # Plot the data
+            plt.figure(figsize=(6, 5))
+            plt.bar(sorted_df['Nama'], sorted_df['Total Kehadiran'], color='blue')
+            plt.xlabel('Nama Karyawan')
+            plt.ylabel('Total Kehadiran')
+            plt.title(f'Total Kehadiran Karyawan dari {"terbaik ke terburuk" if sort_order == "1" else "terburuk ke terbaik"} \nuntuk periode "{rekap_choice_word}"')
+            plt.xticks(rotation=45, ha='right')
+            plt.tight_layout()
 
-        # ROOT TKINTER
-        root = tk.Tk()
-        root.withdraw()  # SEMBUNYIKAN TK
-        # MEMBUAT WINDOW TK UNTUK PATOKAN POSISI WINDOW PLT
-        top = tk.Toplevel(root)
-        # MENGATUR UKURAN DAN POSISI MEMUNCULKAN KANVAS
-        screen_width = root.winfo_screenwidth()
-        screen_height = root.winfo_screenheight()
-        window_width = 550
-        window_height = 400
-        pos_x = screen_width - window_width - 50  # 50 pixel dari kanan
-        pos_y = screen_height - window_height - 100  # 100 pixel dari bawah
-        top.geometry(f'{window_width}x{window_height}+{pos_x}+{pos_y}')
-        top.update_idletasks()
-        # MEMINDAHKAN WINDOW PLT KE POSISI YANG DIINGINKAN
-        fig_manager = plt.get_current_fig_manager()
-        fig_manager.window.wm_geometry(f"{window_width}x{window_height}+{pos_x}+{pos_y}")
-        # EKSEKUSI
-        root.destroy()  # MENUTUP WINDOW TK KARENA HANYA 
+            # ROOT TKINTER
+            root = tk.Tk()
+            root.withdraw()  # SEMBUNYIKAN TK
+            # MEMBUAT WINDOW TK UNTUK PATOKAN POSISI WINDOW PLT
+            top = tk.Toplevel(root)
+            # MENGATUR UKURAN DAN POSISI MEMUNCULKAN KANVAS
+            screen_width = root.winfo_screenwidth()
+            screen_height = root.winfo_screenheight()
+            window_width = 550
+            window_height = 400
+            pos_x = screen_width - window_width - 50  # 50 pixel dari kanan
+            pos_y = screen_height - window_height - 100  # 100 pixel dari bawah
+            top.geometry(f'{window_width}x{window_height}+{pos_x}+{pos_y}')
+            top.update_idletasks()
+            # MEMINDAHKAN WINDOW PLT KE POSISI YANG DIINGINKAN
+            fig_manager = plt.get_current_fig_manager()
+            fig_manager.window.wm_geometry(f"{window_width}x{window_height}+{pos_x}+{pos_y}")
+            # EKSEKUSI
+            root.destroy()  # MENUTUP WINDOW TK KARENA HANYA 
 
-        # Display the plot
-        print("\n[Tutup jendela grafik untuk kembali ke Main Menu]")
-        plt.show()
+            # Display the plot
+            print("\n[Tutup jendela grafik untuk kembali ke Main Menu]")
+            plt.show()
 
         main_page_admin()    # FITUR 7
 
@@ -2069,6 +2071,7 @@ def main_page_employee():   # FITUR KARYAWAN
         for row in reader_presensi:
             data_presensi_lembur_cond.append(row)
             data_presensi_lembur_cond[g][-1] = ""      # MENAMBAHKAN TIAP DATA PRESENSI KE VARIABEL KONDISI DENGAN MENGHAPUS DATA KOLOM "WAKTU"
+            data_presensi_lembur_cond[g][-2] = ""
             g+=1
 
     # MEMBUAT DATA PENGKONDISIAN UNTUK PENGECEKAN DATA SUDAH ADA ATAU BELUM
@@ -2096,12 +2099,12 @@ def main_page_employee():   # FITUR KARYAWAN
     if menu_choice == '1':          # FITUR 1 PRESENSI SEKARANG
         # UI PRESENSI SEKARANG DAN PILIHAN SHIFT
         os.system('cls')
-        print(f'++{'='*86}++\n|| admin>menu utama>presensi sekarang!>{' '*46}||\n++{'-'*86}++\n||{' '*86}||\n||{' '*26}P R E S E N S I   S E K A R A N G !{' '*25}||\n||{' '*86}||\n++{'='*86}++\nwaktu : {datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n')  
+        print(f'++{'='*86}++\n|| admin>menu utama>presensi sekarang!>{' '*49}||\n++{'-'*86}++\n||{' '*86}||\n||{' '*26}P R E S E N S I   S E K A R A N G !{' '*25}||\n||{' '*86}||\n++{'='*86}++\nwaktu : {datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n')  
 
         tanggal_presensi = datetime.datetime.now().strftime("%Y-%m-%d") # indikator tanggal riil
 
         hari_seminggu = ["SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU", "MINGGU"]
-        for nomor_hari in range(3,10):
+        for nomor_hari in range(1,9):
     
             # KARYAWAN YANG HENDAK PRESENSI BENAR DI SENIN-JUMAT
             if datetime.datetime.now().strftime("%A").upper() != "SATURDAY" and datetime.datetime.now().strftime("%A").upper() != "SUNDAY":  
@@ -2126,7 +2129,7 @@ def main_page_employee():   # FITUR KARYAWAN
                     # MEMBUAT DATA UNTUK DIMASUKKAN
                     data_baru = [tanggal_presensi, data_employee[tujuan][0], data_employee[tujuan][1], hari_seminggu[nomor_hari], status_kehadiran, now_time.strftime("%H:%M:%S")]
                     # MEMBUAT DATA PENGKONDISIAN UNTUK MENGECEK DATA SUDAH ADA ATAU BELUM
-                    data_baru_cond = [f'{tanggal_presensi}', f'{data_employee[tujuan][0]}', f'{data_employee[tujuan][1]}', f'{hari_seminggu[nomor_hari]}', f'{status_kehadiran}', '']
+                    data_baru_cond = [f'{tanggal_presensi}', f'{data_employee[tujuan][0]}', f'{data_employee[tujuan][1]}', f'{hari_seminggu[nomor_hari]}', '', '']
                     
                     # MENDETEKSI APAKAH KARYAWAN SUDAH MELAKUKAN PRESENSI DI SHIFT YANG SAMA HARI INI
                     # KARYAWAN BELUM PRESENSI
@@ -2136,33 +2139,38 @@ def main_page_employee():   # FITUR KARYAWAN
                             writer_presensi = csv.writer(csvfile_presensi)
                             writer_presensi.writerows(data_presensi)
                         # IN-PROGRAM-NOTIFICATION DATA DICATAT
-                        input(f'\nPresensi : {tanggal_presensi},{now_time.strftime("%H:%M:%S")},{data_employee[tujuan][0]},{data_employee[tujuan][1]},{hari_seminggu[nomor_hari]},{status_kehadiran} \nPERHATIAN : Presensi berhasil direkam!\n\nTekan [enter] untuk kembali ke menu utama')   
+                        input(f'\nPresensi : {tanggal_presensi},{now_time.strftime("%H:%M:%S")},{data_employee[tujuan][0]},{data_employee[tujuan][1]},{hari_seminggu[nomor_hari]},{status_kehadiran} \nPERHATIAN : Presensi berhasil direkam!\n\nTekan [enter] untuk kembali ke menu utama') 
+                        main_page_employee()  
                     # KARYAWAN SUDAH PRESENSI SEBELUMNYA
                     # IN-PROGRAM-NOTIFICATION DATA SUDAH ADA
                     else:
-                        input(f'\nPERHATIAN : Data presensi "{tanggal_presensi},{data_employee[tujuan][0]},{data_employee[tujuan][1]},{hari_seminggu[nomor_hari]},{status_kehadiran}" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')    
+                        input(f'\nPERHATIAN : Data presensi "{tanggal_presensi},{data_employee[tujuan][0]},{data_employee[tujuan][1]},{hari_seminggu[nomor_hari]},{status_kehadiran}" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')
+                        main_page_employee()     
                 
                 # ABSENSI GLOBAL BELUM DIBUKA
                 elif x in pre_presensi:     
                     # MENGEMBALIKAN KE MENU UTAMA
                     input("\nPERHATIAN : Waktu belum menunjukkan jadwal presensi!\n\nTekan [enter] untuk kembali ke menu utama")
+                    main_page_employee() 
             
             # KARYAWAN YANG HENDAK PRESENSI BUKAN MERUPAKAN KARYAWAN SHIFT TERSEBUT
             else:   
                 input("\nPERHATIAN : Bukan jadwal presensi anda! Tekan [enter] untuk melanjutkan")
-            main_page_employee()
+                main_page_employee()
+        
+        main_page_employee() 
 
     # FITUR 1 SELESAI - UI : COMMENT : DESAIN
 
     elif menu_choice == '2':  # FITUR 2 LIHAT JADWAL KERJA
         os.system('cls')  # Membersihkan layar konsol
         print(f"++{'='*86}++\n|| karyawan>menu utama>lihat jadwal kerja>{' '*46}||\n++{'-'*86}++\n||{' '*86}||\n||{' '*21}L I H A T   J A D W A L  K E R J A  A N D A{' '*21}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('%A, %d %B %Y | %H:%M:%S')}\n")    # UI LIHAT JADWAL Kerja
-        waktu_kerja = """           
-        08:00:00 - 08:59:59 waktu presensi
-        09:00:00 - 17:00:00 jam kerja 
+        waktu_kerja = f"""           
+        {open_presensi} - {close_presensi} waktu presensi
+        {open_kerja} - {close_kerja} jam kerja 
         """
         print(waktu_kerja)# UI LIHAT JADWAL Kerja
-        input("\n\n\nTekan [enter] untuk kembali ke Main Menu")
+        input("\nTekan [enter] untuk kembali ke Main Menu")
         main_page_employee()    # MENGEMBALIKAN KE MENU UTAMA
 
     # FITUR 2 SELESAI
@@ -2238,23 +2246,59 @@ def main_page_employee():   # FITUR KARYAWAN
 
         # Menampilkan statistik kehadiran
         os.system('cls')
-        print(f'++{'='*86}++\n|| {'karyawan>menu utama>rekapitulasi presensi>'f"{rekap_choice_word}"'>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{' '*23}R E K A P I T U L A S I   P R E S E N S I{' '*22}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\nMenampilkan rekapitulasi "{rekap_choice_word.upper()}"\n{start_date} | {end_date}\n\n\nTOTAL HADIR : {total_kehadiran}')  # UI HASIL REKAPAN
-
-        # Rincian Total Kehadiran
-        print("    Rincian:")
-        print(f"      -Total Hadir Tepat Waktu: {total_kehadiran_tepat_waktu}")
-        print(f"      -Total Terlambat: {total_terlambat}")
-
-        print(f"\nTOTAL TIDAK HADIR : {total_tidak_hadir}")
+        print(f'++{'='*86}++\n|| {'karyawan>menu utama>rekapitulasi presensi>'f"{rekap_choice_word}"'>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{' '*23}R E K A P I T U L A S I   P R E S E N S I{' '*22}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\nMenampilkan rekapitulasi "{rekap_choice_word.upper()}"\n{start_date} | {end_date}\n\nTOTAL HADIR : {total_kehadiran}')  # UI HASIL REKAPAN
+        print("dengan rincian:")
+        print(f" > Total Hadir Tepat Waktu: {total_kehadiran_tepat_waktu}")
+        print(f" > Total Terlambat: {total_terlambat}")
+        print(f"TOTAL TIDAK HADIR : {total_tidak_hadir}")
 
         # Persentase Kehadiran
         if total_hari_kerja > 0:
             attendance_percentage = round((total_kehadiran / total_hari_kerja * 100))
             print(f"\nPERSENTASE KEHADIRAN ({start_date} sampai {end_date}): {attendance_percentage}% ({total_kehadiran} dari {total_hari_kerja} hari kerja)")
+
+            print("\n[Tutup jendela grafik untuk kembali ke menu]")
+            # MENYIAPKAN GRAFIK DENGAN MATHPLOPLIB
+            plt.figure(figsize=(5, 5)) # UKURAN WINDOW
+            labels = ['Hadir Tepat Waktu', 'Terlambat', 'Tidak Hadir']
+            values = [total_kehadiran_tepat_waktu, total_terlambat, total_tidak_hadir]
+            nama_display = filtered_df.iloc[0,2]
+
+            plt.bar(labels, values, color=['green', 'orange', 'red'])
+            plt.xlabel('Kategori Kehadiran')
+            plt.ylabel('Jumlah')
+            plt.title(f'Grafik Kehadiran {nama_display}')
+                        
+            # ROOT TKINTER
+            root = tk.Tk()
+            root.withdraw()  # SEMBUNYIKAN TK
+
+            # MEMBUAT WINDOW TK UNTUK PATOKAN POSISI WINDOW PLT
+            top = tk.Toplevel(root)
+
+            # MENGATUR UKURAN DAN POSISI MEMUNCULKAN KANVAS
+            screen_width = root.winfo_screenwidth()
+            screen_height = root.winfo_screenheight()
+            window_width = 450
+            window_height = 400
+            pos_x = screen_width - window_width - 50  # 50 pixel dari kanan
+            pos_y = screen_height - window_height - 100  # 100 pixel dari bawah
+
+            top.geometry(f'{window_width}x{window_height}+{pos_x}+{pos_y}')
+            top.update_idletasks()
+
+            # MEMINDAHKAN WINDOW PLT KE POSISI YANG DIINGINKAN
+            fig_manager = plt.get_current_fig_manager()
+            fig_manager.window.wm_geometry(f"{window_width}x{window_height}+{pos_x}+{pos_y}")
+
+            # EKSEKUSI
+            root.destroy()  # MENUTUP WINDOW TK KARENA HANYA UNTUK POSITIONING
+            plt.show()      # MEMUNCULKAN GRAFIK
+
         else:
             print("\nTidak ada data kehadiran pada periode yang dipilih.")
+            input("\nTekan [enter] untuk kembali ke Main Menu")
 
-        input("\n\n\nTekan [enter] untuk kembali ke Main Menu")
         main_page_employee()    # MENGEMBALIKAN KE MENU UTAMA
 
     # FITUR 3 SELESAI
@@ -2313,9 +2357,9 @@ def main_page_employee():   # FITUR KARYAWAN
         print(f'++{'='*86}++\n|| {f'karyawan>menu utama>lihat data presensi anda>{rekap_choice_word}':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*20}L I H A T   D A T A   P R E S E N S I   A N D A':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n\nMenampilkan data presensi "{rekap_choice_word.upper()}"\n{start_date} | {end_date}\n')   # UI HASIL REKAP
         if rekap_choice in '1234':  # BILA MEMILIH SALAH SATU PILIHAN DARI 1234
             filtered_df = filtered_df.loc[(filtered_df['Tanggal'] >= start_date) & (filtered_df['Tanggal'] <= end_date)]
-            print(tabulate.tabulate(filtered_df, headers="keys", tablefmt="github", showindex=False))
+            print(tabulate.tabulate(filtered_df, headers="keys", tablefmt=kolom_fmt, showindex=False))
         elif rekap_choice == '5':   # BILA MEMILIH 5 : SEMUA
-            print (tabulate.tabulate(filtered_df, headers="keys", tablefmt="github", showindex=False))
+            print (tabulate.tabulate(filtered_df, headers="keys", tablefmt=kolom_fmt, showindex=False))
 
         input("\nTekan [enter] untuk kembali ke Main Menu")
         main_page_employee()    # MENGEMBALIKAN KE MENU UTAMA
@@ -2326,60 +2370,74 @@ def main_page_employee():   # FITUR KARYAWAN
         def presensi_sekarang_lembur():
             # UI PRESENSI SEKARANG DAN PILIHAN SHIFT
             os.system('cls')
-            print(f'++{'='*86}++\n|| karyawan>menu utama>lembur>presensi sekarang!>{' '*46}||\n++{'-'*86}++\n||{' '*86}||\n||{' '*26}P R E S E N S I   S E K A R A N G !{' '*25}||\n||{' '*86}||\n++{'='*86}++\nwaktu : {datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n')  
+            print(f'++{'='*86}++\n|| karyawan>menu utama>lembur>presensi sekarang!>{' '*46}||\n++{'-'*86}++\n||{' '*86}||\n||{' '*26}P R E S E N S I   S E K A R A N G !{' '*25}||\n||{' '*86}||\n++{'='*86}++\nwaktu : {datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n')  
 
-            tanggal_presensi = datetime.datetime.now().strftime("%Y-%m-%d") # indikator tanggal riil
+            # PENGKONDISIAN TANGGAL LEMBUR
+            for data_lembur_terpilih in data_perintah_lembur:
 
-            hari_seminggu = ["SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU", "MINGGU"]
-            for nomor_hari in range(3,10):
-        
-                # KARYAWAN YANG HENDAK PRESENSI BENAR DI SENIN-JUMAT
-                if datetime.datetime.now().strftime("%HH:%MM:%SS") <= close_lembur:  
-        
-                    time_range = DateTimeRange(open_lembur,close_lembur)
-                    x = datetime.datetime.now().strftime("%H:%M:%S")    # DEKLARASI WAKTU TERBARU
-                    
-                    # BILA DALAM WAKTU GLOBAL PRESENSI
-                    if x in DateTimeRange(open_presensi,global_close_presensi):   # ABSENSI GLOBAL DIBUKA
-                        # DALAM RENTANG PRESENSI
-                        if x in time_range :    
-                            status_kehadiran = "HADIR" 
-                        # TIDAK DALAM RENTANG PRESENSI TAPI MASIH PADA SHIFT
-                        # PRESENSI DILUAR JAM SHIFT
-                        else :          
-                            input("\nPERHATIAN : Bukan jadwal presensi! Tekan [enter] untuk kembali ke menu utama")
-                            status_kehadiran = "TIDAK HADIR"
-                            main_page_employee()    # MENGEMBALIKAN KE MENU UTAMA
-                        
-                        # MEMBUAT DATA UNTUK DIMASUKKAN
-                        data_baru = [tanggal_presensi, data_employee[tujuan][0], data_employee[tujuan][1], hari_seminggu[nomor_hari], status_kehadiran, now_time.strftime("%H:%M:%S")]
-                        # MEMBUAT DATA PENGKONDISIAN UNTUK MENGECEK DATA SUDAH ADA ATAU BELUM
-                        data_baru_cond = [f'{tanggal_presensi}', f'{data_employee[tujuan][0]}', f'{data_employee[tujuan][1]}', f'{hari_seminggu[nomor_hari]}', f'{status_kehadiran}', '']
-                        
-                        # MENDETEKSI APAKAH KARYAWAN SUDAH MELAKUKAN PRESENSI DI SHIFT YANG SAMA HARI INI
-                        # KARYAWAN BELUM PRESENSI
-                        if data_baru_cond not in data_presensi_lembur_cond:    
-                            data_presensi.append(data_baru) # Menambahkan data baru ke dalam list data_presensi
-                            with open('employee_presensi_lembur.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
-                                writer_presensi = csv.writer(csvfile_presensi)
-                                writer_presensi.writerows(data_presensi)
-                            # IN-PROGRAM-NOTIFICATION DATA DICATAT
-                            input(f'\nPresensi : {tanggal_presensi},{now_time.strftime("%H:%M:%S")},{data_employee[tujuan][0]},{data_employee[tujuan][1]},{hari_seminggu[nomor_hari]},{status_kehadiran} \nPERHATIAN : Presensi berhasil direkam!\n\nTekan [enter] untuk kembali ke menu utama')   
-                        # KARYAWAN SUDAH PRESENSI SEBELUMNYA
-                        # IN-PROGRAM-NOTIFICATION DATA SUDAH ADA
-                        else:
-                            input(f'\nPERHATIAN : Data presensi "{tanggal_presensi},{data_employee[tujuan][0]},{data_employee[tujuan][1]},{hari_seminggu[nomor_hari]},{status_kehadiran}" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')    
-                    
-                    # ABSENSI GLOBAL BELUM DIBUKA
-                    elif x in pre_presensi:     
-                        # MENGEMBALIKAN KE MENU UTAMA
-                        input("\nPERHATIAN : Waktu belum menunjukkan jadwal presensi!\n\nTekan [enter] untuk kembali ke menu utama")
+                if data_lembur_terpilih[2] == launch_ID and data_lembur_terpilih[0] == datetime.datetime.now().strftime("%Y-%m-%d"):
+                    open_lembur = data_lembur_terpilih[-3]
+                    close_lembur = data_lembur_terpilih[-2]
+
+                    tanggal_presensi = datetime.datetime.now().strftime("%Y-%m-%d") # indikator tanggal riil
+
+                    hari_seminggu = ["SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU", "MINGGU"]
+                    for nomor_hari in range(1,9):
                 
-                # KARYAWAN YANG HENDAK PRESENSI BUKAN MERUPAKAN KARYAWAN SHIFT TERSEBUT
-                else:   
-                    input("\nPERHATIAN : Bukan jadwal presensi anda! Tekan [enter] untuk melanjutkan")
+                        # KARYAWAN YANG HENDAK PRESENSI BENAR DI SENIN-JUMAT
+                        if datetime.datetime.now().strftime("%HH:%MM:%SS") <= close_lembur:  
+                
+                            time_range = DateTimeRange(open_lembur,close_lembur)
+                            x = datetime.datetime.now().strftime("%H:%M:%S")    # DEKLARASI WAKTU TERBARU
+                            
+                            # BILA DALAM WAKTU GLOBAL PRESENSI
+                            if x in DateTimeRange(open_presensi,global_close_presensi):   # ABSENSI GLOBAL DIBUKA
+                                # DALAM RENTANG PRESENSI
+                                if x in time_range :    
+                                    status_kehadiran = "HADIR" 
+                                # TIDAK DALAM RENTANG PRESENSI TAPI MASIH PADA SHIFT
+                                # PRESENSI DILUAR JAM SHIFT
+                                else :          
+                                    input("\nPERHATIAN : Bukan jadwal presensi! Tekan [enter] untuk kembali ke menu utama")
+                                    status_kehadiran = "TIDAK HADIR"
+                                    main_page_employee()    # MENGEMBALIKAN KE MENU UTAMA
+                                
+                                # MEMBUAT DATA UNTUK DIMASUKKAN
+                                data_baru = [tanggal_presensi, data_employee[tujuan][0], data_employee[tujuan][1], hari_seminggu[nomor_hari], status_kehadiran, now_time.strftime("%H:%M:%S")]
+                                # MEMBUAT DATA PENGKONDISIAN UNTUK MENGECEK DATA SUDAH ADA ATAU BELUM
+                                data_baru_cond = [f'{tanggal_presensi}', f'{data_employee[tujuan][0]}', f'{data_employee[tujuan][1]}', f'{hari_seminggu[nomor_hari]}', '', '']
+                                
+                                # MENDETEKSI APAKAH KARYAWAN SUDAH MELAKUKAN PRESENSI DI SHIFT YANG SAMA HARI INI
+                                # KARYAWAN BELUM PRESENSI
+                                if data_baru_cond not in data_presensi_lembur_cond:    
+                                    data_presensi_lembur.append(data_baru) # Menambahkan data baru ke dalam list data_presensi
+                                    with open('employee_presensi_lembur.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
+                                        writer_presensi = csv.writer(csvfile_presensi)
+                                        writer_presensi.writerows(data_presensi_lembur)
+                                    # IN-PROGRAM-NOTIFICATION DATA DICATAT
+                                    input(f'\nPresensi : {tanggal_presensi},{now_time.strftime("%H:%M:%S")},{data_employee[tujuan][0]},{data_employee[tujuan][1]},{hari_seminggu[nomor_hari]},{status_kehadiran} \nPERHATIAN : Presensi berhasil direkam!\n\nTekan [enter] untuk kembali ke menu utama')   
+                                    main_page_employee()
+                                # KARYAWAN SUDAH PRESENSI SEBELUMNYA
+                                # IN-PROGRAM-NOTIFICATION DATA SUDAH ADA
+                                else:
+                                    input(f'PERHATIAN : Data presensi "{tanggal_presensi},{data_employee[tujuan][0]},{data_employee[tujuan][1]},{hari_seminggu[nomor_hari]},{status_kehadiran}" sudah ada!\n\nTekan [enter] untuk kembali ke Menu Lembur')    
+                                    menu_lembur_karyawan()
+                            
+                            # ABSENSI GLOBAL BELUM DIBUKA
+                            elif x in pre_presensi:     
+                                # MENGEMBALIKAN KE MENU UTAMA
+                                input("PERHATIAN : Waktu belum menunjukkan jadwal presensi!\n\nTekan [enter] untuk kembali ke menu utama")
+                                main_page_employee()
+                        
+                        # KARYAWAN YANG HENDAK PRESENSI BUKAN MERUPAKAN KARYAWAN SHIFT TERSEBUT
+                        else:   
+                            input("PERHATIAN : Bukan jadwal presensi anda! Tekan [enter] untuk melanjutkan")
+                            menu_lembur_karyawan()
                     
-                menu_lembur_karyawan()
+                    menu_lembur_karyawan()
+
+            input("INFORMASI : Tidak ada tugas lembur untuk saat ini\n\nTekan [Enter] untuk kembali ke Main Menu")    
+            main_page_employee()
         
         def lihat_riwayat_lembur():
             perintah_lembur = []
@@ -2410,12 +2468,13 @@ def main_page_employee():   # FITUR KARYAWAN
             if perintah_lembur:
                 while True:
                     os.system('cls')
-                    print("\nPilih Rentang Waktu:")
-                    print("1. Hari Ini")
-                    print("2. Minggu Ini")
-                    print("3. Bulan Ini")
-                    print("4. Semua")
-                    print("5. Kembali ke Menu Utama")
+                    print(f'++{'='*86}++\n|| karyawan>menu utama>lembur>riwayat lembur>{' '*43}||\n++{'-'*86}++\n||{' '*86}||\n||{' '*26}            L E M B U R            {' '*25}||\n||{' '*86}||\n++{'='*86}++\nwaktu : {datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n')  
+                    print("Pilih Rentang Waktu:")
+                    print("[1] Hari Ini")
+                    print("[2] Minggu Ini")
+                    print("[3] Bulan Ini")
+                    print("[4] Semua")
+                    print("[5] Kembali ke Menu Utama")
                     
                     rentang_waktu = input("Pilih rentang waktu: ")
                     
@@ -2428,10 +2487,9 @@ def main_page_employee():   # FITUR KARYAWAN
                     elif rentang_waktu == "4":
                         rentang_waktu_str = "semua"
                     elif rentang_waktu == "5":
-                        return  # Kembali ke menu utama
+                        main_page_employee()
                     else:
-                        print("Pilihan tidak valid, silakan coba lagi.")
-                        continue
+                        lihat_riwayat_lembur()
 
                     data = []
                     hari_ini = datetime.datetime.now().date()
@@ -2456,9 +2514,11 @@ def main_page_employee():   # FITUR KARYAWAN
                             data.append([entry['tgl'], entry['hari'], entry['id'], entry['nama'], entry['jam_mulai'], entry['jam_selesai'], entry['durasi_jam']])
 
                     headers = ["Tanggal", "Hari", "ID", "Nama", "Jam Mulai", "Jam Selesai", "Durasi Jam"]
-                    print(tabulate.tabulate(data, headers=headers, tablefmt="grid"))
+                    os.system('cls')
+                    print(f'++{'='*86}++\n||{f' karyawan>menu utama>lembur>riwayat lembur>{rentang_waktu_str}':<86}||\n++{'-'*86}++\n||{' '*86}||\n||{' '*26}            L E M B U R            {' '*25}||\n||{' '*86}||\n++{'='*86}++\nwaktu : {datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n')  
+                    print(tabulate.tabulate(data, headers=headers, tablefmt=kolom_fmt))
                     
-                    input("Tekan enter untuk kembali ke menu")
+                    input("Tekan enter untuk kembali ke menu Lembur")
                     
             else:
                 print("Tidak ada data lembur yang tersedia.")
@@ -2466,12 +2526,12 @@ def main_page_employee():   # FITUR KARYAWAN
 
         def menu_lembur_karyawan():
             os.system('cls')
-            print(f'++{'='*86}++\n|| karyawan>menu utama>lembur>{' '*58}||\n++{'-'*86}++\n||{' '*86}||\n||{' '*26}            L E M B U R            {' '*25}||\n||{' '*86}||\n++{'='*86}++\nwaktu : {datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n\n')  
-            print("\nMenu LEMBUR :")
+            print(f'++{'='*86}++\n|| karyawan>menu utama>lembur>{' '*58}||\n++{'-'*86}++\n||{' '*86}||\n||{' '*26}            L E M B U R            {' '*25}||\n||{' '*86}||\n++{'='*86}++\nwaktu : {datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n')  
+            print("Menu LEMBUR :")
             print("[1] PRESENSI LEMBUR SEKARANG!")
             print("[2] Lihat riwayat lembur")
             print("\n[3] Kembali ke Menu Utama")
-            menu_choice_5 = input("Pilih menu : ")
+            menu_choice_5 = input("\nPilih menu : ")
             
             if menu_choice_5 == '1':    # FITUR 5.1 PRESENSI SEKARANG
                 presensi_sekarang_lembur()
@@ -2492,7 +2552,7 @@ def main_page_employee():   # FITUR KARYAWAN
 
         menu_lembur_karyawan()
 
-    # FITUR 5 tinggal r nya brili
+    # FITUR 5 
 
     elif menu_choice == '6':  # FITUR 6 GAJI ANDA
         def cetak_slip(launch_ID):
@@ -2824,20 +2884,10 @@ kolom_presensi = ["Tanggal", "ID", "Nama", "Hari Kerja", "Kehadiran", "Waktu"]
 kolom_penggajian = ["ID", "Nama", "Posisi", "Gaji Pokok", "Ongkos Lembur", "Potongan Absensi", "Gaji Bersih" ]
 kolom_lembur   = ["Tanggal","Hari","ID","Nama","Jam Mulai","Jam Selesai","durasi_jam"]
 
-kolom_fmt = "grid"
+kolom_fmt = "github"
 
 # lama freeze welcome page
 delayWelcome = 0
-
-# menentukan berapa karyawan dalam toko
-# qKasir = 3
-# qStaf = 2*qKasir
-# qKasirPagi = 1
-# qKasirSiang = 1
-# qKasirMalam = 1
-# qStafPagi = 2*qKasirPagi
-# qStafSiang = 2*qKasirSiang
-# qStafMalam = 2*qKasirMalam
 
 #logo-logo
 logoPart1 = (r"  _    _       _____                      ")
@@ -2927,12 +2977,13 @@ time_range_kerja = DateTimeRange("08:00:00", "16:59:59")
 pre_presensi = DateTimeRange("00:00:00", "07:59:59")
 open_presensi = "08:00:00"
 close_presensi = "08:59:59"
+open_kerja = "09:00:00"
 close_kerja = "17:00:00"
 
-global_close_presensi = "23:59:59"
+global_close_presensi = "23:00:00"
 
 open_lembur = "17:00:00"
-close_lembur = "23:59:59"
+close_lembur = "23:00:00"
 
 # untuk absensi otomatis
 waktuRealBackend = now_time.strftime("%A %d %B %Y")
@@ -2953,4 +3004,3 @@ def calculate_percentage(present_days, total_days):
 akun_pertama()
 backendAutoPresensi()
 launchPage()
- 
