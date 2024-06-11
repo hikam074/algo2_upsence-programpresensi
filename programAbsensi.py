@@ -48,16 +48,16 @@ def launchPage():
             launchPass = input("Masukkan Passcode anda : ")
 
             # MEMBUKA .CSV ADMIN DAN KARYAWAN
-            with open('admin_account_database.csv','r') as fileAdmincsv:    # MEMBUKA .CSV ADMIN
+            with open('admin_akun.csv','r') as fileAdmincsv:    # MEMBUKA .CSV ADMIN
                 admin_list = fileAdmincsv.read()
-            with open('employee_account_database.csv', 'r') as fileEmployeecsv: # MEMBUKA .CSV KARYAWAN
+            with open('employee_akun.csv', 'r') as fileEmployeecsv: # MEMBUKA .CSV KARYAWAN
                 employee_list = fileEmployeecsv.read()   
 
             # IDENTIFIKASI APAKAH MERUPAKAN AKUN ADMIN
             if launch_ID in admin_list:     # APAKAH ID DARI LOGIN ADA DI DATABASE ADMIN
 
                 data_admin = []     # VARIABEL KOSONG UNTUK MENYIMPAN DATA ADMIN
-                with open('admin_account_database.csv') as csvfile_admin:   # MEMBUKA .CSV ADMIN
+                with open('admin_akun.csv') as csvfile_admin:   # MEMBUKA .CSV ADMIN
                     reader_Admin = csv.reader(csvfile_admin)
                     for row in reader_Admin:    # menjadikan file .csv menjadi list admin (menambahkan tiap baris pada .csv kedalam variabel data admin)
                         data_admin.append(row)
@@ -79,7 +79,7 @@ def launchPage():
             elif launch_ID in employee_list:    # APAKAH ID DARI LOGIN ADA DI DATABASE KARYAWAN
 
                 data_employee = []  # VARIABEL KOSONG UNTUK MENYIMPAN DATA KARYAWAN
-                with open('employee_account_database.csv') as csvfile_employee: # MEMBUKA .CSV KARYAWAN
+                with open('employee_akun.csv') as csvfile_employee: # MEMBUKA .CSV KARYAWAN
                     reader_employee = csv.reader(csvfile_employee)
                     for row in reader_employee:     # menjadikan file .csv menjadi list karyawan (menambahkan tiap baris pada .csv kedalam variabel data karyawan)
                         data_employee.append(row)
@@ -132,7 +132,7 @@ def main_page_admin():
 
     # MENGIMPOR DATA ADMIN
     data_admin = []     # VARIABEL KOSONG UNTUK MENYIMPAN DATA ADMIN
-    with open('admin_account_database.csv') as csvfile_admin:       # MEMBUKA .CSV ADMIN
+    with open('admin_akun.csv') as csvfile_admin:       # MEMBUKA .CSV ADMIN
         reader_Admin = csv.reader(csvfile_admin)
         for row in reader_Admin:        # menjadikan file .csv menjadi list admin (menambahkan tiap baris pada .csv kedalam variabel data admin)
             data_admin.append(row)
@@ -142,7 +142,7 @@ def main_page_admin():
 
     # MENGIMPOR DATA KARYAWAN
     data_employee = []  # VARIABEL KOSONG UNTUK MENYIMPAN DATA KARYAWAN
-    with open('employee_account_database.csv') as csvfile_employee: # MEMBUKA .CSV KARYAWAN
+    with open('employee_akun.csv') as csvfile_employee: # MEMBUKA .CSV KARYAWAN
         reader_employee = csv.reader(csvfile_employee)
         for row in reader_employee:     # menjadikan file .csv menjadi list karyawan (menambahkan tiap baris pada .csv kedalam variabel data karyawan)
             data_employee.append(row)   
@@ -151,21 +151,21 @@ def main_page_admin():
 
     # MENGIMPOR DATA PRESENSI KARYAWAN
     data_presensi = []  # VARIABEL KOSONG UNTUK MENYIMPAN DATA PRESENSI
-    with open('presensi_database.csv') as csvfile_presensi:     # MEMBUKA .CSV PRESENSI
+    with open('employee_presensi.csv') as csvfile_presensi:     # MEMBUKA .CSV PRESENSI
         reader_presensi = csv.reader(csvfile_presensi)      # menjadikan file .csv menjadi list presensi (menambahkan tiap baris pada .csv kedalam variabel data presensi)
         for row in reader_presensi:
             data_presensi.append(row)
 
     # MENGIMPOR DATA PRESENSI ADMIN
     data_presensi_admin = []  # VARIABEL KOSONG UNTUK MENYIMPAN DATA PRESENSI
-    with open('presensi_database_admin.csv') as csvfile_presensi_admin:     # MEMBUKA .CSV PRESENSI
+    with open('admin_presensi.csv') as csvfile_presensi_admin:     # MEMBUKA .CSV PRESENSI
         reader_presensi_admin = csv.reader(csvfile_presensi_admin)      # menjadikan file .csv menjadi list presensi (menambahkan tiap baris pada .csv kedalam variabel data presensi)
         for row in reader_presensi_admin:
             data_presensi_admin.append(row)
 
     # MENGIMPOR DATA HISTORI
     data_history = []  # VARIABEL KOSONG UNTUK MENYIMPAN DATA PRESENSI
-    with open('histori_database.csv') as csvfile_histori:     # MEMBUKA .CSV PRESENSI
+    with open('histori.csv') as csvfile_histori:     # MEMBUKA .CSV PRESENSI
         reader_histori = csv.reader(csvfile_histori)      # menjadikan file .csv menjadi list presensi (menambahkan tiap baris pada .csv kedalam variabel data presensi)
         for row in reader_histori:
             data_history.append(row)
@@ -174,14 +174,14 @@ def main_page_admin():
 
     # MENGIMPOR DATA PERINTAH LEMBUR
     data_perintah_lembur = []  # VARIABEL KOSONG UNTUK MENYIMPAN DATA PERINTAH LEMBUR
-    with open('perintah_lembur.csv') as csvfile_perintah_lembur:     # MEMBUKA .CSV PERINTAH
+    with open('employee_perintahlembur.csv') as csvfile_perintah_lembur:     # MEMBUKA .CSV PERINTAH
         reader_perintah_lembur = csv.reader(csvfile_perintah_lembur)      # menjadikan file .csv menjadi list perintah (menambahkan tiap baris pada .csv kedalam variabel data perintah)
         for row in reader_perintah_lembur:
             data_perintah_lembur.append(row)
 
     # MENGIMPOR DATA PRESENSI LEMBUR
     data_presensi_lembur = []  # VARIABEL KOSONG UNTUK MENYIMPAN DATA PRESENSI LEMBUR
-    with open('employee_presensi_lembur.csv') as csvfile_presensi_lembur:     # MEMBUKA .CSV PRESENSI
+    with open('employee_presensilembur.csv') as csvfile_presensi_lembur:     # MEMBUKA .CSV PRESENSI
         reader_presensi_lembur = csv.reader(csvfile_presensi_lembur)      # menjadikan file .csv menjadi list presensi (menambahkan tiap baris pada .csv kedalam variabel data presensi)
         for row in reader_presensi_lembur:
             data_presensi_lembur.append(row)
@@ -189,7 +189,7 @@ def main_page_admin():
     # MEMBUAT DATA PENGKONDISIAN UNTUK PENGECEKAN DATA SUDAH ADA ATAU BELUM
     data_presensi_cond = [] # VARIABEL KOSONG UNTUK MENYIMPAN DATA KONDISI
     g=0 # TRIGGER BARIS KE-
-    with open('presensi_database.csv') as csvfile_presensi:     # MEMBUKA .CSV PRESENSI
+    with open('employee_presensi.csv') as csvfile_presensi:     # MEMBUKA .CSV PRESENSI
         reader_presensi = csv.reader(csvfile_presensi)      #menjadikan file .csv menjadi list presensi (menambahkan tiap baris pada .csv kedalam variabel data presensi)
         for row in reader_presensi:
             data_presensi_cond.append(row)
@@ -199,7 +199,7 @@ def main_page_admin():
     # MEMBUAT DATA PENGKONDISIAN UNTUK PENGECEKAN DATA SUDAH ADA ATAU BELUM
     data_presensi_cond_admin = [] # VARIABEL KOSONG UNTUK MENYIMPAN DATA KONDISI
     g=0 # TRIGGER BARIS KE-
-    with open('presensi_database_admin.csv') as csvfile_presensi:     # MEMBUKA .CSV PRESENSI
+    with open('admin_presensi.csv') as csvfile_presensi:     # MEMBUKA .CSV PRESENSI
         reader_presensi = csv.reader(csvfile_presensi)      #menjadikan file .csv menjadi list presensi (menambahkan tiap baris pada .csv kedalam variabel data presensi)
         for row in reader_presensi:
             data_presensi_cond_admin.append(row)
@@ -260,7 +260,7 @@ def main_page_admin():
                     # KARYAWAN BELUM PRESENSI
                     if data_baru_cond not in data_presensi_cond_admin:    
                         data_presensi_admin.append(data_baru) # Menambahkan data baru ke dalam list data_presensi
-                        with open('presensi_database_admin.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
+                        with open('admin_presensi.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
                             writer_presensi = csv.writer(csvfile_presensi)
                             writer_presensi.writerows(data_presensi_admin)
                         # IN-PROGRAM-NOTIFICATION DATA DICATAT
@@ -316,7 +316,7 @@ def main_page_admin():
                     # MEMASUKKAN DATA KE LIST 
                     data_admin.append(masukan_tambah_admin)
                     # MEMBUKA .CSV DAN MEMASUKKAN DATA
-                    with open('admin_account_database.csv', 'w', newline='') as csvfile_admin:
+                    with open('admin_akun.csv', 'w', newline='') as csvfile_admin:
                         writer_admin = csv.writer(csvfile_admin)
                         writer_admin.writerows(data_admin)
                     # NOTIFIKASI DATA BERHASIL DIMASUKKAN
@@ -358,7 +358,7 @@ def main_page_admin():
                 # MEMASUKKAN DATA BARU KE LIST
                 data_employee.append(masukan_tambah_karyawan)
                 # MEMBUKA .CSV DAN MEMASUKKAN LIST
-                with open('employee_account_database.csv', 'w', newline='') as csvfile_employee:
+                with open('employee_akun.csv', 'w', newline='') as csvfile_employee:
                     writer_employee = csv.writer(csvfile_employee)
                     writer_employee.writerows(data_employee)
                 # NOTIFIKASI DATA BERHASIL DITAMBAHKAN
@@ -459,7 +459,7 @@ def main_page_admin():
                         df.at[index_admin, 'Passcode'] = passBaru
                     
                     # MENYIMPAN DATA BARU KE DATABASE
-                    np.savetxt('admin_account_database.csv', df, delimiter=',', fmt='%s')
+                    np.savetxt('admin_akun.csv', df, delimiter=',', fmt='%s')
                     # NOTIFIKASI DATA BERHASIL DIUBAH
                     os.system('cls')
                     print(f"++{'='*86}++\n|| {f'admin>menu utama>edit data>edit data admin>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*28}E D I T   D A T A   A D M I N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('%A, %d %B %Y | %H:%M:%S')}\n\nData baru \"{masukan_edit_admin}\" telah diubah!\n\nData saat ini :\n{tabulate.tabulate(df, headers="keys", tablefmt=kolom_fmt, showindex=False)}\n")
@@ -537,7 +537,7 @@ def main_page_admin():
                     df.at[index_employee, 'Passcode'] = passBaru
                 
                 # MENYIMPAN DATA BARU KE DATABASE
-                np.savetxt('employee_account_database.csv', df, delimiter=',', fmt='%s')
+                np.savetxt('employee_akun.csv', df, delimiter=',', fmt='%s')
                 # IN-PROGRAM-NOTIFICATION DATA BERHASIL DIUBAH
                 print(f'\nData baru untuk "{df.iloc[index_employee].to_string(header=False, index=False)}" telah diubah!\n\nData saat ini :\n{tabulate.tabulate(df, headers="keys", tablefmt=kolom_fmt, showindex=False)}\n')
 
@@ -638,7 +638,7 @@ def main_page_admin():
                                 df.iloc[masukan_edit_presensi_index, 5] = masukanEditPresensiWaktuBaru.upper()
 
                             # MENYIMPAN DATA BARU KE DATABASE
-                            np.savetxt('presensi_database_admin.csv',df,delimiter=',',fmt='%s')
+                            np.savetxt('admin_presensi.csv',df,delimiter=',',fmt='%s')
                             # IN-PROGRAM-NOTIFICATION DATA BERHASIL DIUBAH
                             print(f'\nData baru "{masukan_edit_presensi_id}" telah diubah!\n\nData saat ini :\n{tabulate.tabulate((df[masukan_edit_presensi_index:masukan_edit_presensi_index+1]), headers="keys", tablefmt=kolom_fmt, showindex=False)}\n') 
                         
@@ -731,7 +731,7 @@ def main_page_admin():
                                 df_employee.at[masukan_edit_presensi_index, 'Waktu'] = masukanEditPresensiWaktuBaru.upper()
 
                             # MENYIMPAN DATA BARU KE DATABASE
-                            df_employee.to_csv('presensi_database.csv', index=False, header=False)
+                            df_employee.to_csv('employee_presensi.csv', index=False, header=False)
                             # IN-PROGRAM-NOTIFICATION DATA BERHASIL DIUBAH
                             print(f'\nData baru "{masukan_edit_presensi_id}" telah diubah!\n\nData saat ini :\n{tabulate.tabulate((df_employee[masukan_edit_presensi_index:masukan_edit_presensi_index+1]), headers="keys", tablefmt=kolom_fmt, showindex=False)}\n') 
                         
@@ -1084,6 +1084,10 @@ def main_page_admin():
                         labels = ['Hadir Tepat Waktu', 'Terlambat', 'Tidak Hadir']
                         values = [total_kehadiran_tepat_waktu, total_terlambat, total_tidak_hadir]
                         nama_display = filtered_df.iloc[0,2]
+                        
+                        # Menambahkan angka di atas batang
+                        for i, value in enumerate(values):
+                            plt.text(i, value + 0.1, str(value), ha='center')
 
                         plt.bar(labels, values, color=['green', 'orange', 'red'])
                         plt.xlabel('Kategori Kehadiran')
@@ -1303,6 +1307,13 @@ def main_page_admin():
                         labels = ['Hadir Tepat Waktu', 'Terlambat', 'Tidak Hadir']
                         values = [total_kehadiran_tepat_waktu, total_terlambat, total_tidak_hadir]
                         nama_display = filtered_df.iloc[0,2]
+
+
+                        # Menambahkan angka di atas batang
+                        for i, value in enumerate(values):
+                            plt.text(i, value + 0.1, str(value), ha='center')
+
+
                         plt.bar(labels, values, color=['green', 'orange', 'red'])
                         plt.xlabel('Kategori Kehadiran')
                         plt.ylabel('Jumlah')
@@ -1379,7 +1390,7 @@ def main_page_admin():
                         if pilihan_admin_hapus == '1':
                             df = pd.DataFrame(data_admin, columns=kolom_admin)                  # deklarasi tabel pandas
                             df = df.drop(x)                                                     # menghapus data yang diinginkan
-                            np.savetxt('admin_account_database.csv',df,delimiter=',',fmt='% s') # meyimpan kembali data yang tidak dihapus
+                            np.savetxt('admin_akun.csv',df,delimiter=',',fmt='% s') # meyimpan kembali data yang tidak dihapus
                             os.system('cls')
                             print(f"++{'='*86}++\n|| {f"admin>menu utama>hapus data>hapus data admin>ID:{data_admin[x][0]}":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*27}H A P U S   D A T A   A D M I N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n") # UI HAPUS DATA
                             print(f"ID terhapus : {menghapus_file}")  # IN-PROGRAM-NOTIFICATION DATA YANG TELAH DIHAPUS
@@ -1422,7 +1433,7 @@ def main_page_admin():
                         if pilihan_employee_hapus == '1':
                             
                             df = df.drop(x)                                                         # menghapus data yang diinginkan
-                            np.savetxt('employee_account_database.csv',df,delimiter=',',fmt='% s')  # meyimpan kembali data yang tidak dihapus
+                            np.savetxt('employee_akun.csv',df,delimiter=',',fmt='% s')  # meyimpan kembali data yang tidak dihapus
                             os.system('cls')
                             print(f"++{'='*86}++\n|| {f"admin>menu utama>hapus data>hapus data karyawan>ID:{data_employee[x][0]}":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*24}H A P U S   D A T A   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n")
                             print(f"ID dihapus : {menghapus_file}\n") # IN-PROGRAM-NOTIFICATION DATA YANG TELAH DIHAPUS
@@ -1466,7 +1477,7 @@ def main_page_admin():
                     df = df.drop(int(masukkan_hapus_presensi))  # MENGHAPUS DATA
                     df = df.astype(str) # Konversi semua kolom ke dalam string sebelum menyimpan
                     # Simpan DataFrame yang telah diubah ke dalam file CSV
-                    np.savetxt("presensi_database_admin.csv",df,delimiter=',',fmt='% s')  
+                    np.savetxt("admin_presensi.csv",df,delimiter=',',fmt='% s')  
                     os.system('cls')
                     print(f"++{'='*86}++\n|| {f"admin>menu utama>hapus presensi admin>tanggal:{masukkan_tanggal_presensi}":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*24}H A P U S   P R E S E N S I   A D M I N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n") # UI HAPUS DATA
                     print(f"Data {masukkan_hapus_presensi} berhasil dihapus!")  # IN-PROGRAM-NOTIFICATION DATA YANG TELAH DIHAPUS
@@ -1507,7 +1518,7 @@ def main_page_admin():
                     df = df.drop(int(masukkan_hapus_presensi))  # MENGHAPUS DATA
                     df = df.astype(str) # Konversi semua kolom ke dalam string sebelum menyimpan
                     # Simpan DataFrame yang telah diubah ke dalam file CSV
-                    np.savetxt("presensi_database.csv",df,delimiter=',',fmt='% s')  
+                    np.savetxt("employee_presensi.csv",df,delimiter=',',fmt='% s')  
                     os.system('cls')
                     print(f"++{'='*86}++\n|| {f"admin>menu utama>hapus presensi karyawan>tanggal:{masukkan_tanggal_presensi}":<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}H A P U S   P R E S E N S I   K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n") # UI HAPUS DATA
                     print(f"Data {masukkan_hapus_presensi} berhasil dihapus!")  # IN-PROGRAM-NOTIFICATION DATA YANG TELAH DIHAPUS
@@ -1630,6 +1641,11 @@ def main_page_admin():
             # Plot the data
             plt.figure(figsize=(6, 5))
             plt.bar(sorted_df['Nama'], sorted_df['Total Kehadiran'], color='blue')
+            
+            # Menambahkan angka di atas batang
+            for i, value in enumerate(sorted_df['Total Kehadiran']):
+                plt.text(i, value + 0.1, str(value), ha='center')
+
             plt.xlabel('Nama Karyawan')
             plt.ylabel('Total Kehadiran')
             plt.title(f'Total Kehadiran Karyawan dari {"terbaik ke terburuk" if sort_order == "1" else "terburuk ke terbaik"} \nuntuk periode "{rekap_choice_word}"')
@@ -1668,7 +1684,7 @@ def main_page_admin():
         def baca_data_karyawan():
             data_karyawan = []
             try:
-                with open("employee_account_database.csv", "r", newline="") as csvfile:
+                with open("employee_akun.csv", "r", newline="") as csvfile:
                     reader = csv.reader(csvfile)
                     for row in reader:
                         data_karyawan.append([row[0],row[1],row[2],row[3]])
@@ -1693,11 +1709,11 @@ def main_page_admin():
         def baca_perintah_lembur():
             perintah_lembur = []
             try:
-                with open("perintah_lembur.csv", "r", newline="") as csvfile:
+                with open("employee_perintahlembur.csv", "r", newline="") as csvfile:
                     reader = csv.reader(csvfile)
                     # Cek apakah file CSV kosong
                     if sum(1 for row in reader) <= 1:  # Kurang dari atau sama dengan 1 karena satu baris adalah header
-                        print("File perintah_lembur.csv kosong.")
+                        print("File employee_perintahlembur.csv kosong.")
                         return perintah_lembur
                     else:
                         csvfile.seek(0)  # Reset posisi file ke awal setelah iterasi sebelumnya
@@ -1705,7 +1721,7 @@ def main_page_admin():
                         for row in reader:
                             perintah_lembur.append([row[0],row[1],row[2],row[3],row[4], row[5],row[6]])
             except FileNotFoundError:
-                print("File perintah_lembur.csv tidak ditemukan, memulai dengan data lembur kosong.")
+                print("File employee_perintahlembur.csv tidak ditemukan, memulai dengan data lembur kosong.")
             return perintah_lembur
 
         def catat_lembur(id_karyawan, tgl, jam_mulai, jam_selesai):
@@ -1732,13 +1748,13 @@ def main_page_admin():
 
         def buat_csv_lembur():
 
-            with open("perintah_lembur.csv", "w", newline="") as csvfile:
+            with open("employee_perintahlembur.csv", "w", newline="") as csvfile:
                 fieldname = ["tgl", "hari", "id", "nama", "jam_mulai", "jam_selesai", "durasi_jam"]
                 writer = csv.writer(csvfile)
                 writer.writerow(fieldname)
                 for data in perintah_lembur:
                     writer.writerow(data)
-            print("Data lembur telah disimpan ke file perintah_lembur.csv")
+            print("Data lembur telah disimpan ke file employee_perintahlembur.csv")
 
         def lihat_perintah_lembur():
             global perintah_lembur
@@ -1879,9 +1895,9 @@ def main_page_admin():
 
             # Membaca file csv dari ketiga csv
             try:
-                employee_df = pd.read_csv('employee_account_database.csv', names=kolom_employee, header=None)
-                lembur_df = pd.read_csv('employee_presensi_lembur.csv', names=kolom_lembur, header=None)
-                presensi_df = pd.read_csv('presensi_database.csv', names=kolom_presensi, header=None)
+                employee_df = pd.read_csv('employee_akun.csv', names=kolom_employee, header=None)
+                lembur_df = pd.read_csv('employee_presensilembur.csv', names=kolom_lembur, header=None)
+                presensi_df = pd.read_csv('employee_presensi.csv', names=kolom_presensi, header=None)
             except FileNotFoundError as e:
                 print(f"Error: {e}")
                 return
@@ -1985,10 +2001,10 @@ def main_page_admin():
             kolom_penggajian = ['ID', 'Nama', 'Posisi', 'Gaji_Pokok', 'Ongkos_Lembur', 'Potongan_Telat', 'Potongan_Absensi', 'Gaji_Bersih']
 
             # Tentukan apakah file ada
-            file_exists = os.path.isfile('penggajian_database.csv')
+            file_exists = os.path.isfile('penggajian.csv')
 
             # Save the DataFrame to CSV
-            penggajian_df[kolom_penggajian].to_csv('penggajian_database.csv', mode='a', index=False, header=not file_exists)
+            penggajian_df[kolom_penggajian].to_csv('penggajian.csv', mode='a', index=False, header=not file_exists)
 
             # Print the DataFrame using tabulate
             print("\nHasil Penggajian Karyawan:")
@@ -2035,7 +2051,7 @@ def main_page_employee():   # FITUR KARYAWAN
     
     # MENGIMPOR DATA KARYAWAN
     data_employee = []      # VARIABEL KOSONG UNTUK MENYIMPAN DATA KARYAWAN
-    with open('employee_account_database.csv') as csvfile_employee: # MEMBUKA .CSV KARYAWAN
+    with open('employee_akun.csv') as csvfile_employee: # MEMBUKA .CSV KARYAWAN
         reader_employee = csv.reader(csvfile_employee)
         for row in reader_employee:     # menjadikan file .csv menjadi list karyawan (menambahkan tiap baris pada .csv kedalam variabel data karyawan)
             data_employee.append(row)
@@ -2044,21 +2060,21 @@ def main_page_employee():   # FITUR KARYAWAN
 
     # MENGIMPOR DATA PRESENSI
     data_presensi = []  # VARIABEL KOSONG UNTUK MENYIMPAN DATA PRESENSI
-    with open('presensi_database.csv') as csvfile_presensi:     # MEMBUKA .CSV PRESENSI
+    with open('employee_presensi.csv') as csvfile_presensi:     # MEMBUKA .CSV PRESENSI
         reader_presensi = csv.reader(csvfile_presensi)      # menjadikan file .csv menjadi list presensi (menambahkan tiap baris pada .csv kedalam variabel data presensi)
         for row in reader_presensi:
             data_presensi.append(row)
     
     # MENGIMPOR DATA PERINTAH LEMBUR
     data_perintah_lembur = []  # VARIABEL KOSONG UNTUK MENYIMPAN DATA PERINTAH LEMBUR
-    with open('perintah_lembur.csv') as csvfile_perintah_lembur:     # MEMBUKA .CSV PERINTAH
+    with open('employee_perintahlembur.csv') as csvfile_perintah_lembur:     # MEMBUKA .CSV PERINTAH
         reader_perintah_lembur = csv.reader(csvfile_perintah_lembur)      # menjadikan file .csv menjadi list perintah (menambahkan tiap baris pada .csv kedalam variabel data perintah)
         for row in reader_perintah_lembur:
             data_perintah_lembur.append(row)
 
     # MENGIMPOR DATA PRESENSI LEMBUR
     data_presensi_lembur = []  # VARIABEL KOSONG UNTUK MENYIMPAN DATA PRESENSI LEMBUR
-    with open('employee_presensi_lembur.csv') as csvfile_presensi_lembur:     # MEMBUKA .CSV PRESENSI
+    with open('employee_presensilembur.csv') as csvfile_presensi_lembur:     # MEMBUKA .CSV PRESENSI
         reader_presensi_lembur = csv.reader(csvfile_presensi_lembur)      # menjadikan file .csv menjadi list presensi (menambahkan tiap baris pada .csv kedalam variabel data presensi)
         for row in reader_presensi_lembur:
             data_presensi_lembur.append(row)
@@ -2066,7 +2082,7 @@ def main_page_employee():   # FITUR KARYAWAN
     # MEMBUAT DATA PENGKONDISIAN UNTUK PENGECEKAN DATA SUDAH ADA ATAU BELUM
     data_presensi_lembur_cond = [] # VARIABEL KOSONG UNTUK MENYIMPAN DATA KONDISI
     g=0 # TRIGGER BARIS KE-
-    with open('employee_presensi_lembur.csv') as csvfile_presensi:     # MEMBUKA .CSV PRESENSI
+    with open('employee_presensilembur.csv') as csvfile_presensi:     # MEMBUKA .CSV PRESENSI
         reader_presensi = csv.reader(csvfile_presensi)      #menjadikan file .csv menjadi list presensi (menambahkan tiap baris pada .csv kedalam variabel data presensi)
         for row in reader_presensi:
             data_presensi_lembur_cond.append(row)
@@ -2077,7 +2093,7 @@ def main_page_employee():   # FITUR KARYAWAN
     # MEMBUAT DATA PENGKONDISIAN UNTUK PENGECEKAN DATA SUDAH ADA ATAU BELUM
     data_presensi_cond = [] # VARIABEL KOSONG UNTUK MENYIMPAN DATA KONDISI
     g=0 # TRIGGER BARIS KE-
-    with open('presensi_database.csv') as csvfile_presensi:     # MEMBUKA .CSV PRESENSI
+    with open('employee_presensi.csv') as csvfile_presensi:     # MEMBUKA .CSV PRESENSI
         reader_presensi = csv.reader(csvfile_presensi)      #menjadikan file .csv menjadi list presensi (menambahkan tiap baris pada .csv kedalam variabel data presensi)
         for row in reader_presensi:
             data_presensi_cond.append(row)
@@ -2135,7 +2151,7 @@ def main_page_employee():   # FITUR KARYAWAN
                     # KARYAWAN BELUM PRESENSI
                     if data_baru_cond not in data_presensi_cond:    
                         data_presensi.append(data_baru) # Menambahkan data baru ke dalam list data_presensi
-                        with open('presensi_database.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
+                        with open('employee_presensi.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
                             writer_presensi = csv.writer(csvfile_presensi)
                             writer_presensi.writerows(data_presensi)
                         # IN-PROGRAM-NOTIFICATION DATA DICATAT
@@ -2181,7 +2197,7 @@ def main_page_employee():   # FITUR KARYAWAN
 
             os.system('cls')
             print(f"++{'='*86}++\n|| karyawan>menu utama>rekapitulasi presensi>{' '*43}||\n++{'-'*86}++\n||{' '*86}||\n||{' '*23}R E K A P I T U L A S I   P R E S E N S I{' '*22}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}") # UI REKAPITULASI PRESENSI
-            with open('presensi_database.csv', 'r') as presensi_file:   # MENGIMPOR DATA PRESENSI
+            with open('employee_presensi.csv', 'r') as presensi_file:   # MENGIMPOR DATA PRESENSI
                 data_presensi = presensi_file.readlines()
 
             # Membuat DataFrame Pandas dari data presensi
@@ -2264,6 +2280,10 @@ def main_page_employee():   # FITUR KARYAWAN
             values = [total_kehadiran_tepat_waktu, total_terlambat, total_tidak_hadir]
             nama_display = filtered_df.iloc[0,2]
 
+            # Menambahkan angka di atas batang
+            for i, value in enumerate(values):
+                plt.text(i, value + 0.1, str(value), ha='center')
+
             plt.bar(labels, values, color=['green', 'orange', 'red'])
             plt.xlabel('Kategori Kehadiran')
             plt.ylabel('Jumlah')
@@ -2308,7 +2328,7 @@ def main_page_employee():   # FITUR KARYAWAN
         os.system('cls')  # Membersihkan layar konsol
         print(f'++{'='*86}++\n|| {'karyawan>menu utama>lihat data presensi anda':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*20}L I H A T   D A T A   P R E S E N S I   A N D A':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime("\r%A, %d %B %Y | %H:%M:%S")}\n')
         
-        with open('presensi_database.csv', 'r') as presensi_file:   # MEMBUKA DATABASE PRESENSI
+        with open('employee_presensi.csv', 'r') as presensi_file:   # MEMBUKA DATABASE PRESENSI
             data_presensi = presensi_file.readlines()
         # MENGUBAH DATA MENJADI TABEL PANDAS
         df = pd.DataFrame([entry.strip().split(',') for entry in data_presensi],columns=["Tanggal", "ID", "Nama", "Shift","kehadiran","Waktu"])
@@ -2411,7 +2431,7 @@ def main_page_employee():   # FITUR KARYAWAN
                                 # KARYAWAN BELUM PRESENSI
                                 if data_baru_cond not in data_presensi_lembur_cond:    
                                     data_presensi_lembur.append(data_baru) # Menambahkan data baru ke dalam list data_presensi
-                                    with open('employee_presensi_lembur.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
+                                    with open('employee_presensilembur.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
                                         writer_presensi = csv.writer(csvfile_presensi)
                                         writer_presensi.writerows(data_presensi_lembur)
                                     # IN-PROGRAM-NOTIFICATION DATA DICATAT
@@ -2442,11 +2462,11 @@ def main_page_employee():   # FITUR KARYAWAN
         def lihat_riwayat_lembur():
             perintah_lembur = []
             try:
-                with open("perintah_lembur.csv", "r", newline="") as csvfile:
+                with open("employee_perintahlembur.csv", "r", newline="") as csvfile:
                     reader = csv.DictReader(csvfile, fieldnames=["tgl", "hari", "id", "nama", "jam_mulai", "jam_selesai", "durasi_jam"])
                     # Cek apakah file CSV kosong
                     if sum(1 for row in reader) <= 1:  # Kurang dari atau sama dengan 1 karena satu baris adalah header
-                        print("File perintah_lembur.csv kosong.")
+                        print("File employee_perintahlembur.csv kosong.")
                         
                     else:
                         csvfile.seek(0)  # Reset posisi file ke awal setelah iterasi sebelumnya
@@ -2463,7 +2483,7 @@ def main_page_employee():   # FITUR KARYAWAN
                             })
                         
             except FileNotFoundError:
-                print("File perintah_lembur.csv tidak ditemukan, memulai dengan data lembur kosong.")
+                print("File employee_perintahlembur.csv tidak ditemukan, memulai dengan data lembur kosong.")
             
             if perintah_lembur:
                 while True:
@@ -2561,7 +2581,7 @@ def main_page_employee():   # FITUR KARYAWAN
            
             penggajian = []
 
-            with open("penggajian_database.csv", "r", newline="") as csvfile:
+            with open("penggajian.csv", "r", newline="") as csvfile:
                 reader = csv.reader(csvfile)
                 for row in reader:
                     penggajian.append(row)
@@ -2628,52 +2648,52 @@ def akun_pertama():
     os.system('cls')
 
     # apabila database presensi admin belum ada
-    if not(Path('presensi_database_admin.csv').is_file()):
+    if not(Path('admin_presensi.csv').is_file()):
         #buat file dahulu sebelum mengakses fungsi tambah supaya bisa menambahkan header dulu
-        presensi = open('presensi_database_admin.csv', 'w')
+        presensi = open('admin_presensi.csv', 'w')
         presensi.close()
 
     # apabila database presensi employee belum ada
-    if not(Path('presensi_database.csv').is_file()):
+    if not(Path('employee_presensi.csv').is_file()):
         #buat file dahulu sebelum mengakses fungsi tambah supaya bisa menambahkan header dulu
-        presensi = open('presensi_database.csv', 'w')
+        presensi = open('employee_presensi.csv', 'w')
         presensi.close()
 
     # apabila database histori belum ada
-    if not(Path('histori_database.csv').is_file()):
+    if not(Path('histori.csv').is_file()):
         #buat file dahulu sebelum mengakses fungsi tambah supaya bisa menambahkan header dulu
-        presensi = open('histori_database.csv', 'w')
+        presensi = open('histori.csv', 'w')
         presensi.close()
 
 
     # apabila database perintah lembur belum ada
-    if not(Path('perintah_lembur.csv').is_file()):
+    if not(Path('employee_perintahlembur.csv').is_file()):
         #buat file dahulu sebelum mengakses fungsi tambah supaya bisa menambahkan header dulu
-        employee = open('perintah_lembur.csv', 'w')
+        employee = open('employee_perintahlembur.csv', 'w')
         employee.close()
 
     # apabila database presensi lembur belum ada
-    if not(Path('employee_presensi_lembur.csv').is_file()):
+    if not(Path('employee_presensilembur.csv').is_file()):
         #buat file dahulu sebelum mengakses fungsi tambah supaya bisa menambahkan header dulu
-        employee = open('employee_presensi_lembur.csv', 'w')
+        employee = open('employee_presensilembur.csv', 'w')
         employee.close()
 
 
     # apabila database gaji belum ada
-    if not(Path('penggajian_database.csv').is_file()):
+    if not(Path('penggajian.csv').is_file()):
         #buat file dahulu sebelum mengakses fungsi tambah supaya bisa menambahkan header dulu
-        employee = open('penggajian_database.csv', 'w')
+        employee = open('penggajian.csv', 'w')
         employee.close()
     
 
     # apabila database akun karyawan belum ada
-    if not(Path('employee_account_database.csv').is_file()):
+    if not(Path('employee_akun.csv').is_file()):
         #buat file dahulu sebelum mengakses fungsi tambah supaya bisa menambahkan header dulu
-        employee = open('employee_account_database.csv', 'w')
+        employee = open('employee_akun.csv', 'w')
         employee.close()
 
     # apabila database admin belum ada
-    if not(Path('admin_account_database.csv').is_file()):
+    if not(Path('admin_akun.csv').is_file()):
         #buat file dahulu sebelum mengakses fungsi tambah supaya bisa menambahkan header dulu
 
         # data admin pertama
@@ -2685,7 +2705,7 @@ def akun_pertama():
         # memasukkan admin pertama 
         first_input = f"{first_account_ID.upper()},{first_account_nama.upper()},{first_account_posisi.upper()},{first_Account_pass}"
 
-        with open('admin_account_database.csv', 'w', newline='') as fileAdmincsv:
+        with open('admin_akun.csv', 'w', newline='') as fileAdmincsv:
             admin_list = csv.DictWriter(fileAdmincsv, fieldnames=[first_input],  delimiter='/') 
             admin_list.writeheader()
 
@@ -2702,14 +2722,14 @@ def backendAutoPresensi():
 
     # MENGIMPOR DATA ADMIN
     data_admin = []     # VARIABEL KOSONG UNTUK MENYIMPAN DATA ADMIN
-    with open('admin_account_database.csv') as csvfile_admin:       # MEMBUKA .CSV ADMIN
+    with open('admin_akun.csv') as csvfile_admin:       # MEMBUKA .CSV ADMIN
         reader_Admin = csv.reader(csvfile_admin)
         for row in reader_Admin:        # menjadikan file .csv menjadi list admin (menambahkan tiap baris pada .csv kedalam variabel data admin)
             data_admin.append(row)
     
     # DATABASE PRESENSI ADMIN
     data_presensi_admin = []
-    with open('presensi_database_admin.csv') as csvfile_presensi:
+    with open('admin_presensi.csv') as csvfile_presensi:
         reader_presensi = csv.reader(csvfile_presensi)
         for row in reader_presensi:
             data_presensi_admin.append(row)
@@ -2717,7 +2737,7 @@ def backendAutoPresensi():
     # INDIKATOR DATABASE PRESENSI ADMIN
     data_presensi_admin_cond = []
     g=0
-    with open('presensi_database_admin.csv') as csvfile_presensi:
+    with open('admin_presensi.csv') as csvfile_presensi:
         reader_presensi = csv.reader(csvfile_presensi)
         for row in reader_presensi:
             data_presensi_admin_cond.append(row)
@@ -2727,14 +2747,14 @@ def backendAutoPresensi():
 
     # INDIKATOR DATABASE KARYAWAN
     data_employee = []
-    with open('employee_account_database.csv') as csvfile_employee:
+    with open('employee_akun.csv') as csvfile_employee:
         reader_employee = csv.reader(csvfile_employee)
         for row in reader_employee:
             data_employee.append(row)
 
     # DATABASE PRESENSI EMPLOYEE
     data_presensi = []
-    with open('presensi_database.csv') as csvfile_presensi:
+    with open('employee_presensi.csv') as csvfile_presensi:
         reader_presensi = csv.reader(csvfile_presensi)
         for row in reader_presensi:
             data_presensi.append(row)
@@ -2742,7 +2762,7 @@ def backendAutoPresensi():
     # INDIKATOR DATABASE PRESENSI EMPLOYEE
     data_presensi_cond = []
     g=0
-    with open('presensi_database.csv') as csvfile_presensi:
+    with open('employee_presensi.csv') as csvfile_presensi:
         reader_presensi = csv.reader(csvfile_presensi)
         for row in reader_presensi:
             data_presensi_cond.append(row)
@@ -2752,7 +2772,7 @@ def backendAutoPresensi():
 
     # MENDETEKSI ADA TIDAKNYA DATA DI HARI INI
     dataHistory = []
-    with open('histori_database.csv') as csvfile_histori:
+    with open('histori.csv') as csvfile_histori:
         reader_histori = csv.reader(csvfile_histori)
         for row in reader_histori:
             dataHistory.append(row)
@@ -2761,20 +2781,20 @@ def backendAutoPresensi():
     # MENDETEKSI ADA TIDAKNYA DATA PRESENSI
     if waktuRealBackend not in histori_column:
         tanggalUpdateHistori = [waktuRealBackend]
-        with open('histori_database.csv', 'a', newline='') as csvfile_histori:    # notifikasi ke admin
+        with open('histori.csv', 'a', newline='') as csvfile_histori:    # notifikasi ke admin
             writer_histori = csv.writer(csvfile_histori,quoting=csv.QUOTE_NONE, escapechar=None)
             writer_histori.writerow(tanggalUpdateHistori)
 
     # MENGIMPOR DATA PERINTAH LEMBUR
     data_perintah_lembur = [] 
-    with open('perintah_lembur.csv') as csvfile_perintah_lembur:    
+    with open('employee_perintahlembur.csv') as csvfile_perintah_lembur:    
         reader_perintah_lembur = csv.reader(csvfile_perintah_lembur)
         for row in reader_perintah_lembur:
             data_perintah_lembur.append(row)
 
     # MENGIMPOR DATA PRESENSI LEMBUR
     data_presensi_lembur = []
-    with open('employee_presensi_lembur.csv') as csvfile_presensi_lembur: 
+    with open('employee_presensilembur.csv') as csvfile_presensi_lembur: 
         reader_presensi_lembur = csv.reader(csvfile_presensi_lembur)      
         for row in reader_presensi_lembur:
             data_presensi_lembur.append(row)
@@ -2782,7 +2802,7 @@ def backendAutoPresensi():
     # INDIKATOR DATABASE PRESENSI LEMBUR
     data_presensilembur_cond = []
     g=0
-    with open('presensi_database.csv') as csvfile_presensilembur:
+    with open('employee_presensi.csv') as csvfile_presensilembur:
         reader_presensilembur = csv.reader(csvfile_presensilembur)
         for row in reader_presensilembur:
             data_presensilembur_cond.append(row)
@@ -2808,10 +2828,10 @@ def backendAutoPresensi():
 
                     if (data_baru_cond not in data_presensi_admin_cond) and ((datetime.datetime.now().strftime("%H:%M:%S") ) not in (pre_presensi and time_range_kerja)) and (dataUpdateHistori not in dataHistory):
                         data_presensi_admin.append(data_baru)   # Menambahkan data baru ke dalam list data_presensi
-                        with open('presensi_database_admin.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
+                        with open('admin_presensi.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
                             writer_presensi = csv.writer(csvfile_presensi)
                             writer_presensi.writerows(data_presensi_admin)
-                        with open('histori_database.csv', 'a', newline='') as csvfile_histori:    # notifikasi ke admin
+                        with open('histori.csv', 'a', newline='') as csvfile_histori:    # notifikasi ke admin
                             writer_histori = csv.writer(csvfile_histori,quoting=csv.QUOTE_NONE, escapechar='_')
                             writer_histori.writerows([dataUpdateHistori])
                     else:
@@ -2833,25 +2853,26 @@ def backendAutoPresensi():
 
                     if (data_baru_cond not in data_presensi_cond) and ((datetime.datetime.now().strftime("%H:%M:%S") ) not in (pre_presensi and time_range_kerja)) and (dataUpdateHistori not in dataHistory):
                         data_presensi.append(data_baru)   # Menambahkan data baru ke dalam list data_presensi
-                        with open('presensi_database.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
+                        with open('employee_presensi.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
                             writer_presensi = csv.writer(csvfile_presensi)
                             writer_presensi.writerows(data_presensi)
-                        with open('histori_database.csv', 'a', newline='') as csvfile_histori:    # notifikasi ke admin
+                        with open('histori.csv', 'a', newline='') as csvfile_histori:    # notifikasi ke admin
                             writer_histori = csv.writer(csvfile_histori,quoting=csv.QUOTE_NONE, escapechar='_')
                             writer_histori.writerows([dataUpdateHistori])
                     else:
                         pass
         
         # AUTOABSENSI PRESENSI LEMBUR
-        if open_lembur > datetime.datetime.now().strftime("%HH:%MM:%SS") > close_lembur:
-            hari_seminggu = ["SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU", "MINGGU"]
-            hari_seminggu_inggris = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
-            
-            data_baru_lembur = []
 
-            for nomor_hari in range(0,7):
-                if (datetime.datetime.now().strftime("%A").upper() == hari_seminggu_inggris[nomor_hari]):  
-                    for tujuan_lembur in range (0, len(data_perintah_lembur)):
+        hari_seminggu = ["SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU", "MINGGU"]
+        hari_seminggu_inggris = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
+            
+        data_baru_lembur = []
+
+        for nomor_hari in range(0,7):
+            if (datetime.datetime.now().strftime("%A").upper() == hari_seminggu_inggris[nomor_hari]):  
+                for tujuan_lembur in range (0, len(data_perintah_lembur)):
+                    if datetime.datetime.now().strftime("%HH:%MM") > data_perintah_lembur[tujuan_lembur][-2]:
                         data_baru_lembur_kotak = []
                         data_baru_lembur_kotak = ([f'{tanggal_presensi}', f'{data_perintah_lembur[tujuan_lembur][2]}', f'{data_perintah_lembur[tujuan_lembur][3]}', f'{hari_seminggu[nomor_hari]}', "TIDAK HADIR", f'{datetime.datetime.now().strftime("%H:%M:%S")}'])
                         data_baru_cond = [f'{tanggal_presensi}',f'{hari_seminggu[nomor_hari]}', f'{data_perintah_lembur[tujuan_lembur][2]}', f'{data_perintah_lembur[tujuan_lembur][3]}', '', '', '']
@@ -2859,10 +2880,10 @@ def backendAutoPresensi():
 
                         if (data_baru_cond not in data_presensilembur_cond) and ((datetime.datetime.now().strftime("%H:%M:%S") ) not in (pre_presensi and time_range_kerja and DateTimeRange(data_perintah_lembur[tujuan_lembur][-3], data_perintah_lembur[tujuan_lembur][-2]))) and (dataUpdateHistori not in dataHistory):
                             data_baru_lembur.append(data_baru_lembur_kotak)   # Menambahkan data baru ke dalam list data_presensi
-                            with open('employee_presensi_lembur.csv', 'w', newline='') as csvfile_presensi_lembur:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
+                            with open('employee_presensilembur.csv', 'a', newline='') as csvfile_presensi_lembur:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
                                 writer_presensi_lembur = csv.writer(csvfile_presensi_lembur)
                                 writer_presensi_lembur.writerow(data_baru_lembur_kotak)
-                            with open('histori_database.csv', 'a', newline='') as csvfile_histori:    # notifikasi ke admin
+                            with open('histori.csv', 'a', newline='') as csvfile_histori:    # notifikasi ke admin
                                 writer_histori = csv.writer(csvfile_histori,quoting=csv.QUOTE_NONE, escapechar='_')
                                 writer_histori.writerows([dataUpdateHistori])
                         else:
