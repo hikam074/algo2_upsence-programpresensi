@@ -227,61 +227,72 @@ def main_page_admin():
         tanggal_presensi = datetime.datetime.now().strftime("%Y-%m-%d") # INDIKATOR TANGGAL RIIL
 
         # HARI DALAM INDONESIA
-        hari_seminggu = ["SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU", "MINGGU"]
-        # MENGECEK APAKAH NAMA HARI INI
-        for nomor_hari in range(1,9):
-    
-            # KARYAWAN YANG HENDAK PRESENSI BENAR DI SENIN-JUMAT
-            if datetime.datetime.now().strftime("%A").upper() != "SATURDAY" and datetime.datetime.now().strftime("%A").upper() != "SUNDAY":  
-    
-                time_range = DateTimeRange(open_presensi,close_presensi)
-                x = datetime.datetime.now().strftime("%H:%M:%S")    # DEKLARASI WAKTU TERBARU
-                
-                # BILA DALAM WAKTU GLOBAL PRESENSI
-                if x in DateTimeRange(open_presensi,global_close_presensi):   # ABSENSI GLOBAL DIBUKA
-                    # DALAM RENTANG PRESENSI
-                    if x in time_range :    
-                        status_kehadiran = "HADIR" 
-                    # TIDAK DALAM RENTANG PRESENSI TAPI MASIH PADA SHIFT
-                    elif x in time_range_kerja:    
-                        status_kehadiran = "TERLAMBAT"
-                    # PRESENSI DILUAR JAM SHIFT
-                    else :          
-                        input("\nPERHATIAN : Bukan jadwal presensi! Tekan [enter] untuk kembali ke menu utama")
-                        status_kehadiran = "TIDAK HADIR"
-                        main_page_admin()    # MENGEMBALIKAN KE MENU UTAMA
-                    
-                    # MEMBUAT DATA UNTUK DIMASUKKAN
-                    data_baru = [tanggal_presensi, data_admin[tujuan][0], data_admin[tujuan][1], hari_seminggu[nomor_hari], status_kehadiran, now_time.strftime("%H:%M:%S")]
-                    # MEMBUAT DATA PENGKONDISIAN UNTUK MENGECEK DATA SUDAH ADA ATAU BELUM
-                    data_baru_cond = [f'{tanggal_presensi}', f'{data_admin[tujuan][0]}', f'{data_admin[tujuan][1]}', f'{hari_seminggu[nomor_hari]}', '', '']
-                    
-                    # MENDETEKSI APAKAH KARYAWAN SUDAH MELAKUKAN PRESENSI DI SHIFT YANG SAMA HARI INI
-                    # KARYAWAN BELUM PRESENSI
-                    if data_baru_cond not in data_presensi_cond_admin:    
-                        data_presensi_admin.append(data_baru) # Menambahkan data baru ke dalam list data_presensi
-                        with open('admin_presensi.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
-                            writer_presensi = csv.writer(csvfile_presensi)
-                            writer_presensi.writerows(data_presensi_admin)
-                        # IN-PROGRAM-NOTIFICATION DATA DICATAT
-                        input(f'\nPresensi : {tanggal_presensi},{now_time.strftime("%H:%M:%S")},{data_admin[tujuan][0]},{data_admin[tujuan][1]},{hari_seminggu[nomor_hari]},{status_kehadiran} \nPERHATIAN : Presensi berhasil direkam!\n\nTekan [enter] untuk kembali ke menu utama')   
-                        main_page_admin()
-                    # KARYAWAN SUDAH PRESENSI SEBELUMNYA
-                    # IN-PROGRAM-NOTIFICATION DATA SUDAH ADA
-                    else:
-                        input(f'\nPERHATIAN : Data presensi "{tanggal_presensi},{data_admin[tujuan][0]},{data_admin[tujuan][1]},{hari_seminggu[nomor_hari]},{status_kehadiran}" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')    
-                        main_page_admin()
+        if datetime.datetime.now().strftime("%A").upper() == 'MONDAY':
+            hari_indo = 'SENIN'
+        if datetime.datetime.now().strftime("%A").upper() == 'TUESDAY':
+            hari_indo = 'SELASA'
+        if datetime.datetime.now().strftime("%A").upper() == 'WEDNESDAY':
+            hari_indo = 'RABU'
+        if datetime.datetime.now().strftime("%A").upper() == 'THURSDAY':
+            hari_indo = 'KAMIS'
+        if datetime.datetime.now().strftime("%A").upper() == 'FRIDAY':
+            hari_indo = 'JUMAT'
+        if datetime.datetime.now().strftime("%A").upper() == 'SATURDAY':
+            hari_indo = 'SABTU'
+        if datetime.datetime.now().strftime("%A").upper() == 'SUNDAY':
+            hari_indo = 'MINGGU'
 
-                # ABSENSI GLOBAL BELUM DIBUKA
-                elif x in pre_presensi:     
-                    # MENGEMBALIKAN KE MENU UTAMA
-                    input("\nPERHATIAN : Waktu belum menunjukkan jadwal presensi!\n\nTekan [enter] untuk kembali ke menu utama")
-                    main_page_admin()
+        # KARYAWAN YANG HENDAK PRESENSI BENAR DI SENIN-JUMAT
+        if datetime.datetime.now().strftime("%A").upper() != "SATURDAY" and datetime.datetime.now().strftime("%A").upper() != "SUNDAY":  
+
+            time_range = DateTimeRange(open_presensi,close_presensi)
+            x = datetime.datetime.now().strftime("%H:%M:%S")    # DEKLARASI WAKTU TERBARU
             
-            # KARYAWAN YANG HENDAK PRESENSI BUKAN MERUPAKAN KARYAWAN SHIFT TERSEBUT
-            else:   
-                input("\nPERHATIAN : Bukan jadwal presensi anda! Tekan [enter] untuk melanjutkan")
+            # BILA DALAM WAKTU GLOBAL PRESENSI
+            if x in DateTimeRange(open_presensi,global_close_presensi):   # ABSENSI GLOBAL DIBUKA
+                # DALAM RENTANG PRESENSI
+                if x in time_range :    
+                    status_kehadiran = "HADIR" 
+                # TIDAK DALAM RENTANG PRESENSI TAPI MASIH PADA SHIFT
+                elif x in time_range_kerja:    
+                    status_kehadiran = "TERLAMBAT"
+                # PRESENSI DILUAR JAM SHIFT
+                else :          
+                    input("\nPERHATIAN : Bukan jadwal presensi! Tekan [enter] untuk kembali ke menu utama")
+                    status_kehadiran = "TIDAK HADIR"
+                    main_page_admin()    # MENGEMBALIKAN KE MENU UTAMA
+                
+                # MEMBUAT DATA UNTUK DIMASUKKAN
+                data_baru = [tanggal_presensi, data_admin[tujuan][0], data_admin[tujuan][1], hari_indo, status_kehadiran, now_time.strftime("%H:%M:%S")]
+                # MEMBUAT DATA PENGKONDISIAN UNTUK MENGECEK DATA SUDAH ADA ATAU BELUM
+                data_baru_cond = [f'{tanggal_presensi}', f'{data_admin[tujuan][0]}', f'{data_admin[tujuan][1]}', f'{hari_indo}', '', '']
+                
+                # MENDETEKSI APAKAH KARYAWAN SUDAH MELAKUKAN PRESENSI DI SHIFT YANG SAMA HARI INI
+                # KARYAWAN BELUM PRESENSI
+                if data_baru_cond not in data_presensi_cond_admin:    
+                    data_presensi_admin.append(data_baru) # Menambahkan data baru ke dalam list data_presensi
+                    with open('admin_presensi.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
+                        writer_presensi = csv.writer(csvfile_presensi)
+                        writer_presensi.writerows(data_presensi_admin)
+                    # IN-PROGRAM-NOTIFICATION DATA DICATAT
+                    input(f'\nPresensi : {tanggal_presensi},{now_time.strftime("%H:%M:%S")},{data_admin[tujuan][0]},{data_admin[tujuan][1]},{hari_indo},{status_kehadiran} \nPERHATIAN : Presensi berhasil direkam!\n\nTekan [enter] untuk kembali ke menu utama')   
+                    main_page_admin()
+                # KARYAWAN SUDAH PRESENSI SEBELUMNYA
+                # IN-PROGRAM-NOTIFICATION DATA SUDAH ADA
+                else:
+                    input(f'\nPERHATIAN : Data presensi "{tanggal_presensi},{data_admin[tujuan][0]},{data_admin[tujuan][1]},{hari_indo},{status_kehadiran}" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')    
+                    main_page_admin()
+
+            # ABSENSI GLOBAL BELUM DIBUKA
+            elif x in pre_presensi:     
+                # MENGEMBALIKAN KE MENU UTAMA
+                input("\nPERHATIAN : Waktu belum menunjukkan jadwal presensi!\n\nTekan [enter] untuk kembali ke menu utama")
                 main_page_admin()
+        
+        # KARYAWAN YANG HENDAK PRESENSI BUKAN MERUPAKAN KARYAWAN SHIFT TERSEBUT
+        else:   
+            input("\nPERHATIAN : Bukan jadwal presensi anda! Tekan [enter] untuk melanjutkan")
+            main_page_admin()
 
         main_page_admin()
 
@@ -300,7 +311,7 @@ def main_page_admin():
             if masukkanAdminID not in admin_column:     # BILA ID YANG HENDAK DITAMBAHKAN BELUM ADA
                 
                 # LIST POSISI
-                Posisi = [["CPO"],["CEO"],["CFO"],["COO"],["CMO"],["CPO"],["CTO"]]
+                Posisi = [["CPO"],["CEO"],["CFO"],["COO"],["CMO"],["CTO"]]
                 # MENJADIKAN LIST DIPRINT HORIZONTAL INSTEAD OF VERTIKAL
                 Posisi_horizontal = [pos[0] for pos in Posisi]
                 tabel_posisi = [Posisi_horizontal]
@@ -1733,14 +1744,23 @@ def main_page_admin():
                 print(f"Error: Employee dengan ID '{id_karyawan}' tidak ditemukan.")
                 return
 
-
-
-            hari_seminggu = ["SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU", "MINGGU"]
-            hari_seminggu_inggris = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
-            for nomor_hari in range(0,7):
-                if (datetime.datetime.now().strftime("%A").upper() == hari_seminggu_inggris[nomor_hari]): 
-                    # Mendapatkan nama hari dari tanggal yang dimasukkan
-                    hari = hari_seminggu[nomor_hari]
+            # HARI DALAM INDONESIA
+            if datetime.datetime.now().strftime("%A").upper() == 'MONDAY':
+                hari_indo = 'SENIN'
+            if datetime.datetime.now().strftime("%A").upper() == 'TUESDAY':
+                hari_indo = 'SELASA'
+            if datetime.datetime.now().strftime("%A").upper() == 'WEDNESDAY':
+                hari_indo = 'RABU'
+            if datetime.datetime.now().strftime("%A").upper() == 'THURSDAY':
+                hari_indo = 'KAMIS'
+            if datetime.datetime.now().strftime("%A").upper() == 'FRIDAY':
+                hari_indo = 'JUMAT'
+            if datetime.datetime.now().strftime("%A").upper() == 'SATURDAY':
+                hari_indo = 'SABTU'
+            if datetime.datetime.now().strftime("%A").upper() == 'SUNDAY':
+                hari_indo = 'MINGGU'
+            
+            hari = hari_indo
 
             durasi_jam = hitung_durasi_jam(jam_mulai, jam_selesai)
             perintah_lembur.append([tgl,hari,id_karyawan,karyawan[1],jam_mulai,jam_selesai,durasi_jam])
@@ -1889,15 +1909,17 @@ def main_page_admin():
     # FITUR 8 SELESAI : UI 
 
     elif menu_choice == '9':        # FITUR 9 PENGGAJIAN
+
         def penggajian():
             os.system('cls')
             print(f"++{'='*86}++\n|| {f'admin>menu utama>penggajian>':<85}||\n++{'-'*86}++\n||{' '*86}||\n||{f'{' '*21}P E N G G A J I A N  K A R Y A W A N':<86}||\n||{' '*86}||\n++{'='*86}++\n{datetime.datetime.now().strftime('%A, %d %B %Y | %H:%M:%S')}\n")
 
             # Membaca file csv dari ketiga csv
             try:
-                employee_df = pd.read_csv('employee_akun.csv', names=kolom_employee, header=None)
-                lembur_df = pd.read_csv('employee_presensilembur.csv', names=kolom_lembur, header=None)
-                presensi_df = pd.read_csv('employee_presensi.csv', names=kolom_presensi, header=None)
+                kolom_employ = ['id','Nama','Posisi','Password']
+                employee_df = pd.read_csv('employee_akun.csv', names=kolom_employ, header=None)
+                lembur_df = pd.read_csv('employee_perintahlembur.csv')
+                presensi_df = pd.read_csv('employee_presensi.csv')
             except FileNotFoundError as e:
                 print(f"Error: {e}")
                 return
@@ -1956,62 +1978,79 @@ def main_page_admin():
                 'DATA ANALYST': 6000000
             }
 
+            periode_gaji = input("Masukkan periode gaji [yyyy-mm] : ")
+
             # Hitung total lembur dan ongkos lembur
             if 'durasi_jam' in lembur_df.columns:
+
+                lembur_df = lembur_df[lembur_df['tgl'].str.startswith(periode_gaji)]
+
                 lembur_df['durasi_jam'] = pd.to_numeric(lembur_df['durasi_jam'], errors='coerce')  # Konversi ke numerik, jika gagal menjadi NaN
                 lembur_df['durasi_jam'] = lembur_df['durasi_jam'].fillna(0)  # Mengisi NaN dengan 0
-                total_lembur = lembur_df.groupby('ID')['durasi_jam'].sum().reset_index()
+                total_lembur = lembur_df.groupby('id')['durasi_jam'].sum().reset_index()
                 total_lembur['Ongkos_Lembur'] = total_lembur['durasi_jam'] * ongkos_lembur_per_jam
-                karyawan_terpilih.loc[:,'ID'] = karyawan_terpilih['ID'].astype(total_lembur['ID'].dtype)
 
             else:
                 print("Kolom 'durasi_jam' tidak ditemukan dalam DataFrame lembur. Pastikan kolom tersebut ada di file CSV.")
                 return
 
             # Hitung total keterlambatan
-            presensi_df['Waktu'] = pd.to_datetime(presensi_df['Waktu'], format='%H:%M:%S', errors='coerce').dt.time
-            presensi_df['Kehadiran'] = presensi_df['Kehadiran'].astype(str).fillna('')
+            presensi_df = presensi_df[presensi_df['tanggal'].str.startswith(periode_gaji)]
+
+            presensi_df['waktu_presensi'] = pd.to_datetime(presensi_df['waktu_presensi'], format='%H:%M:%S', errors='coerce').dt.time
+            presensi_df['status_kehadiran'] = presensi_df['status_kehadiran'].astype(str).fillna('')
             presensi_df['Telat'] = presensi_df.apply(
                 lambda row: max(
-                    (datetime.datetime.combine(datetime.date.today(), row['Waktu']) - 
+                    (datetime.datetime.combine(datetime.date.today(), row['waktu_presensi']) - 
                     datetime.datetime.combine(datetime.date.today(), datetime.time(9, 0))).seconds // 3600, 1
-                ) if row['Kehadiran'].upper() == 'HADIR' and row['Waktu'] >= datetime.time(9, 0) else 0, axis=1)
+                ) if row['status_kehadiran'].upper() == 'HADIR' and row['waktu_presensi'] >= datetime.time(9, 0) else 0, axis=1)
+            total_telat = presensi_df.groupby('id')['Telat'].sum().reset_index()
+            total_telat['Potongan_Telat'] = total_telat['Telat'] * potongan_per_jam_telat 
 
-            total_telat = presensi_df.groupby('ID')['Telat'].sum().reset_index()
-            total_telat['Potongan_Telat'] = total_telat['Telat'] * potongan_per_jam_telat
 
             # Hitung total ketidakhadiran
-            absensi_df = presensi_df[(presensi_df['Kehadiran'].str.upper() == 'TIDAK HADIR') & (presensi_df['Hari Kerja'].str.upper() == 'YA')]
-            total_absen = absensi_df.groupby('ID').size().reset_index(name='Total_Tidak_Hadir')
+            absensi_df = presensi_df[(presensi_df['status_kehadiran'].str.upper() == 'TIDAK HADIR')]
+            total_absen = absensi_df.groupby('id').size().reset_index(name='Total_Tidak_Hadir')
             total_absen['Potongan_Absensi'] = total_absen['Total_Tidak_Hadir'] * potongan_per_hari_absen
 
-            # Merge data untuk penggajian
-            penggajian_df = pd.merge(karyawan_terpilih, total_lembur, left_on='ID', right_on='ID', how='left').fillna(0)
-            penggajian_df = pd.merge(penggajian_df, total_telat[['ID', 'Potongan_Telat']], on='ID', how='left').fillna(0)
-            penggajian_df = pd.merge(penggajian_df, total_absen[['ID', 'Potongan_Absensi']], on='ID', how='left').fillna(0)
-            
+            # Ensure 'ID' columns are of the same type before merging
+            karyawan_terpilih.loc[:,'id'] = karyawan_terpilih['id'].astype(str)
+            total_lembur['id'] = total_lembur['id'].astype(str)
+            total_telat['id'] = total_telat['id'].astype(str)
+            total_absen['id'] = total_absen['id'].astype(str)
 
-            # Tentukan gaji pokok berdasarkan posisi karyawan
+            # Merge data for payroll
+            penggajian_df = pd.merge(karyawan_terpilih, total_lembur, left_on='id', right_on='id', how='left').fillna(0)
+            penggajian_df = pd.merge(penggajian_df, total_telat[['id', 'Potongan_Telat']], on='id', how='left').fillna(0)
+            penggajian_df = pd.merge(penggajian_df, total_absen[['id', 'Potongan_Absensi']], on='id', how='left').fillna(0)
+
+            # Set gaji pokok based on employee position
             penggajian_df['Gaji_Pokok'] = penggajian_df['Posisi'].map(gaji_pokok_map)
 
-            # Hitung Gaji Bersih
+            # Calculate Gaji Bersih
             penggajian_df['Gaji_Bersih'] = penggajian_df['Gaji_Pokok'] + penggajian_df['Ongkos_Lembur'] - penggajian_df['Potongan_Telat'] - penggajian_df['Potongan_Absensi']
 
-            # Kolom yang ingin disimpan
-            kolom_penggajian = ['ID', 'Nama', 'Posisi', 'Gaji_Pokok', 'Ongkos_Lembur', 'Potongan_Telat', 'Potongan_Absensi', 'Gaji_Bersih']
+            # Columns to be saved
+            kolom_penggajian = ['Tanggal','Periode', 'id', 'Nama', 'Posisi', 'Gaji_Pokok', 'Ongkos_Lembur', 'Potongan_Telat', 'Potongan_Absensi', 'Gaji_Bersih']
 
-            # Tentukan apakah file ada
-            file_exists = os.path.isfile('penggajian.csv')
+            # Add the Tanggal column
+            penggajian_df.insert(0, 'Tanggal', datetime.datetime.now().strftime('%Y-%m-%d'))
+            penggajian_df.insert(1, 'Periode', f'{periode_gaji}')
+
 
             # Save the DataFrame to CSV
-            penggajian_df[kolom_penggajian].to_csv('penggajian.csv', mode='a', index=False, header=not file_exists)
+
+            penggajian_df[kolom_penggajian].to_csv('penggajian.csv', mode='a', index=False, header=False)
 
             # Print the DataFrame using tabulate
             print("\nHasil Penggajian Karyawan:")
+        
             print(tabulate.tabulate(penggajian_df[kolom_penggajian], headers='keys', tablefmt='fancy_grid'))
 
             input("\nTekan [enter] untuk kembali ke menu utama")
             main_page_admin()
+
+
 
         penggajian()
 
@@ -2119,60 +2158,73 @@ def main_page_employee():   # FITUR KARYAWAN
 
         tanggal_presensi = datetime.datetime.now().strftime("%Y-%m-%d") # indikator tanggal riil
 
-        hari_seminggu = ["SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU", "MINGGU"]
-        for nomor_hari in range(1,9):
+        # HARI DALAM INDONESIA
+        if datetime.datetime.now().strftime("%A").upper() == 'MONDAY':
+            hari_indo = 'SENIN'
+        if datetime.datetime.now().strftime("%A").upper() == 'TUESDAY':
+            hari_indo = 'SELASA'
+        if datetime.datetime.now().strftime("%A").upper() == 'WEDNESDAY':
+            hari_indo = 'RABU'
+        if datetime.datetime.now().strftime("%A").upper() == 'THURSDAY':
+            hari_indo = 'KAMIS'
+        if datetime.datetime.now().strftime("%A").upper() == 'FRIDAY':
+            hari_indo = 'JUMAT'
+        if datetime.datetime.now().strftime("%A").upper() == 'SATURDAY':
+            hari_indo = 'SABTU'
+        if datetime.datetime.now().strftime("%A").upper() == 'SUNDAY':
+            hari_indo = 'MINGGU'
     
-            # KARYAWAN YANG HENDAK PRESENSI BENAR DI SENIN-JUMAT
-            if datetime.datetime.now().strftime("%A").upper() != "SATURDAY" and datetime.datetime.now().strftime("%A").upper() != "SUNDAY":  
-    
-                time_range = DateTimeRange(open_presensi,close_presensi)
-                x = datetime.datetime.now().strftime("%H:%M:%S")    # DEKLARASI WAKTU TERBARU
-                
-                # BILA DALAM WAKTU GLOBAL PRESENSI
-                if x in DateTimeRange(open_presensi,global_close_presensi):   # ABSENSI GLOBAL DIBUKA
-                    # DALAM RENTANG PRESENSI
-                    if x in time_range :    
-                        status_kehadiran = "HADIR" 
-                    # TIDAK DALAM RENTANG PRESENSI TAPI MASIH PADA SHIFT
-                    elif x in time_range_kerja:    
-                        status_kehadiran = "TERLAMBAT"
-                    # PRESENSI DILUAR JAM SHIFT
-                    else :          
-                        input("\nPERHATIAN : Bukan jadwal presensi! Tekan [enter] untuk kembali ke menu utama")
-                        status_kehadiran = "TIDAK HADIR"
-                        main_page_employee()    # MENGEMBALIKAN KE MENU UTAMA
-                    
-                    # MEMBUAT DATA UNTUK DIMASUKKAN
-                    data_baru = [tanggal_presensi, data_employee[tujuan][0], data_employee[tujuan][1], hari_seminggu[nomor_hari], status_kehadiran, now_time.strftime("%H:%M:%S")]
-                    # MEMBUAT DATA PENGKONDISIAN UNTUK MENGECEK DATA SUDAH ADA ATAU BELUM
-                    data_baru_cond = [f'{tanggal_presensi}', f'{data_employee[tujuan][0]}', f'{data_employee[tujuan][1]}', f'{hari_seminggu[nomor_hari]}', '', '']
-                    
-                    # MENDETEKSI APAKAH KARYAWAN SUDAH MELAKUKAN PRESENSI DI SHIFT YANG SAMA HARI INI
-                    # KARYAWAN BELUM PRESENSI
-                    if data_baru_cond not in data_presensi_cond:    
-                        data_presensi.append(data_baru) # Menambahkan data baru ke dalam list data_presensi
-                        with open('employee_presensi.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
-                            writer_presensi = csv.writer(csvfile_presensi)
-                            writer_presensi.writerows(data_presensi)
-                        # IN-PROGRAM-NOTIFICATION DATA DICATAT
-                        input(f'\nPresensi : {tanggal_presensi},{now_time.strftime("%H:%M:%S")},{data_employee[tujuan][0]},{data_employee[tujuan][1]},{hari_seminggu[nomor_hari]},{status_kehadiran} \nPERHATIAN : Presensi berhasil direkam!\n\nTekan [enter] untuk kembali ke menu utama') 
-                        main_page_employee()  
-                    # KARYAWAN SUDAH PRESENSI SEBELUMNYA
-                    # IN-PROGRAM-NOTIFICATION DATA SUDAH ADA
-                    else:
-                        input(f'\nPERHATIAN : Data presensi "{tanggal_presensi},{data_employee[tujuan][0]},{data_employee[tujuan][1]},{hari_seminggu[nomor_hari]},{status_kehadiran}" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')
-                        main_page_employee()     
-                
-                # ABSENSI GLOBAL BELUM DIBUKA
-                elif x in pre_presensi:     
-                    # MENGEMBALIKAN KE MENU UTAMA
-                    input("\nPERHATIAN : Waktu belum menunjukkan jadwal presensi!\n\nTekan [enter] untuk kembali ke menu utama")
-                    main_page_employee() 
+        # KARYAWAN YANG HENDAK PRESENSI BENAR DI SENIN-JUMAT
+        if datetime.datetime.now().strftime("%A").upper() != "SATURDAY" and datetime.datetime.now().strftime("%A").upper() != "SUNDAY":  
+
+            time_range = DateTimeRange(open_presensi,close_presensi)
+            x = datetime.datetime.now().strftime("%H:%M:%S")    # DEKLARASI WAKTU TERBARU
             
-            # KARYAWAN YANG HENDAK PRESENSI BUKAN MERUPAKAN KARYAWAN SHIFT TERSEBUT
-            else:   
-                input("\nPERHATIAN : Bukan jadwal presensi anda! Tekan [enter] untuk melanjutkan")
-                main_page_employee()
+            # BILA DALAM WAKTU GLOBAL PRESENSI
+            if x in DateTimeRange(open_presensi,global_close_presensi):   # ABSENSI GLOBAL DIBUKA
+                # DALAM RENTANG PRESENSI
+                if x in time_range :    
+                    status_kehadiran = "HADIR" 
+                # TIDAK DALAM RENTANG PRESENSI TAPI MASIH PADA SHIFT
+                elif x in time_range_kerja:    
+                    status_kehadiran = "TERLAMBAT"
+                # PRESENSI DILUAR JAM SHIFT
+                else :          
+                    input("\nPERHATIAN : Bukan jadwal presensi! Tekan [enter] untuk kembali ke menu utama")
+                    status_kehadiran = "TIDAK HADIR"
+                    main_page_employee()    # MENGEMBALIKAN KE MENU UTAMA
+                
+                # MEMBUAT DATA UNTUK DIMASUKKAN
+                data_baru = [tanggal_presensi, data_employee[tujuan][0], data_employee[tujuan][1], hari_indo, status_kehadiran, now_time.strftime("%H:%M:%S")]
+                # MEMBUAT DATA PENGKONDISIAN UNTUK MENGECEK DATA SUDAH ADA ATAU BELUM
+                data_baru_cond = [f'{tanggal_presensi}', f'{data_employee[tujuan][0]}', f'{data_employee[tujuan][1]}', f'{hari_indo}', '', '']
+                
+                # MENDETEKSI APAKAH KARYAWAN SUDAH MELAKUKAN PRESENSI DI SHIFT YANG SAMA HARI INI
+                # KARYAWAN BELUM PRESENSI
+                if data_baru_cond not in data_presensi_cond:    
+                    data_presensi.append(data_baru) # Menambahkan data baru ke dalam list data_presensi
+                    with open('employee_presensi.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
+                        writer_presensi = csv.writer(csvfile_presensi)
+                        writer_presensi.writerows(data_presensi)
+                    # IN-PROGRAM-NOTIFICATION DATA DICATAT
+                    input(f'\nPresensi : {tanggal_presensi},{now_time.strftime("%H:%M:%S")},{data_employee[tujuan][0]},{data_employee[tujuan][1]},{hari_indo},{status_kehadiran} \nPERHATIAN : Presensi berhasil direkam!\n\nTekan [enter] untuk kembali ke menu utama') 
+                    main_page_employee()  
+                # KARYAWAN SUDAH PRESENSI SEBELUMNYA
+                # IN-PROGRAM-NOTIFICATION DATA SUDAH ADA
+                else:
+                    input(f'\nPERHATIAN : Data presensi "{tanggal_presensi},{data_employee[tujuan][0]},{data_employee[tujuan][1]},{hari_indo},{status_kehadiran}" sudah ada!\n\nTekan [enter] untuk kembali ke menu utama')
+                    main_page_employee()     
+            
+            # ABSENSI GLOBAL BELUM DIBUKA
+            elif x in pre_presensi:     
+                # MENGEMBALIKAN KE MENU UTAMA
+                input("\nPERHATIAN : Waktu belum menunjukkan jadwal presensi!\n\nTekan [enter] untuk kembali ke menu utama")
+                main_page_employee() 
+        
+        # KARYAWAN YANG HENDAK PRESENSI BUKAN MERUPAKAN KARYAWAN SHIFT TERSEBUT
+        else:   
+            input("\nPERHATIAN : Bukan jadwal presensi anda! Tekan [enter] untuk melanjutkan")
+            main_page_employee()
         
         main_page_employee() 
 
@@ -2401,60 +2453,71 @@ def main_page_employee():   # FITUR KARYAWAN
 
                     tanggal_presensi = datetime.datetime.now().strftime("%Y-%m-%d") # indikator tanggal riil
 
-                    hari_seminggu = ["SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU", "MINGGU"]
-                    for nomor_hari in range(1,9):
-                
-                        # KARYAWAN YANG HENDAK PRESENSI BENAR DI SENIN-JUMAT
-                        if datetime.datetime.now().strftime("%HH:%MM:%SS") <= close_lembur:  
-                
-                            time_range = DateTimeRange(open_lembur,close_lembur)
-                            x = datetime.datetime.now().strftime("%H:%M:%S")    # DEKLARASI WAKTU TERBARU
-                            
-                            # BILA DALAM WAKTU GLOBAL PRESENSI
-                            if x in DateTimeRange(open_presensi,global_close_presensi):   # ABSENSI GLOBAL DIBUKA
-                                # DALAM RENTANG PRESENSI
-                                if x in time_range :    
-                                    status_kehadiran = "HADIR" 
-                                # TIDAK DALAM RENTANG PRESENSI TAPI MASIH PADA SHIFT
-                                # PRESENSI DILUAR JAM SHIFT
-                                else :          
-                                    input("\nPERHATIAN : Bukan jadwal presensi! Tekan [enter] untuk kembali ke menu utama")
-                                    status_kehadiran = "TIDAK HADIR"
-                                    main_page_employee()    # MENGEMBALIKAN KE MENU UTAMA
-                                
-                                # MEMBUAT DATA UNTUK DIMASUKKAN
-                                data_baru = [tanggal_presensi, data_employee[tujuan][0], data_employee[tujuan][1], hari_seminggu[nomor_hari], status_kehadiran, now_time.strftime("%H:%M:%S")]
-                                # MEMBUAT DATA PENGKONDISIAN UNTUK MENGECEK DATA SUDAH ADA ATAU BELUM
-                                data_baru_cond = [f'{tanggal_presensi}', f'{data_employee[tujuan][0]}', f'{data_employee[tujuan][1]}', f'{hari_seminggu[nomor_hari]}', '', '']
-                                
-                                # MENDETEKSI APAKAH KARYAWAN SUDAH MELAKUKAN PRESENSI DI SHIFT YANG SAMA HARI INI
-                                # KARYAWAN BELUM PRESENSI
-                                if data_baru_cond not in data_presensi_lembur_cond:    
-                                    data_presensi_lembur.append(data_baru) # Menambahkan data baru ke dalam list data_presensi
-                                    with open('employee_presensilembur.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
-                                        writer_presensi = csv.writer(csvfile_presensi)
-                                        writer_presensi.writerows(data_presensi_lembur)
-                                    # IN-PROGRAM-NOTIFICATION DATA DICATAT
-                                    input(f'\nPresensi : {tanggal_presensi},{now_time.strftime("%H:%M:%S")},{data_employee[tujuan][0]},{data_employee[tujuan][1]},{hari_seminggu[nomor_hari]},{status_kehadiran} \nPERHATIAN : Presensi berhasil direkam!\n\nTekan [enter] untuk kembali ke menu utama')   
-                                    main_page_employee()
-                                # KARYAWAN SUDAH PRESENSI SEBELUMNYA
-                                # IN-PROGRAM-NOTIFICATION DATA SUDAH ADA
-                                else:
-                                    input(f'PERHATIAN : Data presensi "{tanggal_presensi},{data_employee[tujuan][0]},{data_employee[tujuan][1]},{hari_seminggu[nomor_hari]},{status_kehadiran}" sudah ada!\n\nTekan [enter] untuk kembali ke Menu Lembur')    
-                                    menu_lembur_karyawan()
-                            
-                            # ABSENSI GLOBAL BELUM DIBUKA
-                            elif x in pre_presensi:     
-                                # MENGEMBALIKAN KE MENU UTAMA
-                                input("PERHATIAN : Waktu belum menunjukkan jadwal presensi!\n\nTekan [enter] untuk kembali ke menu utama")
-                                main_page_employee()
+                    # HARI DALAM INDONESIA
+                    if datetime.datetime.now().strftime("%A").upper() == 'MONDAY':
+                        hari_indo = 'SENIN'
+                    if datetime.datetime.now().strftime("%A").upper() == 'TUESDAY':
+                        hari_indo = 'SELASA'
+                    if datetime.datetime.now().strftime("%A").upper() == 'WEDNESDAY':
+                        hari_indo = 'RABU'
+                    if datetime.datetime.now().strftime("%A").upper() == 'THURSDAY':
+                        hari_indo = 'KAMIS'
+                    if datetime.datetime.now().strftime("%A").upper() == 'FRIDAY':
+                        hari_indo = 'JUMAT'
+                    if datetime.datetime.now().strftime("%A").upper() == 'SATURDAY':
+                        hari_indo = 'SABTU'
+                    if datetime.datetime.now().strftime("%A").upper() == 'SUNDAY':
+                        hari_indo = 'MINGGU'
+            
+                    # KARYAWAN YANG HENDAK PRESENSI BENAR DI SENIN-JUMAT
+                    if datetime.datetime.now().strftime("%HH:%MM:%SS") <= close_lembur:  
+            
+                        time_range = DateTimeRange(open_lembur,close_lembur)
+                        x = datetime.datetime.now().strftime("%H:%M:%S")    # DEKLARASI WAKTU TERBARU
                         
-                        # KARYAWAN YANG HENDAK PRESENSI BUKAN MERUPAKAN KARYAWAN SHIFT TERSEBUT
-                        else:   
-                            input("PERHATIAN : Bukan jadwal presensi anda! Tekan [enter] untuk melanjutkan")
-                            menu_lembur_karyawan()
+                        # BILA DALAM WAKTU GLOBAL PRESENSI
+                        if x in DateTimeRange(open_presensi,global_close_presensi):   # ABSENSI GLOBAL DIBUKA
+                            # DALAM RENTANG PRESENSI
+                            if x in time_range :    
+                                status_kehadiran = "HADIR" 
+                            # TIDAK DALAM RENTANG PRESENSI TAPI MASIH PADA SHIFT
+                            # PRESENSI DILUAR JAM SHIFT
+                            else :          
+                                input("\nPERHATIAN : Bukan jadwal presensi! Tekan [enter] untuk kembali ke menu utama")
+                                status_kehadiran = "TIDAK HADIR"
+                                main_page_employee()    # MENGEMBALIKAN KE MENU UTAMA
+                            
+                            # MEMBUAT DATA UNTUK DIMASUKKAN
+                            data_baru = [tanggal_presensi, data_employee[tujuan][0], data_employee[tujuan][1], hari_indo, status_kehadiran, now_time.strftime("%H:%M:%S")]
+                            # MEMBUAT DATA PENGKONDISIAN UNTUK MENGECEK DATA SUDAH ADA ATAU BELUM
+                            data_baru_cond = [f'{tanggal_presensi}', f'{data_employee[tujuan][0]}', f'{data_employee[tujuan][1]}', f'{hari_indo}', '', '']
+                            
+                            # MENDETEKSI APAKAH KARYAWAN SUDAH MELAKUKAN PRESENSI DI SHIFT YANG SAMA HARI INI
+                            # KARYAWAN BELUM PRESENSI
+                            if data_baru_cond not in data_presensi_lembur_cond:    
+                                data_presensi_lembur.append(data_baru) # Menambahkan data baru ke dalam list data_presensi
+                                with open('employee_presensilembur.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
+                                    writer_presensi = csv.writer(csvfile_presensi)
+                                    writer_presensi.writerows(data_presensi_lembur)
+                                # IN-PROGRAM-NOTIFICATION DATA DICATAT
+                                input(f'\nPresensi : {tanggal_presensi},{now_time.strftime("%H:%M:%S")},{data_employee[tujuan][0]},{data_employee[tujuan][1]},{hari_indo},{status_kehadiran} \nPERHATIAN : Presensi berhasil direkam!\n\nTekan [enter] untuk kembali ke menu utama')   
+                                main_page_employee()
+                            # KARYAWAN SUDAH PRESENSI SEBELUMNYA
+                            # IN-PROGRAM-NOTIFICATION DATA SUDAH ADA
+                            else:
+                                input(f'PERHATIAN : Data presensi "{tanggal_presensi},{data_employee[tujuan][0]},{data_employee[tujuan][1]},{hari_indo},{status_kehadiran}" sudah ada!\n\nTekan [enter] untuk kembali ke Menu Lembur')    
+                                menu_lembur_karyawan()
+                        
+                        # ABSENSI GLOBAL BELUM DIBUKA
+                        elif x in pre_presensi:     
+                            # MENGEMBALIKAN KE MENU UTAMA
+                            input("PERHATIAN : Waktu belum menunjukkan jadwal presensi!\n\nTekan [enter] untuk kembali ke menu utama")
+                            main_page_employee()
                     
-                    menu_lembur_karyawan()
+                    # KARYAWAN YANG HENDAK PRESENSI BUKAN MERUPAKAN KARYAWAN SHIFT TERSEBUT
+                    else:   
+                        input("PERHATIAN : Bukan jadwal presensi anda! Tekan [enter] untuk melanjutkan")
+                        menu_lembur_karyawan()
 
             input("INFORMASI : Tidak ada tugas lembur untuk saat ini\n\nTekan [Enter] untuk kembali ke Main Menu")    
             main_page_employee()
@@ -2577,7 +2640,7 @@ def main_page_employee():   # FITUR KARYAWAN
     elif menu_choice == '6':  # FITUR 6 GAJI ANDA
         def cetak_slip(launch_ID):
             os.system('cls')  # Bersihkan console
-            print(f'++{"="*86}++\n|| karyawan>menu utama>gaji anda>{" "*46}||\n++{"-"*86}++\n||{" "*86}||\n||{" "*26}S L I P  G A J I  A N D A{" "*25}||\n||{" "*86}||\n++{"="*86}++\nwaktu : {datetime.datetime.now().strftime("%A, %d %B %Y | %H:%M:%S")}\n\n')
+            print(f'++{"="*86}++\n|| karyawan>menu utama>gaji anda>{' '*55}||\n++{"-"*86}++\n||{" "*86}||\n||{" "*31}S L I P  G A J I  A N D A{' '*30}||\n||{" "*86}||\n++{"="*86}++\nwaktu : {datetime.datetime.now().strftime("%A, %d %B %Y | %H:%M:%S")}\n\n')
            
             penggajian = []
 
@@ -2586,21 +2649,23 @@ def main_page_employee():   # FITUR KARYAWAN
                 for row in reader:
                     penggajian.append(row)
 
+            periode_gaji = input("Masukkan periode gaji yang hendak dilihat (yyyy-mm) : ")
 
-
-
-            # Asumsi nama kolom file CSV adalah seperti berikut
-            kolom_penggajian = ['ID', 'Nama', 'Posisi', 'Gaji_Pokok', 'Ongkos_Lembur', 'Potongan_Telat', 'Potongan_Absensi', 'Gaji_Bersih']
             # Membuat DataFrame Pandas dari data penggajian
             df = pd.DataFrame(penggajian, columns=kolom_penggajian)
             # Filter DataFrame berdasarkan ID yang sudah login
-            filtered_df = df.loc[df['ID'] == str(launch_ID)]
+            filtered_df = df.loc[df['id'] == str(launch_ID)]
+            filtered_df = df.loc[df['Periode'] == str(periode_gaji)]
 
 
             # Menampilkan data pada slip gaji
             if not filtered_df.empty:
                 data = filtered_df.iloc[0]
-                print(f"ID Karyawan    : {data['ID']}")
+                print()
+                print(f"menapilkan data untuk periode : {data['Periode']}")
+                print(f'Tanggal slip gaji : {data['Tanggal']}')
+                print()
+                print(f"ID Karyawan    : {data['id']}")
                 print(f"Nama           : {data['Nama']}")
                 print(f"Posisi         : {data['Posisi']}")
                 print("-"*86)
@@ -2682,8 +2747,10 @@ def akun_pertama():
     # apabila database gaji belum ada
     if not(Path('penggajian.csv').is_file()):
         #buat file dahulu sebelum mengakses fungsi tambah supaya bisa menambahkan header dulu
-        employee = open('penggajian.csv', 'w')
-        employee.close()
+        with open('penggajian.csv', mode='w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(kolom_penggajian)
+            file.close()
     
 
     # apabila database akun karyawan belum ada
@@ -2817,77 +2884,107 @@ def backendAutoPresensi():
         # AUTOABSEN PRESENSI ADMIN
         for tujuan in range (0, len(data_admin)):
 
-            hari_seminggu = ["SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU", "MINGGU"]
-            hari_seminggu_inggris = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
-            for nomor_hari in range(0,7):
-                if (datetime.datetime.now().strftime("%A").upper() == hari_seminggu_inggris[nomor_hari]):   
+            # HARI DALAM INDONESIA
+            if datetime.datetime.now().strftime("%A").upper() == 'MONDAY':
+                hari_indo = 'SENIN'
+            if datetime.datetime.now().strftime("%A").upper() == 'TUESDAY':
+                hari_indo = 'SELASA'
+            if datetime.datetime.now().strftime("%A").upper() == 'WEDNESDAY':
+                hari_indo = 'RABU'
+            if datetime.datetime.now().strftime("%A").upper() == 'THURSDAY':
+                hari_indo = 'KAMIS'
+            if datetime.datetime.now().strftime("%A").upper() == 'FRIDAY':
+                hari_indo = 'JUMAT'
+            if datetime.datetime.now().strftime("%A").upper() == 'SATURDAY':
+                hari_indo = 'SABTU'
+            if datetime.datetime.now().strftime("%A").upper() == 'SUNDAY':
+                hari_indo = 'MINGGU'
 
-                    data_baru = [tanggal_presensi, data_admin[tujuan][0], data_admin[tujuan][1], hari_seminggu[nomor_hari],'TIDAK HADIR',datetime.datetime.now().strftime("%H:%M:%S")]
-                    data_baru_cond = [f'{tanggal_presensi}', f'{data_admin[tujuan][0]}', f'{data_admin[tujuan][1]}', hari_seminggu[nomor_hari], '', '']
-                    dataUpdateHistori = [f'{backend_tanggal_presensi} Karyawan {data_admin[tujuan][0]} {data_admin[tujuan][1]} tidak presensi']
-
-                    if (data_baru_cond not in data_presensi_admin_cond) and ((datetime.datetime.now().strftime("%H:%M:%S") ) not in (pre_presensi and time_range_kerja)) and (dataUpdateHistori not in dataHistory):
-                        data_presensi_admin.append(data_baru)   # Menambahkan data baru ke dalam list data_presensi
-                        with open('admin_presensi.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
-                            writer_presensi = csv.writer(csvfile_presensi)
-                            writer_presensi.writerows(data_presensi_admin)
-                        with open('histori.csv', 'a', newline='') as csvfile_histori:    # notifikasi ke admin
-                            writer_histori = csv.writer(csvfile_histori,quoting=csv.QUOTE_NONE, escapechar='_')
-                            writer_histori.writerows([dataUpdateHistori])
-                    else:
-                        pass
+            data_baru = [tanggal_presensi, data_admin[tujuan][0], data_admin[tujuan][1], hari_indo,'TIDAK HADIR',datetime.datetime.now().strftime("%H:%M:%S")]
+            data_baru_cond = [f'{tanggal_presensi}', f'{data_admin[tujuan][0]}', f'{data_admin[tujuan][1]}', hari_indo, '', '']
+            dataUpdateHistori = [f'{backend_tanggal_presensi} Admin {data_admin[tujuan][0]} {data_admin[tujuan][1]} tidak presensi']
+            if (data_baru_cond not in data_presensi_admin_cond) and ((datetime.datetime.now().strftime("%H:%M:%S") ) not in (pre_presensi and time_range_kerja)) and (dataUpdateHistori not in dataHistory):
+                data_presensi_admin.append(data_baru)   # Menambahkan data baru ke dalam list data_presensi
+                with open('admin_presensi.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
+                    writer_presensi = csv.writer(csvfile_presensi)
+                    writer_presensi.writerows(data_presensi_admin)
+                with open('histori.csv', 'a', newline='') as csvfile_histori:    # notifikasi ke admin
+                    writer_histori = csv.writer(csvfile_histori,quoting=csv.QUOTE_NONE, escapechar='_')
+                    writer_histori.writerows([dataUpdateHistori])
+            else:
+                pass
 
         # AUTOABSEN PRESENSI EMPLOYEE
         for tujuan in range (0, len(data_employee)):
 
-            hari_seminggu = ["SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU", "MINGGU"]
-            hari_seminggu_inggris = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
-            for nomor_hari in range(0,7):
-                if (datetime.datetime.now().strftime("%A").upper() == hari_seminggu_inggris[nomor_hari]):   
+            # HARI DALAM INDONESIA
+            if datetime.datetime.now().strftime("%A").upper() == 'MONDAY':
+                hari_indo = 'SENIN'
+            if datetime.datetime.now().strftime("%A").upper() == 'TUESDAY':
+                hari_indo = 'SELASA'
+            if datetime.datetime.now().strftime("%A").upper() == 'WEDNESDAY':
+                hari_indo = 'RABU'
+            if datetime.datetime.now().strftime("%A").upper() == 'THURSDAY':
+                hari_indo = 'KAMIS'
+            if datetime.datetime.now().strftime("%A").upper() == 'FRIDAY':
+                hari_indo = 'JUMAT'
+            if datetime.datetime.now().strftime("%A").upper() == 'SATURDAY':
+                hari_indo = 'SABTU'
+            if datetime.datetime.now().strftime("%A").upper() == 'SUNDAY':
+                hari_indo = 'MINGGU'   
 
-                    data_baru = [tanggal_presensi, data_employee[tujuan][0], data_employee[tujuan][1], hari_seminggu[nomor_hari],'TIDAK HADIR',datetime.datetime.now().strftime("%H:%M:%S")]
-
-                    data_baru_cond = [f'{tanggal_presensi}', f'{data_employee[tujuan][0]}', f'{data_employee[tujuan][1]}', hari_seminggu[nomor_hari], '', '']
-
-                    dataUpdateHistori = [f'{backend_tanggal_presensi} Karyawan {data_employee[tujuan][0]} {data_employee[tujuan][1]} tidak presensi']
-
-                    if (data_baru_cond not in data_presensi_cond) and ((datetime.datetime.now().strftime("%H:%M:%S") ) not in (pre_presensi and time_range_kerja)) and (dataUpdateHistori not in dataHistory):
-                        data_presensi.append(data_baru)   # Menambahkan data baru ke dalam list data_presensi
-                        with open('employee_presensi.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
-                            writer_presensi = csv.writer(csvfile_presensi)
-                            writer_presensi.writerows(data_presensi)
-                        with open('histori.csv', 'a', newline='') as csvfile_histori:    # notifikasi ke admin
-                            writer_histori = csv.writer(csvfile_histori,quoting=csv.QUOTE_NONE, escapechar='_')
-                            writer_histori.writerows([dataUpdateHistori])
-                    else:
-                        pass
+            data_baru = [tanggal_presensi, data_employee[tujuan][0], data_employee[tujuan][1], hari_indo,'TIDAK HADIR',datetime.datetime.now().strftime("%H:%M:%S")]
+            
+            data_baru_cond = [f'{tanggal_presensi}', f'{data_employee[tujuan][0]}', f'{data_employee[tujuan][1]}', hari_indo, '', '']
+            dataUpdateHistori = [f'{backend_tanggal_presensi} Karyawan {data_employee[tujuan][0]} {data_employee[tujuan][1]} tidak presensi']
+            
+            if (data_baru_cond not in data_presensi_cond) and ((datetime.datetime.now().strftime("%H:%M:%S") ) not in (pre_presensi and time_range_kerja)) and (dataUpdateHistori not in dataHistory):
+                data_presensi.append(data_baru)   # Menambahkan data baru ke dalam list data_presensi
+                with open('employee_presensi.csv', 'w', newline='') as csvfile_presensi:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
+                    writer_presensi = csv.writer(csvfile_presensi)
+                    writer_presensi.writerows(data_presensi)
+                with open('histori.csv', 'a', newline='') as csvfile_histori:    # notifikasi ke admin
+                    writer_histori = csv.writer(csvfile_histori,quoting=csv.QUOTE_NONE, escapechar='_')
+                    writer_histori.writerows([dataUpdateHistori])
+            else:
+                pass
         
         # AUTOABSENSI PRESENSI LEMBUR
 
-        hari_seminggu = ["SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU", "MINGGU"]
-        hari_seminggu_inggris = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
+        # HARI DALAM INDONESIA
+        if datetime.datetime.now().strftime("%A").upper() == 'MONDAY':
+            hari_indo = 'SENIN'
+        if datetime.datetime.now().strftime("%A").upper() == 'TUESDAY':
+            hari_indo = 'SELASA'
+        if datetime.datetime.now().strftime("%A").upper() == 'WEDNESDAY':
+            hari_indo = 'RABU'
+        if datetime.datetime.now().strftime("%A").upper() == 'THURSDAY':
+            hari_indo = 'KAMIS'
+        if datetime.datetime.now().strftime("%A").upper() == 'FRIDAY':
+            hari_indo = 'JUMAT'
+        if datetime.datetime.now().strftime("%A").upper() == 'SATURDAY':
+            hari_indo = 'SABTU'
+        if datetime.datetime.now().strftime("%A").upper() == 'SUNDAY':
+            hari_indo = 'MINGGU'
             
         data_baru_lembur = []
 
-        for nomor_hari in range(0,7):
-            if (datetime.datetime.now().strftime("%A").upper() == hari_seminggu_inggris[nomor_hari]):  
-                for tujuan_lembur in range (0, len(data_perintah_lembur)):
-                    if datetime.datetime.now().strftime("%HH:%MM") > data_perintah_lembur[tujuan_lembur][-2]:
-                        data_baru_lembur_kotak = []
-                        data_baru_lembur_kotak = ([f'{tanggal_presensi}', f'{data_perintah_lembur[tujuan_lembur][2]}', f'{data_perintah_lembur[tujuan_lembur][3]}', f'{hari_seminggu[nomor_hari]}', "TIDAK HADIR", f'{datetime.datetime.now().strftime("%H:%M:%S")}'])
-                        data_baru_cond = [f'{tanggal_presensi}',f'{hari_seminggu[nomor_hari]}', f'{data_perintah_lembur[tujuan_lembur][2]}', f'{data_perintah_lembur[tujuan_lembur][3]}', '', '', '']
-                        dataUpdateHistori = [f'{backend_tanggal_presensi} Karyawan {data_perintah_lembur[tujuan_lembur][2]} {data_perintah_lembur[tujuan_lembur][3]} tidak lembur']
-
-                        if (data_baru_cond not in data_presensilembur_cond) and ((datetime.datetime.now().strftime("%H:%M:%S") ) not in (pre_presensi and time_range_kerja and DateTimeRange(data_perintah_lembur[tujuan_lembur][-3], data_perintah_lembur[tujuan_lembur][-2]))) and (dataUpdateHistori not in dataHistory):
-                            data_baru_lembur.append(data_baru_lembur_kotak)   # Menambahkan data baru ke dalam list data_presensi
-                            with open('employee_presensilembur.csv', 'a', newline='') as csvfile_presensi_lembur:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
-                                writer_presensi_lembur = csv.writer(csvfile_presensi_lembur)
-                                writer_presensi_lembur.writerow(data_baru_lembur_kotak)
-                            with open('histori.csv', 'a', newline='') as csvfile_histori:    # notifikasi ke admin
-                                writer_histori = csv.writer(csvfile_histori,quoting=csv.QUOTE_NONE, escapechar='_')
-                                writer_histori.writerows([dataUpdateHistori])
-                        else:
-                            pass
+        for tujuan_lembur in range (0, len(data_perintah_lembur)):
+            if datetime.datetime.now().strftime("%HH:%MM") > data_perintah_lembur[tujuan_lembur][-2]:
+                data_baru_lembur_kotak = []
+                data_baru_lembur_kotak = ([f'{tanggal_presensi}', f'{data_perintah_lembur[tujuan_lembur][2]}', f'{data_perintah_lembur[tujuan_lembur][3]}', f'{hari_indo}', "TIDAK HADIR", f'{datetime.datetime.now().strftime("%H:%M:%S")}'])
+                data_baru_cond = [f'{tanggal_presensi}',f'{hari_indo}', f'{data_perintah_lembur[tujuan_lembur][2]}', f'{data_perintah_lembur[tujuan_lembur][3]}', '', '', '']
+                dataUpdateHistori = [f'{backend_tanggal_presensi} Karyawan {data_perintah_lembur[tujuan_lembur][2]} {data_perintah_lembur[tujuan_lembur][3]} tidak lembur']
+                if (data_baru_cond not in data_presensilembur_cond) and ((datetime.datetime.now().strftime("%H:%M:%S") ) not in (pre_presensi and time_range_kerja and DateTimeRange(data_perintah_lembur[tujuan_lembur][-3], data_perintah_lembur[tujuan_lembur][-2]))) and (dataUpdateHistori not in dataHistory):
+                    data_baru_lembur.append(data_baru_lembur_kotak)   # Menambahkan data baru ke dalam list data_presensi
+                    with open('employee_presensilembur.csv', 'a', newline='') as csvfile_presensi_lembur:    # Membuka file CSV dalam mode penulisan dan menulis data baru ke dalamnya
+                        writer_presensi_lembur = csv.writer(csvfile_presensi_lembur)
+                        writer_presensi_lembur.writerow(data_baru_lembur_kotak)
+                    with open('histori.csv', 'a', newline='') as csvfile_histori:    # notifikasi ke admin
+                        writer_histori = csv.writer(csvfile_histori,quoting=csv.QUOTE_NONE, escapechar='_')
+                        writer_histori.writerows([dataUpdateHistori])
+                else:
+                    pass
        
 
 
@@ -2902,7 +2999,7 @@ def backendAutoPresensi():
 kolom_admin    = ['ID','Nama','Posisi','Password']
 kolom_employee = ['ID','Nama','Posisi','Password']
 kolom_presensi = ["Tanggal", "ID", "Nama", "Hari Kerja", "Kehadiran", "Waktu"]
-kolom_penggajian = ["ID", "Nama", "Posisi", "Gaji Pokok", "Ongkos Lembur", "Potongan Absensi", "Gaji Bersih" ]
+kolom_penggajian = ['Tanggal','Periode', 'id', 'Nama', 'Posisi', 'Gaji_Pokok', 'Ongkos_Lembur', 'Potongan_Telat', 'Potongan_Absensi', 'Gaji_Bersih']
 kolom_lembur   = ["Tanggal","Hari","ID","Nama","Jam Mulai","Jam Selesai","durasi_jam"]
 
 kolom_fmt = "github"
